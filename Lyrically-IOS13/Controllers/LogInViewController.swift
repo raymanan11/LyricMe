@@ -22,7 +22,7 @@ class LogInViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     }
     
     func setup() {
-        let redirectURL = "Lyrically://"
+        let redirectURL = "Lyrically://callback"
         auth.redirectURL = URL(string: redirectURL)
         auth.clientID = Constants.clientID
         auth.requestedScopes = ["user-read-currently-playing", "user-read-playback-state"]
