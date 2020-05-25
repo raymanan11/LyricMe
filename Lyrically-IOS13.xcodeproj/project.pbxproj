@@ -26,6 +26,7 @@
 		7D802F792468D1110048CE94 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D802F782468D1110048CE94 /* AuthService.swift */; };
 		7D802F7B2468D11E0048CE94 /* Ext-UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D802F7A2468D11E0048CE94 /* Ext-UserDefaults.swift */; };
 		7D9B36A4247B717900E4B7C7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9B36A3247B717900E4B7C7 /* Constants.swift */; };
+		7D9B36CA247B760900E4B7C7 /* SpotifyiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D9B36C9247B760900E4B7C7 /* SpotifyiOS.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 		7D802F782468D1110048CE94 /* AuthService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		7D802F7A2468D11E0048CE94 /* Ext-UserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Ext-UserDefaults.swift"; sourceTree = "<group>"; };
 		7D9B36A3247B717900E4B7C7 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		7D9B36C9247B760900E4B7C7 /* SpotifyiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpotifyiOS.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D9B36CA247B760900E4B7C7 /* SpotifyiOS.framework in Frameworks */,
 				7D3FA2B224663E6500EF389E /* SpotifyMetadata.framework in Frameworks */,
 				7D3FA2B424663E7100EF389E /* SpotifyAuthentication.framework in Frameworks */,
 				7D3FA2B624663E7F00EF389E /* SpotifyAudioPlayback.framework in Frameworks */,
@@ -122,6 +125,7 @@
 				7D37D3022471E5D00022EA8E /* Controllers */,
 				7D3FA298246632E200EF389E /* AppDelegate.swift */,
 				7D3FA29A246632E200EF389E /* SceneDelegate.swift */,
+				7D9B36C9247B760900E4B7C7 /* SpotifyiOS.framework */,
 				7D802F782468D1110048CE94 /* AuthService.swift */,
 				7D802F7A2468D11E0048CE94 /* Ext-UserDefaults.swift */,
 				7D3FA2A1246632E700EF389E /* Assets.xcassets */,
