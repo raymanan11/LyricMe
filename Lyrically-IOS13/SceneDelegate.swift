@@ -8,15 +8,46 @@
 
 import UIKit
 
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
+class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTAppRemoteDelegate, SPTAppRemotePlayerStateDelegate {
+    
+    private static let kAccessTokenKey = "access-token-key"
+    
+    let redirectURL = URL(string: "Lyrically://")
+    
     var window: UIWindow?
-    var auth = SPTAuth()
-    var viewController = LogInViewController()
+    
+    lazy var appRemote: SPTAppRemote = {
+        let configuration = SPTConfiguration(clientID: Constants.clientID, redirectURL: self.redirectURL!)
+        let appRemote = SPTAppRemote(configuration: configuration, logLevel: .debug)
+        appRemote.connectionParameters.accessToken = self.accessToken
+        appRemote.delegate = self
+        return appRemote
+    }()
+    
+    var accessToken = UserDefaults.standard.string(forKey: kAccessTokenKey) {
+        didSet {
+            let defaults = UserDefaults.standard
+            defaults.set(accessToken, forKey: SceneDelegate.kAccessTokenKey)
+        }
+    }
+    
+    func appRemoteDidEstablishConnection(_ appRemote: SPTAppRemote) {
+      print("connected")
+    }
+    
+    func appRemote(_ appRemote: SPTAppRemote, didDisconnectWithError error: Error?) {
+      print("disconnected")
+    }
+    
+    func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
+      print("failed")
+    }
+    
+    func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
+      print("player state changed")
+    }
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        auth.redirectURL = URL(string: "Lyrically://")
-        auth.sessionUserDefaultsKey = "current session"
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
@@ -56,18 +87,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let url = URLContexts.first?.url else {
             return
         }
-        var dict = [String:String]()
-        let components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
-        if let queryItems = components.queryItems {
-            for item in queryItems {
-                dict[item.name] = item.value!
-            }
+
+        let parameters = appRemote.authorizationParameters(from: url);
+
+        if let access_token = parameters?[SPTAppRemoteAccessTokenKey] {
+            appRemote.connectionParameters.accessToken = access_token
+            self.accessToken = access_token
+        } else if let error_description = parameters?[SPTAppRemoteErrorDescriptionKey] {
+            // Show the error
         }
-        Constants.code = dict["code"]
-        
-        viewController.getToken()
-        
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
     }
+    
+    
 }
 

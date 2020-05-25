@@ -446,6 +446,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					"\"Alamofire\"",
+					"-framework",
+					"\"CFNetwork\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.raymondan.Lyrically;
 				PRODUCT_NAME = Lyrically;
 				SWIFT_OBJC_BRIDGING_HEADER = "/Users/raymanan11/Desktop/Swift/Lyrically-IOS13/Lyrically-IOS13/LyricallyHeader.h";
@@ -470,6 +477,13 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					"\"Alamofire\"",
+					"-framework",
+					"\"CFNetwork\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.raymondan.Lyrically;
 				PRODUCT_NAME = Lyrically;

@@ -14,6 +14,7 @@ class LogInViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     @IBOutlet weak var logIn: UIButton!
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         setup()
         
@@ -30,18 +31,18 @@ class LogInViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         loginUrl = URL(string: (loginUrl?.absoluteString.replacingOccurrences(of: "token", with: "code"))!)
     }
     
-    func getToken() {
-        let parameters = ["client_id" : auth.clientID, "client_secret" : Constants.clientSecret , "grant_type" : "authorization_code", "code" : Constants.code, "redirect_uri" : auth.redirectURL.absoluteString]
-        AF.request("https://accounts.spotify.com/api/token", method: .post, parameters: parameters).responseJSON(completionHandler: {
-            response in
-
-            if let result = response.value {
-                let jsonData = result as! NSDictionary
-                AuthService.instance.tokenId = jsonData.value(forKey: "access_token") as? String
-                AuthService.instance.sessiontokenId = jsonData.value(forKey: "refresh_token") as? String
-            }
-        })
-    }
+//    func getToken() {
+//        let parameters = ["client_id" : auth.clientID, "client_secret" : Constants.clientSecret , "grant_type" : "authorization_code", "code" : Constants.code, "redirect_uri" : auth.redirectURL.absoluteString]
+//        AF.request("https://accounts.spotify.com/api/token", method: .post, parameters: parameters).responseJSON(completionHandler: {
+//            response in
+//
+//            if let result = response.value {
+//                let jsonData = result as! NSDictionary
+//                AuthService.instance.tokenId = jsonData.value(forKey: "access_token") as? String
+//                AuthService.instance.sessiontokenId = jsonData.value(forKey: "refresh_token") as? String
+//            }
+//        })
+//    }
     
     @IBAction func logIn(_ sender: Any) {
         if let url = loginUrl {
