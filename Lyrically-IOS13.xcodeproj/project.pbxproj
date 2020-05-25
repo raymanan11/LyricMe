@@ -1,0 +1,503 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6BBE86DB817FFFA10082309E /* Pods_Lyrically_IOS13.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFAEA1116F41CB8AB2B20BD /* Pods_Lyrically_IOS13.framework */; };
+		7D37D3052471EEA90022EA8E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D37D3042471EEA90022EA8E /* MainViewController.swift */; };
+		7D37D307247203FB0022EA8E /* CurrentlyPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D37D306247203FB0022EA8E /* CurrentlyPlayingManager.swift */; };
+		7D37D30924720BA30022EA8E /* SpotifyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D37D30824720BA30022EA8E /* SpotifyInfo.swift */; };
+		7D37D30B247349800022EA8E /* CurrentlyPlayingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D37D30A247349800022EA8E /* CurrentlyPlayingInfo.swift */; };
+		7D3FA299246632E200EF389E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3FA298246632E200EF389E /* AppDelegate.swift */; };
+		7D3FA29B246632E200EF389E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3FA29A246632E200EF389E /* SceneDelegate.swift */; };
+		7D3FA29D246632E200EF389E /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3FA29C246632E200EF389E /* LogInViewController.swift */; };
+		7D3FA2A0246632E200EF389E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D3FA29E246632E200EF389E /* Main.storyboard */; };
+		7D3FA2A2246632E700EF389E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D3FA2A1246632E700EF389E /* Assets.xcassets */; };
+		7D3FA2A5246632E700EF389E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D3FA2A3246632E700EF389E /* LaunchScreen.storyboard */; };
+		7D3FA2AD2466332500EF389E /* LyricManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3FA2AC2466332500EF389E /* LyricManager.swift */; };
+		7D3FA2AF2466333F00EF389E /* SongInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3FA2AE2466333F00EF389E /* SongInfo.swift */; };
+		7D3FA2B224663E6500EF389E /* SpotifyMetadata.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D3FA2B124663E6500EF389E /* SpotifyMetadata.framework */; };
+		7D3FA2B424663E7100EF389E /* SpotifyAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D3FA2B324663E7100EF389E /* SpotifyAuthentication.framework */; };
+		7D3FA2B624663E7F00EF389E /* SpotifyAudioPlayback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D3FA2B524663E7F00EF389E /* SpotifyAudioPlayback.framework */; };
+		7D802F792468D1110048CE94 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D802F782468D1110048CE94 /* AuthService.swift */; };
+		7D802F7B2468D11E0048CE94 /* Ext-UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D802F7A2468D11E0048CE94 /* Ext-UserDefaults.swift */; };
+		7D9B36A4247B717900E4B7C7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9B36A3247B717900E4B7C7 /* Constants.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1FFAEA1116F41CB8AB2B20BD /* Pods_Lyrically_IOS13.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lyrically_IOS13.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		23539EE62AE6B5FCECD7FA0A /* Pods-Lyrically-IOS13.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lyrically-IOS13.release.xcconfig"; path = "Target Support Files/Pods-Lyrically-IOS13/Pods-Lyrically-IOS13.release.xcconfig"; sourceTree = "<group>"; };
+		2B921FBA6690388DF5FF347E /* Pods-Lyrically-IOS13.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lyrically-IOS13.debug.xcconfig"; path = "Target Support Files/Pods-Lyrically-IOS13/Pods-Lyrically-IOS13.debug.xcconfig"; sourceTree = "<group>"; };
+		7D37D3042471EEA90022EA8E /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		7D37D306247203FB0022EA8E /* CurrentlyPlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentlyPlayingManager.swift; sourceTree = "<group>"; };
+		7D37D30824720BA30022EA8E /* SpotifyInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyInfo.swift; sourceTree = "<group>"; };
+		7D37D30A247349800022EA8E /* CurrentlyPlayingInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentlyPlayingInfo.swift; sourceTree = "<group>"; };
+		7D3FA295246632E200EF389E /* Lyrically.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lyrically.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7D3FA298246632E200EF389E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		7D3FA29A246632E200EF389E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		7D3FA29C246632E200EF389E /* LogInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
+		7D3FA29F246632E200EF389E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		7D3FA2A1246632E700EF389E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7D3FA2A4246632E700EF389E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		7D3FA2A6246632E700EF389E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7D3FA2AC2466332500EF389E /* LyricManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricManager.swift; sourceTree = "<group>"; };
+		7D3FA2AE2466333F00EF389E /* SongInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongInfo.swift; sourceTree = "<group>"; };
+		7D3FA2B124663E6500EF389E /* SpotifyMetadata.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpotifyMetadata.framework; sourceTree = "<group>"; };
+		7D3FA2B324663E7100EF389E /* SpotifyAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpotifyAuthentication.framework; sourceTree = "<group>"; };
+		7D3FA2B524663E7F00EF389E /* SpotifyAudioPlayback.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpotifyAudioPlayback.framework; sourceTree = "<group>"; };
+		7D3FA2B724663EF300EF389E /* LyricallyHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LyricallyHeader.h; sourceTree = "<group>"; };
+		7D802F782468D1110048CE94 /* AuthService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		7D802F7A2468D11E0048CE94 /* Ext-UserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Ext-UserDefaults.swift"; sourceTree = "<group>"; };
+		7D9B36A3247B717900E4B7C7 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7D3FA292246632E200EF389E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7D3FA2B224663E6500EF389E /* SpotifyMetadata.framework in Frameworks */,
+				7D3FA2B424663E7100EF389E /* SpotifyAuthentication.framework in Frameworks */,
+				7D3FA2B624663E7F00EF389E /* SpotifyAudioPlayback.framework in Frameworks */,
+				6BBE86DB817FFFA10082309E /* Pods_Lyrically_IOS13.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		36659BB9B9AB78617A6C79AF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1FFAEA1116F41CB8AB2B20BD /* Pods_Lyrically_IOS13.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7D37D3022471E5D00022EA8E /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				7D3FA29C246632E200EF389E /* LogInViewController.swift */,
+				7D37D3042471EEA90022EA8E /* MainViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		7D37D3032471E6710022EA8E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				7D3FA29E246632E200EF389E /* Main.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		7D3FA28C246632E200EF389E = {
+			isa = PBXGroup;
+			children = (
+				7D3FA297246632E200EF389E /* Lyrically-IOS13 */,
+				7D3FA296246632E200EF389E /* Products */,
+				BD06AAD2932FD6B28F070CA1 /* Pods */,
+				36659BB9B9AB78617A6C79AF /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		7D3FA296246632E200EF389E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7D3FA295246632E200EF389E /* Lyrically.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7D3FA297246632E200EF389E /* Lyrically-IOS13 */ = {
+			isa = PBXGroup;
+			children = (
+				7D9B36A3247B717900E4B7C7 /* Constants.swift */,
+				7D3FA2B02466336100EF389E /* Model */,
+				7D37D3032471E6710022EA8E /* View */,
+				7D37D3022471E5D00022EA8E /* Controllers */,
+				7D3FA298246632E200EF389E /* AppDelegate.swift */,
+				7D3FA29A246632E200EF389E /* SceneDelegate.swift */,
+				7D802F782468D1110048CE94 /* AuthService.swift */,
+				7D802F7A2468D11E0048CE94 /* Ext-UserDefaults.swift */,
+				7D3FA2A1246632E700EF389E /* Assets.xcassets */,
+				7D3FA2B124663E6500EF389E /* SpotifyMetadata.framework */,
+				7D3FA2B324663E7100EF389E /* SpotifyAuthentication.framework */,
+				7D3FA2B524663E7F00EF389E /* SpotifyAudioPlayback.framework */,
+				7D3FA2A3246632E700EF389E /* LaunchScreen.storyboard */,
+				7D3FA2A6246632E700EF389E /* Info.plist */,
+				7D3FA2B724663EF300EF389E /* LyricallyHeader.h */,
+			);
+			path = "Lyrically-IOS13";
+			sourceTree = "<group>";
+		};
+		7D3FA2B02466336100EF389E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7D3FA2AC2466332500EF389E /* LyricManager.swift */,
+				7D3FA2AE2466333F00EF389E /* SongInfo.swift */,
+				7D37D306247203FB0022EA8E /* CurrentlyPlayingManager.swift */,
+				7D37D30824720BA30022EA8E /* SpotifyInfo.swift */,
+				7D37D30A247349800022EA8E /* CurrentlyPlayingInfo.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		BD06AAD2932FD6B28F070CA1 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2B921FBA6690388DF5FF347E /* Pods-Lyrically-IOS13.debug.xcconfig */,
+				23539EE62AE6B5FCECD7FA0A /* Pods-Lyrically-IOS13.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7D3FA294246632E200EF389E /* Lyrically-IOS13 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7D3FA2A9246632E700EF389E /* Build configuration list for PBXNativeTarget "Lyrically-IOS13" */;
+			buildPhases = (
+				20DB1D954D511D033000211B /* [CP] Check Pods Manifest.lock */,
+				7D3FA291246632E200EF389E /* Sources */,
+				7D3FA292246632E200EF389E /* Frameworks */,
+				7D3FA293246632E200EF389E /* Resources */,
+				23FEA08A9FCF92D90A0DF104 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Lyrically-IOS13";
+			productName = "Lyrically-IOS13";
+			productReference = 7D3FA295246632E200EF389E /* Lyrically.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7D3FA28D246632E200EF389E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1130;
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = "Raymond An";
+				TargetAttributes = {
+					7D3FA294246632E200EF389E = {
+						CreatedOnToolsVersion = 11.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 7D3FA290246632E200EF389E /* Build configuration list for PBXProject "Lyrically-IOS13" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 7D3FA28C246632E200EF389E;
+			productRefGroup = 7D3FA296246632E200EF389E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7D3FA294246632E200EF389E /* Lyrically-IOS13 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7D3FA293246632E200EF389E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7D3FA2A5246632E700EF389E /* LaunchScreen.storyboard in Resources */,
+				7D3FA2A2246632E700EF389E /* Assets.xcassets in Resources */,
+				7D3FA2A0246632E200EF389E /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		20DB1D954D511D033000211B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Lyrically-IOS13-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		23FEA08A9FCF92D90A0DF104 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Lyrically-IOS13/Pods-Lyrically-IOS13-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Lyrically-IOS13/Pods-Lyrically-IOS13-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Lyrically-IOS13/Pods-Lyrically-IOS13-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7D3FA291246632E200EF389E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7D3FA29D246632E200EF389E /* LogInViewController.swift in Sources */,
+				7D3FA299246632E200EF389E /* AppDelegate.swift in Sources */,
+				7D3FA29B246632E200EF389E /* SceneDelegate.swift in Sources */,
+				7D3FA2AF2466333F00EF389E /* SongInfo.swift in Sources */,
+				7D3FA2AD2466332500EF389E /* LyricManager.swift in Sources */,
+				7D37D3052471EEA90022EA8E /* MainViewController.swift in Sources */,
+				7D9B36A4247B717900E4B7C7 /* Constants.swift in Sources */,
+				7D37D30924720BA30022EA8E /* SpotifyInfo.swift in Sources */,
+				7D802F7B2468D11E0048CE94 /* Ext-UserDefaults.swift in Sources */,
+				7D37D30B247349800022EA8E /* CurrentlyPlayingInfo.swift in Sources */,
+				7D802F792468D1110048CE94 /* AuthService.swift in Sources */,
+				7D37D307247203FB0022EA8E /* CurrentlyPlayingManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		7D3FA29E246632E200EF389E /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7D3FA29F246632E200EF389E /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		7D3FA2A3246632E700EF389E /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7D3FA2A4246632E700EF389E /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		7D3FA2A7246632E700EF389E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/raymanan11/Desktop/Swift/Lyrically-IOS13/Lyrically-IOS13/LyricallyHeader.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
+			};
+			name = Debug;
+		};
+		7D3FA2A8246632E700EF389E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/raymanan11/Desktop/Swift/Lyrically-IOS13/Lyrically-IOS13/LyricallyHeader.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		7D3FA2AA246632E700EF389E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2B921FBA6690388DF5FF347E /* Pods-Lyrically-IOS13.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = SH98QXW57H;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Lyrically-IOS13",
+				);
+				INFOPLIST_FILE = "Lyrically-IOS13/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.raymondan.Lyrically;
+				PRODUCT_NAME = Lyrically;
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/raymanan11/Desktop/Swift/Lyrically-IOS13/Lyrically-IOS13/LyricallyHeader.h";
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7D3FA2AB246632E700EF389E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 23539EE62AE6B5FCECD7FA0A /* Pods-Lyrically-IOS13.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = SH98QXW57H;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Lyrically-IOS13",
+				);
+				INFOPLIST_FILE = "Lyrically-IOS13/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.raymondan.Lyrically;
+				PRODUCT_NAME = Lyrically;
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/raymanan11/Desktop/Swift/Lyrically-IOS13/Lyrically-IOS13/LyricallyHeader.h";
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7D3FA290246632E200EF389E /* Build configuration list for PBXProject "Lyrically-IOS13" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7D3FA2A7246632E700EF389E /* Debug */,
+				7D3FA2A8246632E700EF389E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7D3FA2A9246632E700EF389E /* Build configuration list for PBXNativeTarget "Lyrically-IOS13" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7D3FA2AA246632E700EF389E /* Debug */,
+				7D3FA2AB246632E700EF389E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7D3FA28D246632E200EF389E /* Project object */;
+}
