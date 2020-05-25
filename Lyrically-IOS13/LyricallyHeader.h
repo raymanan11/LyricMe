@@ -10,8 +10,8 @@
 #define LyricallyHeader_h
 
 #import <SpotifyAuthentication/SpotifyAuthentication.h>
-#import <SpotifyAudioPlayback/SpotifyAudioPlayback.h>
-#import <SpotifyMetadata/SpotifyMetadata.h>
+//#import <SpotifyAudioPlayback/SpotifyAudioPlayback.h>
+//#import <SpotifyMetadata/SpotifyMetadata.h>
 #import <SpotifyiOS/SpotifyiOS.h>
 
 #endif /* LyricallyHeader_h */

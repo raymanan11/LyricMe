@@ -20,13 +20,12 @@
 		7D3FA2A5246632E700EF389E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D3FA2A3246632E700EF389E /* LaunchScreen.storyboard */; };
 		7D3FA2AD2466332500EF389E /* LyricManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3FA2AC2466332500EF389E /* LyricManager.swift */; };
 		7D3FA2AF2466333F00EF389E /* SongInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3FA2AE2466333F00EF389E /* SongInfo.swift */; };
-		7D3FA2B224663E6500EF389E /* SpotifyMetadata.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D3FA2B124663E6500EF389E /* SpotifyMetadata.framework */; };
-		7D3FA2B424663E7100EF389E /* SpotifyAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D3FA2B324663E7100EF389E /* SpotifyAuthentication.framework */; };
-		7D3FA2B624663E7F00EF389E /* SpotifyAudioPlayback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D3FA2B524663E7F00EF389E /* SpotifyAudioPlayback.framework */; };
 		7D802F792468D1110048CE94 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D802F782468D1110048CE94 /* AuthService.swift */; };
 		7D802F7B2468D11E0048CE94 /* Ext-UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D802F7A2468D11E0048CE94 /* Ext-UserDefaults.swift */; };
 		7D9B36A4247B717900E4B7C7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9B36A3247B717900E4B7C7 /* Constants.swift */; };
 		7D9B36CA247B760900E4B7C7 /* SpotifyiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D9B36C9247B760900E4B7C7 /* SpotifyiOS.framework */; };
+		7D9B36CC247C8BAE00E4B7C7 /* SpotifyAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D9B36CB247C8BAE00E4B7C7 /* SpotifyAuthentication.framework */; };
+		7D9B36D8247C8F2A00E4B7C7 /* SpotifyAuthentication 5.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D9B36D7247C8F2A00E4B7C7 /* SpotifyAuthentication 5.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,14 +46,13 @@
 		7D3FA2A6246632E700EF389E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7D3FA2AC2466332500EF389E /* LyricManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricManager.swift; sourceTree = "<group>"; };
 		7D3FA2AE2466333F00EF389E /* SongInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongInfo.swift; sourceTree = "<group>"; };
-		7D3FA2B124663E6500EF389E /* SpotifyMetadata.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpotifyMetadata.framework; sourceTree = "<group>"; };
-		7D3FA2B324663E7100EF389E /* SpotifyAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpotifyAuthentication.framework; sourceTree = "<group>"; };
-		7D3FA2B524663E7F00EF389E /* SpotifyAudioPlayback.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpotifyAudioPlayback.framework; sourceTree = "<group>"; };
 		7D3FA2B724663EF300EF389E /* LyricallyHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LyricallyHeader.h; sourceTree = "<group>"; };
 		7D802F782468D1110048CE94 /* AuthService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		7D802F7A2468D11E0048CE94 /* Ext-UserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Ext-UserDefaults.swift"; sourceTree = "<group>"; };
 		7D9B36A3247B717900E4B7C7 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		7D9B36C9247B760900E4B7C7 /* SpotifyiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpotifyiOS.framework; sourceTree = "<group>"; };
+		7D9B36CB247C8BAE00E4B7C7 /* SpotifyAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpotifyAuthentication.framework; sourceTree = "<group>"; };
+		7D9B36D7247C8F2A00E4B7C7 /* SpotifyAuthentication 5.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "SpotifyAuthentication 5.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,10 +60,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D9B36D8247C8F2A00E4B7C7 /* SpotifyAuthentication 5.framework in Frameworks */,
 				7D9B36CA247B760900E4B7C7 /* SpotifyiOS.framework in Frameworks */,
-				7D3FA2B224663E6500EF389E /* SpotifyMetadata.framework in Frameworks */,
-				7D3FA2B424663E7100EF389E /* SpotifyAuthentication.framework in Frameworks */,
-				7D3FA2B624663E7F00EF389E /* SpotifyAudioPlayback.framework in Frameworks */,
+				7D9B36CC247C8BAE00E4B7C7 /* SpotifyAuthentication.framework in Frameworks */,
 				6BBE86DB817FFFA10082309E /* Pods_Lyrically_IOS13.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -125,13 +122,11 @@
 				7D37D3022471E5D00022EA8E /* Controllers */,
 				7D3FA298246632E200EF389E /* AppDelegate.swift */,
 				7D3FA29A246632E200EF389E /* SceneDelegate.swift */,
+				7D9B36D7247C8F2A00E4B7C7 /* SpotifyAuthentication 5.framework */,
 				7D9B36C9247B760900E4B7C7 /* SpotifyiOS.framework */,
 				7D802F782468D1110048CE94 /* AuthService.swift */,
 				7D802F7A2468D11E0048CE94 /* Ext-UserDefaults.swift */,
 				7D3FA2A1246632E700EF389E /* Assets.xcassets */,
-				7D3FA2B124663E6500EF389E /* SpotifyMetadata.framework */,
-				7D3FA2B324663E7100EF389E /* SpotifyAuthentication.framework */,
-				7D3FA2B524663E7F00EF389E /* SpotifyAudioPlayback.framework */,
 				7D3FA2A3246632E700EF389E /* LaunchScreen.storyboard */,
 				7D3FA2A6246632E700EF389E /* Info.plist */,
 				7D3FA2B724663EF300EF389E /* LyricallyHeader.h */,
@@ -145,6 +140,7 @@
 				7D3FA2AC2466332500EF389E /* LyricManager.swift */,
 				7D3FA2AE2466333F00EF389E /* SongInfo.swift */,
 				7D37D306247203FB0022EA8E /* CurrentlyPlayingManager.swift */,
+				7D9B36CB247C8BAE00E4B7C7 /* SpotifyAuthentication.framework */,
 				7D37D30824720BA30022EA8E /* SpotifyInfo.swift */,
 				7D37D30A247349800022EA8E /* CurrentlyPlayingInfo.swift */,
 			);
@@ -440,7 +436,9 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Lyrically-IOS13",
+					"$(PROJECT_DIR)/Lyrically-IOS13/Model",
 				);
+				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Lyrically-IOS13/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -452,6 +450,7 @@
 					"\"Alamofire\"",
 					"-framework",
 					"\"CFNetwork\"",
+					"-ObjC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.raymondan.Lyrically;
 				PRODUCT_NAME = Lyrically;
@@ -472,7 +471,9 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Lyrically-IOS13",
+					"$(PROJECT_DIR)/Lyrically-IOS13/Model",
 				);
+				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Lyrically-IOS13/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -484,6 +485,7 @@
 					"\"Alamofire\"",
 					"-framework",
 					"\"CFNetwork\"",
+					"-ObjC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.raymondan.Lyrically;
 				PRODUCT_NAME = Lyrically;

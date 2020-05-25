@@ -8,46 +8,42 @@
 
 import UIKit
 
-class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTAppRemoteDelegate, SPTAppRemotePlayerStateDelegate {
-    
-    private static let kAccessTokenKey = "access-token-key"
-    
-    let redirectURL = URL(string: "Lyrically://")
+class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelegate {
     
     var window: UIWindow?
     
-    lazy var appRemote: SPTAppRemote = {
-        let configuration = SPTConfiguration(clientID: Constants.clientID, redirectURL: self.redirectURL!)
-        let appRemote = SPTAppRemote(configuration: configuration, logLevel: .debug)
-        appRemote.connectionParameters.accessToken = self.accessToken
-        appRemote.delegate = self
-        return appRemote
-    }()
-    
-    var accessToken = UserDefaults.standard.string(forKey: kAccessTokenKey) {
-        didSet {
-            let defaults = UserDefaults.standard
-            defaults.set(accessToken, forKey: SceneDelegate.kAccessTokenKey)
-        }
+    func sessionManager(manager: SPTSessionManager, didInitiate session: SPTSession) {
+        print("success", session)
     }
     
-    func appRemoteDidEstablishConnection(_ appRemote: SPTAppRemote) {
-      print("connected")
+    func sessionManager(manager: SPTSessionManager, didFailWith error: Error) {
+        print("fail", error)
     }
     
-    func appRemote(_ appRemote: SPTAppRemote, didDisconnectWithError error: Error?) {
-      print("disconnected")
-    }
-    
-    func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
-      print("failed")
-    }
-    
-    func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
-      print("player state changed")
+    func sessionManager(manager: SPTSessionManager, didRenew session: SPTSession) {
+        print("renewed", session)
     }
 
+    
+    let spotifyClientID = Constants.clientID
+    let spotifyRedirectURL = Constants.redirectURI!
+    
+    lazy var configuration = SPTConfiguration(clientID: spotifyClientID, redirectURL: URL(string: "Lyrically://callback")!)
+    
+    lazy var sessionManager: SPTSessionManager = {
+      if let tokenSwapURL = URL(string: "https://spotify-token-swap.glitch.me/api/token"),
+         let tokenRefreshURL = URL(string: "https://spotify-token-swap.glitch.me/api/refresh_token") {
+        self.configuration.tokenSwapURL = tokenSwapURL
+        self.configuration.tokenRefreshURL = tokenRefreshURL
+        self.configuration.playURI = ""
+      }
+      let manager = SPTSessionManager(configuration: self.configuration, delegate: self)
+      return manager
+    }()
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        let requestedScopes: SPTScope = [.appRemoteControl, .userReadCurrentlyPlaying, .userReadPlaybackState]
+        self.sessionManager.initiateSession(with: requestedScopes, options: .default)
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
@@ -82,22 +78,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTAppRemoteDelegate, S
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-
+    
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        print("hello")
         guard let url = URLContexts.first?.url else {
             return
         }
-
-        let parameters = appRemote.authorizationParameters(from: url);
-
-        if let access_token = parameters?[SPTAppRemoteAccessTokenKey] {
-            appRemote.connectionParameters.accessToken = access_token
-            self.accessToken = access_token
-        } else if let error_description = parameters?[SPTAppRemoteErrorDescriptionKey] {
-            // Show the error
-        }
+        print(url)
+        print("hi")
     }
-    
-    
+
 }
 
