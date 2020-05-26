@@ -8,19 +8,22 @@ class LogInViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     
     var auth = SPTAuth.defaultInstance()!
     var loginUrl: URL?
-    var response: URL?
     var currentlyPlaying = CurrentlyPlayingManager()
     
     @IBOutlet weak var logIn: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // This is the first thing that loads which calls this method
         setup()
         
+        // listens for notification which then moves to the main view controller to show the song info like it's lyrics
         NotificationCenter.default.addObserver(self, selector: #selector(self.moveToNextVC), name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
 
     }
     
+    // method sets up redirect url, Client ID requested scopes, and the url used to get code that will be used to exchange for a access token
     func setup() {
         let redirectURL = "Lyrically://callback"
         auth.redirectURL = URL(string: redirectURL)
@@ -30,6 +33,7 @@ class LogInViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         loginUrl = URL(string: (loginUrl?.absoluteString.replacingOccurrences(of: "token", with: "code"))!)
     }
     
+    // method used to get access token as well as the refresh token
     func getToken() {
         let parameters = ["client_id" : auth.clientID, "client_secret" : Constants.clientSecret , "grant_type" : "authorization_code", "code" : Constants.code, "redirect_uri" : auth.redirectURL.absoluteString]
         AF.request("https://accounts.spotify.com/api/token", method: .post, parameters: parameters).responseJSON(completionHandler: {
@@ -43,6 +47,7 @@ class LogInViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         })
     }
     
+    // when this button is pressed, the loginURL is pressed, user logs in giving permission for this app to get currently playing song, and goes to Scene Delegate after this url is opened and came back to app using redirect URL
     @IBAction func logIn(_ sender: Any) {
         if let url = loginUrl {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)

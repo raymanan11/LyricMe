@@ -31,7 +31,8 @@ class AuthService {
         } set {
             defaults.set(newValue, forKey: UserDefaults.tokenId)
         }
-}
+    }
+    
     var sessiontokenId: String? {
         get {
             return defaults.value(forKey: UserDefaults.sessiontokenId) as? String

@@ -23,6 +23,7 @@ struct CurrentlyPlayingManager {
     
     var songLyrics = LyricManager()
     
+    // gets the information of the currently playing song and artist
     mutating func fetchData() {
         let request = NSMutableURLRequest(url: NSURL(string: "https://api.spotify.com/v1/me/player/currently-playing")! as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
         
@@ -43,9 +44,10 @@ struct CurrentlyPlayingManager {
 //                    let sdata = String(data: safeData, encoding: String.Encoding.utf8) as String?
 //                    print(sdata)
                 if let info = self.parseJSON(data: safeData) {
+                    // goes back to the Main VC to update the song title and artist
                     delegate?.updateSongInfoUI(info)
                     let songAndArtist = info.songName + " " + info.allArtists
-                    // pass in info.songName and info.allArtists
+                    // goes to Main VC to be used to go to LyricManager to call API to get the lyrics of the song
                     delegate?.passData(songAndArtist, songName: info.songName, songArtist: info.artistName)
                 }
             }
@@ -72,9 +74,7 @@ struct CurrentlyPlayingManager {
                         artists = artists + value.name! + ", "
                     }
                 }
-//                print(singleArtist)
-//                print(artists)
-                //print(songName)
+                
                 let correctSongName = checkSongName(songName)
 //                let currentlyPlayingInfo = CurrentlyPlayingInfo(artistName: artistName, songName: correctSongName)
 //                print(correctSongName)
@@ -89,6 +89,7 @@ struct CurrentlyPlayingManager {
         return nil
     }
     
+    // this method is used to make sure song titles with characters like - and () don't affect the API call used to get lyrics
     func checkSongName(_ songName: String) -> String {
         if songName.contains("(") || songName.contains("-") {
             var arr = songName.components(separatedBy: " ")
