@@ -26,7 +26,6 @@ struct LyricManager {
     mutating func fetchData(songAndArtist: String, songName: String, songArtist: String) {
         self.songName = songName
         self.songArtist = songArtist
-        // PROBLEM: Some artists names cannot be recognized (i.e. Michael Bublé - can't recognize the é)
         var songURL = songAndArtist.replacingOccurrences(of: " ", with: "%2520")
         songURL = songURL.folding(options: .diacriticInsensitive, locale: .current)
         let request = NSMutableURLRequest(url: NSURL(string: "https://canarado-lyrics.p.rapidapi.com/lyrics/\(songURL)")! as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
@@ -61,26 +60,20 @@ struct LyricManager {
         do {
             let songInfo = try decoder.decode(SongInfo.self, from: safeData)
             // loop through the array contents and match if the songName and lyrics are contained in the titles of the content
-            print(songName)
-            print(songArtist)
+            print("song name: " + songName)
+            print("song artist: " + songArtist)
+            print()
             for(index, value) in songInfo.content.enumerated() {
-                print(value.title.lowercased())
-//                print(songArtist.lowercased())
-//                var songInfo = value.title.lowercased()
-//                songInfo = songInfo.folding(options: .diacriticInsensitive, locale: .current)
-//                if value.title.lowercased().contains(songName.lowercased()) {
-//                    print("contains song name")
+                let potentialSongName = value.title.lowercased()
+                print("Song Name: " + potentialSongName)
+                
+//                if potentialSongName.contains(songArtist.lowercased()) {
+//                    print("Found artist name: " + songArtist.lowercased())
 //                }
-//                // for some reason doesn't work, maybe go back to this but for now just gonna compare the song name
-//                if songInfo.contains(songArtist.lowercased()) {
-//                    print("contains song artist")
-//                }
-//                if "the show goes on by lupe fiasco".contains("lupe fiasco") {
-//                    print("hell yea")
-//                }
-                if value.title.lowercased().contains(songName.lowercased()) {
-                    print(songName.lowercased())
-                    print("Found song name!")
+                
+                // hopefully also include an and statement that will include the artist name for extra security/accuracy to get lyrics from API like the statement above
+                if potentialSongName.contains(songName.lowercased()) {
+                    print("Found song name: " + songName.lowercased())
                     return value.lyrics
                 }
 

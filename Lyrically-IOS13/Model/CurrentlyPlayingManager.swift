@@ -43,9 +43,10 @@ struct CurrentlyPlayingManager {
 //                    let sdata = String(data: safeData, encoding: String.Encoding.utf8) as String?
 //                    print(sdata)
                 if let info = self.parseJSON(data: safeData) {
+                    // update the UI that shows currently playing songs, song artist(s)
                     delegate?.updateSongInfoUI(info)
                     let songAndArtist = info.songName + " " + info.allArtists
-                    // pass in info.songName and info.allArtists
+                    // pass info to Main VC which will call API to get lyrics from passed data
                     delegate?.passData(songAndArtist, songName: info.songName, songArtist: info.artistName)
                 }
             }
@@ -63,6 +64,7 @@ struct CurrentlyPlayingManager {
             if let singleArtist = info.item?.artists[0].name, let songName = info.item?.name {
                 var artists = ""
                 let artistInfo = info.item?.artists
+                // gets all of the artists in the song
                 for(index, value) in (artistInfo?.enumerated())! {
                     if index == artistInfo!.endIndex - 1
                     {
@@ -72,12 +74,8 @@ struct CurrentlyPlayingManager {
                         artists = artists + value.name! + ", "
                     }
                 }
-//                print(singleArtist)
-//                print(artists)
-                //print(songName)
+                // checks of the song title has any - or () which could get the wrong info from lyric API
                 let correctSongName = checkSongName(songName)
-//                let currentlyPlayingInfo = CurrentlyPlayingInfo(artistName: artistName, songName: correctSongName)
-//                print(correctSongName)
                 let currentlyPlayingInfo = CurrentlyPlayingInfo(artistName: singleArtist, songName: correctSongName, allArtists: artists)
                 return currentlyPlayingInfo
             }

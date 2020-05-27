@@ -45,15 +45,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     }()
     
     func login() {
+        // gets the requuested scopes of the user
         let requestedScopes: SPTScope = [.appRemoteControl, .userReadCurrentlyPlaying, .userReadPlaybackState]
         self.sessionManager.initiateSession(with: requestedScopes, options: .default)
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         print("Opened url")
+        // when the user navigates back to the app using the redirect url, this url will have the code used to exchange for the access token
         guard let url = URLContexts.first?.url else {
             return
         }
+        
+        // parse the url to get the code used to exchange for access token
         var dict = [String:String]()
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
         if let queryItems = components.queryItems {
@@ -64,8 +68,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         
         Constants.code = dict["code"]
         
+        // call method to exchange code for access token
         getAccessToken(spotifyCode: Constants.code!)
         
+        // notification in order to transition to next screen
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
     }
     
@@ -73,9 +79,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         let parameters = ["code": spotifyCode]
         AF.request(tokenSwap, method: .post, parameters: parameters).responseJSON(completionHandler: {
             response in
-            if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-                print("Data: \(utf8Text)")
-            }
+//            if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+//                print("Data: \(utf8Text)")
+//            }
             if let result = response.value {
                 let jsonData = result as! NSDictionary
                 AuthService.instance.tokenId = jsonData.value(forKey: "access_token") as? String

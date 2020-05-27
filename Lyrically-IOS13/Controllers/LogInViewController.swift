@@ -13,8 +13,8 @@ class LogInViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        //setup()
         
+        // listens for successful login which if notified, goes to the next VC
         NotificationCenter.default.addObserver(self, selector: #selector(self.moveToNextVC), name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
 
     }
@@ -24,7 +24,7 @@ class LogInViewController: UIViewController {
     }
     
     @objc func moveToNextVC() {
-        performSegue(withIdentifier: "goToMainView", sender: self)
+        performSegue(withIdentifier: Constants.goToMainVC, sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
