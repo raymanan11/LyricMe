@@ -62,24 +62,22 @@ struct LyricManager {
             let songInfo = try decoder.decode(SongInfo.self, from: safeData)
             
             // loop through the array contents and match if the songName and lyrics are contained in the titles of the content
-            for(index, value) in songInfo.content.enumerated() {
-                print("Potential Song Name: " + value.title.lowercased())
-                print("Song Artist: " + "hi" + songArtist.lowercased() + "hi")
-                print("Song Name: " + "hi" + songName.lowercased() + "hi")
-                print()
-                
-                let potentialSongName = value.title.lowercased()
 
-                if potentialSongName.contains(songArtist.lowercased()) {
-                    print(songArtist.lowercased())
-                    print("Found artist name!")
-                }
+            print("song name: " + songName)
+            print("song artist: " + songArtist)
+            print()
+            for(index, value) in songInfo.content.enumerated() {
+                let potentialSongName = value.title.lowercased()
+                print("Song Name: " + potentialSongName)
                 
-                // try to figure out why .contains isn't working for the song artist
+//                if potentialSongName.contains(songArtist.lowercased()) {
+//                    print("Found artist name: " + songArtist.lowercased())
+//                }
+                
+                // hopefully also include an and statement that will include the artist name for extra security/accuracy to get lyrics from API like the statement above
                 if potentialSongName.contains(songName.lowercased()) {
-                    print(songName.lowercased())
-                    print("Found song name!")
-                    print()
+                    print("Found song name: " + songName.lowercased())
+
                     return value.lyrics
                 }
 

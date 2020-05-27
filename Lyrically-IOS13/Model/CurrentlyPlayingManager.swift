@@ -44,10 +44,10 @@ struct CurrentlyPlayingManager {
 //                    let sdata = String(data: safeData, encoding: String.Encoding.utf8) as String?
 //                    print(sdata)
                 if let info = self.parseJSON(data: safeData) {
-                    // goes back to the Main VC to update the song title and artist
+                    // update the UI that shows currently playing songs, song artist(s)
                     delegate?.updateSongInfoUI(info)
                     let songAndArtist = info.songName + " " + info.allArtists
-                    // goes to Main VC to be used to go to LyricManager to call API to get the lyrics of the song
+                    // pass info to Main VC which will call API to get lyrics from passed data
                     delegate?.passData(songAndArtist, songName: info.songName, songArtist: info.artistName)
                 }
             }
@@ -65,6 +65,7 @@ struct CurrentlyPlayingManager {
             if let singleArtist = info.item?.artists[0].name, let songName = info.item?.name {
                 var artists = ""
                 let artistInfo = info.item?.artists
+                // gets all of the artists in the song
                 for(index, value) in (artistInfo?.enumerated())! {
                     if index == artistInfo!.endIndex - 1
                     {
@@ -74,10 +75,8 @@ struct CurrentlyPlayingManager {
                         artists = artists + value.name! + ", "
                     }
                 }
-                
+                // checks of the song title has any - or () which could get the wrong info from lyric API
                 let correctSongName = checkSongName(songName)
-//                let currentlyPlayingInfo = CurrentlyPlayingInfo(artistName: artistName, songName: correctSongName)
-//                print(correctSongName)
                 let currentlyPlayingInfo = CurrentlyPlayingInfo(artistName: singleArtist, songName: correctSongName, allArtists: artists)
                 return currentlyPlayingInfo
             }

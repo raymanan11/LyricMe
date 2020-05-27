@@ -7,13 +7,90 @@
 //
 
 import UIKit
+import Alamofire
 
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
+class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelegate {
+    
     var window: UIWindow?
-    var auth = SPTAuth()
-    var viewController = LogInViewController()
+    
+    func sessionManager(manager: SPTSessionManager, didInitiate session: SPTSession) {
+        print("success", session)
+    }
+    
+    func sessionManager(manager: SPTSessionManager, didFailWith error: Error) {
+        print("fail", error)
+    }
+    
+    func sessionManager(manager: SPTSessionManager, didRenew session: SPTSession) {
+        print("renewed", session)
+    }
 
+    let spotifyClientID = Constants.clientID
+    let spotifyRedirectURL = Constants.redirectURI!
+    
+    lazy var configuration = SPTConfiguration(clientID: spotifyClientID, redirectURL: URL(string: "Lyrically://callback")!)
+    
+    let tokenSwap = "https://tangible-lean-level.glitch.me/api/token"
+    let refresh = "https://tangible-lean-level.glitch.me/api/refresh_token"
+    
+    lazy var sessionManager: SPTSessionManager = {
+      if let tokenSwapURL = URL(string: tokenSwap),
+         let tokenRefreshURL = URL(string: refresh) {
+        self.configuration.tokenSwapURL = tokenSwapURL
+        self.configuration.tokenRefreshURL = tokenRefreshURL
+        self.configuration.playURI = ""
+      }
+      let manager = SPTSessionManager(configuration: self.configuration, delegate: self)
+      return manager
+    }()
+    
+    func login() {
+        // gets the requuested scopes of the user
+        let requestedScopes: SPTScope = [.appRemoteControl, .userReadCurrentlyPlaying, .userReadPlaybackState]
+        self.sessionManager.initiateSession(with: requestedScopes, options: .default)
+    }
+    
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        print("Opened url")
+        // when the user navigates back to the app using the redirect url, this url will have the code used to exchange for the access token
+        guard let url = URLContexts.first?.url else {
+            return
+        }
+        
+        // parse the url to get the code used to exchange for access token
+        var dict = [String:String]()
+        let components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+        if let queryItems = components.queryItems {
+            for item in queryItems {
+                dict[item.name] = item.value!
+            }
+        }
+        
+        Constants.code = dict["code"]
+        
+        // call method to exchange code for access token
+        getAccessToken(spotifyCode: Constants.code!)
+        
+        // notification in order to transition to next screen
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
+    }
+    
+    func getAccessToken(spotifyCode: String) {
+        let parameters = ["code": spotifyCode]
+        AF.request(tokenSwap, method: .post, parameters: parameters).responseJSON(completionHandler: {
+            response in
+//            if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+//                print("Data: \(utf8Text)")
+//            }
+            if let result = response.value {
+                let jsonData = result as! NSDictionary
+                AuthService.instance.tokenId = jsonData.value(forKey: "access_token") as? String
+                AuthService.instance.sessiontokenId = jsonData.value(forKey: "refresh_token") as? String
+            }
+            
+        })
+    }
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
@@ -50,28 +127,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
-    // this method is called as the user gets back to the app using the redirect URL and as a result the URL also contains the code that will be used to exchange for an access token
-    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        // gets the callback URL
-        guard let url = URLContexts.first?.url else {
-            return
-        }
-        var dict = [String:String]()
-        // gets the components of the URL
-        let components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
-        if let queryItems = components.queryItems {
-            for item in queryItems {
-                dict[item.name] = item.value!
-            }
-        }
-        // set the code used to exchange for an access token as a global variable
-        Constants.code = dict["code"]
-        
-        // get the access token
-        viewController.getToken()
-        
-        // create a notification that signifies a successful login
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
-    }
 }
 

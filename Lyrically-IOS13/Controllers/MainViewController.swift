@@ -35,6 +35,8 @@ class MainViewController: UIViewController {
 }
 
 extension MainViewController: LyricManagerDelegate {
+    
+    // updates the UI to show lyrics for song
     func updateLyrics(_ fullLyrics: String) {
         DispatchQueue.main.async {
             self.lyrics.text = fullLyrics
@@ -43,6 +45,8 @@ extension MainViewController: LyricManagerDelegate {
 }
 
 extension MainViewController: PassData {
+    
+    // goes to Lyric API to get info for lyrics
     func passData(_ songInfo: String, songName: String, songArtist: String) {
         lyricManager.fetchData(songAndArtist: songInfo, songName: songName, songArtist: songArtist)
     }
