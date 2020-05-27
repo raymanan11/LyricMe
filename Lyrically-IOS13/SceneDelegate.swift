@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelegate {
     
@@ -24,15 +25,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         print("renewed", session)
     }
 
-    
     let spotifyClientID = Constants.clientID
     let spotifyRedirectURL = Constants.redirectURI!
     
     lazy var configuration = SPTConfiguration(clientID: spotifyClientID, redirectURL: URL(string: "Lyrically://callback")!)
     
+    let tokenSwap = "https://tangible-lean-level.glitch.me/api/token"
+    let refresh = "https://tangible-lean-level.glitch.me/api/refresh_token"
+    
     lazy var sessionManager: SPTSessionManager = {
-      if let tokenSwapURL = URL(string: "https://spotify-token-swap.glitch.me/api/token"),
-         let tokenRefreshURL = URL(string: "https://spotify-token-swap.glitch.me/api/refresh_token") {
+      if let tokenSwapURL = URL(string: tokenSwap),
+         let tokenRefreshURL = URL(string: refresh) {
         self.configuration.tokenSwapURL = tokenSwapURL
         self.configuration.tokenRefreshURL = tokenRefreshURL
         self.configuration.playURI = ""
@@ -41,9 +44,48 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
       return manager
     }()
     
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+    func login() {
         let requestedScopes: SPTScope = [.appRemoteControl, .userReadCurrentlyPlaying, .userReadPlaybackState]
         self.sessionManager.initiateSession(with: requestedScopes, options: .default)
+    }
+    
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        print("Opened url")
+        guard let url = URLContexts.first?.url else {
+            return
+        }
+        var dict = [String:String]()
+        let components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+        if let queryItems = components.queryItems {
+            for item in queryItems {
+                dict[item.name] = item.value!
+            }
+        }
+        
+        Constants.code = dict["code"]
+        
+        getAccessToken(spotifyCode: Constants.code!)
+        
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
+    }
+    
+    func getAccessToken(spotifyCode: String) {
+        let parameters = ["code": spotifyCode]
+        AF.request(tokenSwap, method: .post, parameters: parameters).responseJSON(completionHandler: {
+            response in
+            if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                print("Data: \(utf8Text)")
+            }
+            if let result = response.value {
+                let jsonData = result as! NSDictionary
+                AuthService.instance.tokenId = jsonData.value(forKey: "access_token") as? String
+                AuthService.instance.sessiontokenId = jsonData.value(forKey: "refresh_token") as? String
+            }
+            
+        })
+    }
+    
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
@@ -77,15 +119,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
-    }
-    
-    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        print("hello")
-        guard let url = URLContexts.first?.url else {
-            return
-        }
-        print(url)
-        print("hi")
     }
 
 }

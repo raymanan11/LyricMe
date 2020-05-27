@@ -51,6 +51,7 @@ extension MainViewController: PassData {
         DispatchQueue.main.async {
             self.songTitle.text = songInfo.songName
             self.songArtist.text = "by " + songInfo.allArtists
+            self.lyrics.text = "Getting Lyrics ..."
         }
     }
 }
