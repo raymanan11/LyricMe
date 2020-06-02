@@ -7,24 +7,32 @@
 //
 
 import Foundation
+import SwiftKeychainWrapper
+import Alamofire
 
-protocol PassData {
+protocol UI {
+    func updateSpotifyStatus(isPlaying: Bool)
     func passData(_ songInfo: String, songName: String, songArtist: String)
-    
     func updateSongInfoUI(_ songInfo: CurrentlyPlayingInfo)
 }
 
-struct CurrentlyPlayingManager {
-    var delegate: PassData?
-    // the first time that it comes here, the access token will be valid here but after an hour it will not be so maybe at this point check whether the access token is still valid
-    // if it's not valid, use the refresh token and request for a new acces token (this is a new method) 
-    let accessToken = AuthService.instance.tokenId ?? "none"
-    lazy var headers = ["Authorization" : "Bearer \(accessToken)"]
+class CurrentlyPlayingManager {
     
-    var songLyrics = LyricManager()
+    var tokenManager = TokenManager()
+    
+    var UIDelegate: UI?
     
     // gets the information of the currently playing song and artist
-    mutating func fetchData() {
+    @objc func fetchData() {
+        let accessToken: String? = KeychainWrapper.standard.string(forKey: Constants.accessToken)
+        
+        print("Access token is: \(accessToken ?? "none")")
+
+        let headers = ["Authorization" : "Bearer \(accessToken ?? "none")"]
+        
+//        accessToken = KeychainWrapper.standard.string(forKey: Constants.accessToken)!
+        
+        //print("Using access token: \(accessToken)")
         let request = NSMutableURLRequest(url: NSURL(string: "https://api.spotify.com/v1/me/player/currently-playing")! as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
         
         request.allHTTPHeaderFields = headers
@@ -36,19 +44,34 @@ struct CurrentlyPlayingManager {
     
     func handle(data: Data?, response: URLResponse?, error: Error?) {
         if error != nil {
-            print(error?.localizedDescription)
+            print(error!)
             return
         }
         else {
             if let safeData = data {
-//                    let sdata = String(data: safeData, encoding: String.Encoding.utf8) as String?
-//                    print(sdata)
-                if let info = self.parseJSON(data: safeData) {
-                    // update the UI that shows currently playing songs, song artist(s)
-                    delegate?.updateSongInfoUI(info)
-                    let songAndArtist = info.songName + " " + info.allArtists
-                    // pass info to Main VC which will call API to get lyrics from passed data
-                    delegate?.passData(songAndArtist, songName: info.songName, songArtist: info.artistName)
+//                let sdata = String(data: safeData, encoding: String.Encoding.utf8) as String?
+//                print(sdata)
+
+                // check if the access token is expired, then if it is then refresh to get new access token and post a notification that a new refresh token was received and call fetchData again
+                if self.checkError(safeData) == true {
+                    
+                    print("Access token is expired")
+                    print("Getting new access token")
+                    UIDelegate?.updateSpotifyStatus(isPlaying: true)
+                    tokenManager.refreshToken()
+                }
+                
+                else {
+                    if let info = self.parseJSON(data: safeData) {
+                        // update the UI that shows currently playing songs, song artist(s)
+                        UIDelegate?.updateSongInfoUI(info)
+                        let songAndArtist = "\(info.songName) \(info.allArtists)"
+                        // pass info to Main VC which will call API to get lyrics from passed data
+                        UIDelegate?.passData(songAndArtist, songName: info.songName, songArtist: info.artistName)
+                    }
+                    else {
+                        UIDelegate?.updateSpotifyStatus(isPlaying: false)
+                    }
                 }
             }
         }
@@ -62,7 +85,7 @@ struct CurrentlyPlayingManager {
 //            }
             let info = try decoder.decode(SpotifyInfo.self, from: data)
             
-            if let singleArtist = info.item?.artists[0].name, let songName = info.item?.name {
+            if let singleArtist = info.item?.artists[0].name, let songName = info.item?.name, let albumURL = info.item?.album?.images[0].url {
                 var artists = ""
                 let artistInfo = info.item?.artists
                 // gets all of the artists in the song
@@ -72,20 +95,35 @@ struct CurrentlyPlayingManager {
                         artists = artists + value.name!
                     }
                     else {
-                        artists = artists + value.name! + ", "
+                        artists = artists + "\(value.name!) "
                     }
                 }
                 // checks of the song title has any - or () which could get the wrong info from lyric API
                 let correctSongName = checkSongName(songName)
-                let currentlyPlayingInfo = CurrentlyPlayingInfo(artistName: singleArtist, songName: correctSongName, allArtists: artists)
+                let currentlyPlayingInfo = CurrentlyPlayingInfo(artistName: singleArtist, songName: correctSongName, allArtists: artists, albumURL: albumURL)
                 return currentlyPlayingInfo
             }
-        }
-        catch {
-            print("Not currently playing a song!")
             return nil
         }
-        return nil
+        catch {
+            // update the lyrics info in the main to ask to play a song
+            return nil
+        }
+    }
+    
+    func checkError(_ potentialError: Data) -> Bool? {
+        let expireAccessTokenCode = 401
+        let decoder = JSONDecoder()
+        do {
+            let info = try decoder.decode(ErrorInfo.self, from: potentialError)
+            if info.error.status == expireAccessTokenCode {
+                return true
+            }
+            return false
+        }
+        catch {
+            return false
+        }
     }
     
     // this method is used to make sure song titles with characters like - and () don't affect the API call used to get lyrics

@@ -22,6 +22,8 @@
 		7D3FA2AF2466333F00EF389E /* SongInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3FA2AE2466333F00EF389E /* SongInfo.swift */; };
 		7D802F792468D1110048CE94 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D802F782468D1110048CE94 /* AuthService.swift */; };
 		7D802F7B2468D11E0048CE94 /* Ext-UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D802F7A2468D11E0048CE94 /* Ext-UserDefaults.swift */; };
+		7D976EC6248084F100700E63 /* ErrorInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D976EC5248084F100700E63 /* ErrorInfo.swift */; };
+		7D976EC82481684400700E63 /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D976EC72481684400700E63 /* TokenManager.swift */; };
 		7D9B36A4247B717900E4B7C7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9B36A3247B717900E4B7C7 /* Constants.swift */; };
 		7D9B36CA247B760900E4B7C7 /* SpotifyiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D9B36C9247B760900E4B7C7 /* SpotifyiOS.framework */; };
 /* End PBXBuildFile section */
@@ -47,6 +49,8 @@
 		7D3FA2B724663EF300EF389E /* LyricallyHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LyricallyHeader.h; sourceTree = "<group>"; };
 		7D802F782468D1110048CE94 /* AuthService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		7D802F7A2468D11E0048CE94 /* Ext-UserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Ext-UserDefaults.swift"; sourceTree = "<group>"; };
+		7D976EC5248084F100700E63 /* ErrorInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorInfo.swift; sourceTree = "<group>"; };
+		7D976EC72481684400700E63 /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
 		7D9B36A3247B717900E4B7C7 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		7D9B36C9247B760900E4B7C7 /* SpotifyiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SpotifyiOS.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,6 +88,7 @@
 		7D37D3032471E6710022EA8E /* View */ = {
 			isa = PBXGroup;
 			children = (
+				7D3FA2A3246632E700EF389E /* LaunchScreen.storyboard */,
 				7D3FA29E246632E200EF389E /* Main.storyboard */,
 			);
 			path = View;
@@ -120,7 +125,6 @@
 				7D802F782468D1110048CE94 /* AuthService.swift */,
 				7D802F7A2468D11E0048CE94 /* Ext-UserDefaults.swift */,
 				7D3FA2A1246632E700EF389E /* Assets.xcassets */,
-				7D3FA2A3246632E700EF389E /* LaunchScreen.storyboard */,
 				7D3FA2A6246632E700EF389E /* Info.plist */,
 				7D3FA2B724663EF300EF389E /* LyricallyHeader.h */,
 			);
@@ -135,6 +139,8 @@
 				7D37D306247203FB0022EA8E /* CurrentlyPlayingManager.swift */,
 				7D37D30824720BA30022EA8E /* SpotifyInfo.swift */,
 				7D37D30A247349800022EA8E /* CurrentlyPlayingInfo.swift */,
+				7D976EC5248084F100700E63 /* ErrorInfo.swift */,
+				7D976EC72481684400700E63 /* TokenManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -264,6 +270,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D3FA29D246632E200EF389E /* LogInViewController.swift in Sources */,
+				7D976EC6248084F100700E63 /* ErrorInfo.swift in Sources */,
 				7D3FA299246632E200EF389E /* AppDelegate.swift in Sources */,
 				7D3FA29B246632E200EF389E /* SceneDelegate.swift in Sources */,
 				7D3FA2AF2466333F00EF389E /* SongInfo.swift in Sources */,
@@ -275,6 +282,7 @@
 				7D37D30B247349800022EA8E /* CurrentlyPlayingInfo.swift in Sources */,
 				7D802F792468D1110048CE94 /* AuthService.swift in Sources */,
 				7D37D307247203FB0022EA8E /* CurrentlyPlayingManager.swift in Sources */,
+				7D976EC82481684400700E63 /* TokenManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

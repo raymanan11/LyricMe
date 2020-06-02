@@ -8,8 +8,13 @@
 
 import UIKit
 import Alamofire
+import SwiftKeychainWrapper
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelegate {
+    
+    let dispatchGroup = DispatchGroup()
+    
+    var tokenManager = TokenManager()
     
     var window: UIWindow?
     
@@ -66,29 +71,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
             }
         }
         
-        Constants.code = dict["code"]
-        
+        let _: Bool = KeychainWrapper.standard.set(dict["code"]!, forKey: Constants.code)
+        let possibleCode: String? = KeychainWrapper.standard.string(forKey: Constants.code)
         // call method to exchange code for access token
-        getAccessToken(spotifyCode: Constants.code!)
-        
-        // notification in order to transition to next screen
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
-    }
-    
-    func getAccessToken(spotifyCode: String) {
-        let parameters = ["code": spotifyCode]
-        AF.request(tokenSwap, method: .post, parameters: parameters).responseJSON(completionHandler: {
-            response in
-//            if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-//                print("Data: \(utf8Text)")
-//            }
-            if let result = response.value {
-                let jsonData = result as! NSDictionary
-                AuthService.instance.tokenId = jsonData.value(forKey: "access_token") as? String
-                AuthService.instance.sessiontokenId = jsonData.value(forKey: "refresh_token") as? String
-            }
+        if let code = possibleCode {
+            dispatchGroup.enter()
+            tokenManager.getAccessToken(spotifyCode: code)
+            dispatchGroup.leave()
             
-        })
+            dispatchGroup.notify(queue: .main) {
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
+            }
+//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
+        }
     }
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -99,10 +94,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
+        print(#function)
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.
         // Release any resources associated with this scene that can be re-created the next time the scene connects.
         // The scene may re-connect later, as its session was not neccessarily discarded (see `application:didDiscardSceneSessions` instead).
+        
+        // at this point, the app is gotten rid of when swiping up and deleting it
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
@@ -116,16 +114,56 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
+//        let potentialToken: String? = KeychainWrapper.standard.string(forKey: Constants.accessToken)
+//        if let accessToken = potentialToken {
+//            print("Got access token: \(accessToken)")
+//        }
+//        else {
+//            print("Did not receive access token")
+//        }
+        print(#function)
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
-//        viewController.callToken()
+        
+        // then when window comes back use the information saved in the sceneDidEnterBackground use that information to see whether suer should go into log in screen or straight into the main view controller
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
+
+        // at this point is when the app goes to background, you can save the information because when app gets destroyed can be unpredictable
+        // decide whether user has already logged in, so they won't have to log in again or if the access token is still valid
+
     }
 
 }
+
+public extension Int {
+    
+    var seconds: DispatchTimeInterval {
+        return DispatchTimeInterval.seconds(self)
+    }
+    
+    var second: DispatchTimeInterval {
+        return seconds
+    }
+    
+    var milliseconds: DispatchTimeInterval {
+        return DispatchTimeInterval.milliseconds(self)
+    }
+    
+    var millisecond: DispatchTimeInterval {
+        return milliseconds
+    }
+    
+}
+
+public extension DispatchTimeInterval {
+    var fromNow: DispatchTime {
+        return DispatchTime.now() + self
+    }
+}
+
 

@@ -11,14 +11,19 @@ import Foundation
 struct SpotifyInfo: Decodable {
     var item: Item?
 }
-//
-//struct Album: Decodable {
-//    var artists: [Artist]
-//}
 
 struct Item: Decodable {
     var name: String?
+    var album: Album?
     var artists: [Artist]
+}
+
+struct Album: Decodable {
+    var images: [Images]
+}
+
+struct Images: Decodable {
+    var url: String?
 }
 
 struct Artist: Decodable {

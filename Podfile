@@ -7,5 +7,6 @@ target 'Lyrically-IOS13' do
 
   # Pods for Lyrically-IOS13
 pod 'Alamofire', '~> 5.1'
+pod 'SwiftKeychainWrapper', '~> 3.4'
 
 end

@@ -12,4 +12,5 @@ struct CurrentlyPlayingInfo {
     var artistName: String
     var songName: String
     var allArtists: String
+    var albumURL: String
 }

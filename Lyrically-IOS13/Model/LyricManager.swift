@@ -12,18 +12,18 @@ protocol LyricManagerDelegate : class {
     func updateLyrics(_ fullLyrics: String)
 }
 
-struct LyricManager {
+class LyricManager {
     var songName = ""
     var songArtist = ""
     
-    weak var delegate: LyricManagerDelegate?
+    var delegate: LyricManagerDelegate?
     
     let headers = [
         "x-rapidapi-host": "canarado-lyrics.p.rapidapi.com",
         "x-rapidapi-key": Constants.rapidAPIKey
     ]
     
-    mutating func fetchData(songAndArtist: String, songName: String, songArtist: String) {
+    func fetchData(songAndArtist: String, songName: String, songArtist: String) {
         self.songName = songName
         self.songArtist = songArtist
         var songURL = songAndArtist.replacingOccurrences(of: " ", with: "%2520")
@@ -45,13 +45,8 @@ struct LyricManager {
         }
         if let safeData = data {
             if let lyrics = self.parseJson(safeData) {
-                if(delegate != nil) {
-                    // goes back to the Main VC and updates the user interface to show the lyrics on the screen
-                    delegate?.updateLyrics(lyrics)
-                }
-                else {
-                    print("delegate is nil!")
-                }
+                // goes back to the Main VC and updates the user interface to show the lyrics on the screen
+                delegate?.updateLyrics(lyrics)
             }
         }
     }
@@ -68,26 +63,22 @@ struct LyricManager {
             print()
             for(index, value) in songInfo.content.enumerated() {
                 let potentialSongName = value.title.lowercased()
-                print("Song Name: " + potentialSongName)
-                
-//                if potentialSongName.contains(songArtist.lowercased()) {
-//                    print("Found artist name: " + songArtist.lowercased())
-//                }
-                
                 // hopefully also include an and statement that will include the artist name for extra security/accuracy to get lyrics from API like the statement above
                 if potentialSongName.contains(songName.lowercased()) {
                     print("Found song name: " + songName.lowercased())
 
                     return value.lyrics
                 }
-
             }
+            
+            let songAndArtist = songName + " " + songArtist
+            fetchData(songAndArtist: songAndArtist, songName: self.songName, songArtist: self.songArtist)
             // if it reaches this point then that means it is not able to find lyrics
             return "No lyrics found"
         }
         catch {
             print(error)
-            return nil
+            return "No lyrics found"
         }
     }
 }
