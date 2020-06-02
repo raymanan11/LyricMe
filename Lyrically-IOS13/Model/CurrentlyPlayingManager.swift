@@ -90,12 +90,11 @@ class CurrentlyPlayingManager {
                 let artistInfo = info.item?.artists
                 // gets all of the artists in the song
                 for(index, value) in (artistInfo?.enumerated())! {
-                    if index == artistInfo!.endIndex - 1
-                    {
-                        artists = artists + value.name!
+                    if index == artistInfo!.endIndex - 1 {
+                        artists = artists + "\(value.name!)"
                     }
                     else {
-                        artists = artists + "\(value.name!) "
+                        artists = artists + "\(value.name!), "
                     }
                 }
                 // checks of the song title has any - or () which could get the wrong info from lyric API

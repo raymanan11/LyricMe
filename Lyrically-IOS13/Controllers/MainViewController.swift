@@ -57,8 +57,8 @@ extension MainViewController: LyricManagerDelegate {
     func updateLyrics(_ fullLyrics: String) {
         DispatchQueue.main.async {
             self.lyrics.text = fullLyrics
-//            self.lyrics.setContentOffset(.zero, animated: true)
             self.lyrics.scrollRangeToVisible(NSMakeRange(0, 0))
+            LyricManager.triedOnce = false
             print("Got the lyrics and updating it!")
         }
     }
@@ -69,6 +69,7 @@ extension MainViewController: UI {
     func updateSpotifyStatus(isPlaying: Bool) {
         DispatchQueue.main.async {
             self.lyrics.isHidden = true
+            self.albumImage.image = UIImage(named: "LyricallyLogo")
             if isPlaying {
                 self.songTitle.text = "Getting Currently"
                 self.songArtist.text = "Playing Song..."
@@ -76,7 +77,6 @@ extension MainViewController: UI {
             else {
                 self.songTitle.text = "Please Play"
                 self.songArtist.text = "A Song"
-                self.albumImage.image = UIImage(named: "LyricallyLogo")
             }
         }
     }
@@ -91,6 +91,7 @@ extension MainViewController: UI {
             self.lyrics.isHidden = false
             self.songTitle.text = songInfo.songName
             self.songArtist.text = "by " + songInfo.allArtists
+            print("All artists: \(songInfo.allArtists)")
             self.updateAlbumImage(albumURL: songInfo.albumURL)
             self.lyrics.text = "Getting Lyrics..."
             print("Got the currently playing info and updated it!")

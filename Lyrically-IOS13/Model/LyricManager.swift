@@ -18,6 +18,8 @@ class LyricManager {
     
     var delegate: LyricManagerDelegate?
     
+    static var triedOnce: Bool = false
+    
     let headers = [
         "x-rapidapi-host": "canarado-lyrics.p.rapidapi.com",
         "x-rapidapi-key": Constants.rapidAPIKey
@@ -45,8 +47,16 @@ class LyricManager {
         }
         if let safeData = data {
             if let lyrics = self.parseJson(safeData) {
+                if lyrics == "No lyrics found" && LyricManager.triedOnce == false {
+                    LyricManager.triedOnce = true
+                    // another way of getting lyrics if not found is trying just one artist instead of all
+                    let songAndArtist = "\(songName) \(songArtist)"
+                    fetchData(songAndArtist: songAndArtist, songName: self.songName, songArtist: self.songArtist)
+                }
+                else {
+                    delegate?.updateLyrics(lyrics)
+                }
                 // goes back to the Main VC and updates the user interface to show the lyrics on the screen
-                delegate?.updateLyrics(lyrics)
             }
         }
     }
@@ -57,12 +67,12 @@ class LyricManager {
             let songInfo = try decoder.decode(SongInfo.self, from: safeData)
             
             // loop through the array contents and match if the songName and lyrics are contained in the titles of the content
-
-            print("song name: " + songName)
-            print("song artist: " + songArtist)
+            print("Spotify Song Name: \(songName)")
+            print("Spotify Song Artist: \(songArtist)")
             print()
             for(index, value) in songInfo.content.enumerated() {
                 let potentialSongName = value.title.lowercased()
+                print("API Song name: \(potentialSongName)")
                 // hopefully also include an and statement that will include the artist name for extra security/accuracy to get lyrics from API like the statement above
                 if potentialSongName.contains(songName.lowercased()) {
                     print("Found song name: " + songName.lowercased())
@@ -70,9 +80,6 @@ class LyricManager {
                     return value.lyrics
                 }
             }
-            
-            let songAndArtist = songName + " " + songArtist
-            fetchData(songAndArtist: songAndArtist, songName: self.songName, songArtist: self.songArtist)
             // if it reaches this point then that means it is not able to find lyrics
             return "No lyrics found"
         }
