@@ -10,7 +10,9 @@ import Foundation
 
 struct CurrentlyPlayingInfo {
     var artistName: String
-    var songName: String
+    var fullSongName: String
+    var apiSongName: String
     var allArtists: String
     var albumURL: String
+    var isPlaying: Bool
 }

@@ -33,6 +33,7 @@ class LyricManager {
         let request = NSMutableURLRequest(url: NSURL(string: "https://canarado-lyrics.p.rapidapi.com/lyrics/\(songURL)")! as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
         request.httpMethod = "GET"
         request.allHTTPHeaderFields = headers
+        
 
         let session = URLSession.shared
         let dataTask = session.dataTask(with: request as URLRequest, completionHandler: handle(data:response:error:))
@@ -42,12 +43,13 @@ class LyricManager {
     
     func handle(data: Data?, response: URLResponse?, error: Error?) {
         if (error != nil) {
-            print(error)
+            print(error!)
+            //delegate?.updateLyrics("No lyrics found")
             return
         }
         if let safeData = data {
             if let lyrics = self.parseJson(safeData) {
-                if lyrics == "No lyrics found" && LyricManager.triedOnce == false {
+                if lyrics == Constants.noLyrics && LyricManager.triedOnce == false {
                     LyricManager.triedOnce = true
                     // another way of getting lyrics if not found is trying just one artist instead of all
                     let songAndArtist = "\(songName) \(songArtist)"
@@ -65,27 +67,20 @@ class LyricManager {
         let decoder = JSONDecoder()
         do {
             let songInfo = try decoder.decode(SongInfo.self, from: safeData)
-            
             // loop through the array contents and match if the songName and lyrics are contained in the titles of the content
-            print("Spotify Song Name: \(songName)")
-            print("Spotify Song Artist: \(songArtist)")
-            print()
             for(index, value) in songInfo.content.enumerated() {
                 let potentialSongName = value.title.lowercased()
-                print("API Song name: \(potentialSongName)")
                 // hopefully also include an and statement that will include the artist name for extra security/accuracy to get lyrics from API like the statement above
                 if potentialSongName.contains(songName.lowercased()) {
-                    print("Found song name: " + songName.lowercased())
-
                     return value.lyrics
                 }
             }
             // if it reaches this point then that means it is not able to find lyrics
-            return "No lyrics found"
+            return Constants.noLyrics
         }
         catch {
             print(error)
-            return "No lyrics found"
+            return Constants.noLyrics
         }
     }
 }

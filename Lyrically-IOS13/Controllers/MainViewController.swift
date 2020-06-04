@@ -33,12 +33,15 @@ class MainViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.newAccessToken), object: nil)
     
+        NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
+        
+        _ = Timer.scheduledTimer(timeInterval: 15.0, target: self, selector: #selector(MainViewController.getInfo), userInfo: nil, repeats: true)
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
         currentlyPlaying.UIDelegate = self
         lyricManager.delegate = self
-        currentlyPlaying.fetchData()
     }
     
     @IBAction func getCurrentlyPlaying(_ sender: Any) {
@@ -59,7 +62,6 @@ extension MainViewController: LyricManagerDelegate {
             self.lyrics.text = fullLyrics
             self.lyrics.scrollRangeToVisible(NSMakeRange(0, 0))
             LyricManager.triedOnce = false
-            print("Got the lyrics and updating it!")
         }
     }
 }
@@ -70,6 +72,7 @@ extension MainViewController: UI {
         DispatchQueue.main.async {
             self.lyrics.isHidden = true
             self.albumImage.image = UIImage(named: "LyricallyLogo")
+            self.songArtist.font = UIFont(name: "Futura-Bold", size: 24)
             if isPlaying {
                 self.songTitle.text = "Getting Currently"
                 self.songArtist.text = "Playing Song..."
@@ -89,12 +92,11 @@ extension MainViewController: UI {
     func updateSongInfoUI(_ songInfo: CurrentlyPlayingInfo) {
         DispatchQueue.main.async {
             self.lyrics.isHidden = false
-            self.songTitle.text = songInfo.songName
+            self.songTitle.text = songInfo.fullSongName
+            self.songArtist.font = UIFont(name: "Futura-Medium", size: 22)
             self.songArtist.text = "by " + songInfo.allArtists
-            print("All artists: \(songInfo.allArtists)")
             self.updateAlbumImage(albumURL: songInfo.albumURL)
             self.lyrics.text = "Getting Lyrics..."
-            print("Got the currently playing info and updated it!")
         }
     }
     

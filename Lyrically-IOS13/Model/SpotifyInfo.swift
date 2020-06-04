@@ -10,6 +10,7 @@ import Foundation
 
 struct SpotifyInfo: Decodable {
     var item: Item?
+    var is_playing: Bool
 }
 
 struct Item: Decodable {

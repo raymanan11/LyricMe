@@ -17,6 +17,7 @@ protocol UI {
 }
 
 class CurrentlyPlayingManager {
+    var previousSong: String?
     
     var tokenManager = TokenManager()
     
@@ -24,15 +25,11 @@ class CurrentlyPlayingManager {
     
     // gets the information of the currently playing song and artist
     @objc func fetchData() {
+        print("In fetchData()")
         let accessToken: String? = KeychainWrapper.standard.string(forKey: Constants.accessToken)
-        
-        print("Access token is: \(accessToken ?? "none")")
 
         let headers = ["Authorization" : "Bearer \(accessToken ?? "none")"]
         
-//        accessToken = KeychainWrapper.standard.string(forKey: Constants.accessToken)!
-        
-        //print("Using access token: \(accessToken)")
         let request = NSMutableURLRequest(url: NSURL(string: "https://api.spotify.com/v1/me/player/currently-playing")! as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
         
         request.allHTTPHeaderFields = headers
@@ -53,24 +50,32 @@ class CurrentlyPlayingManager {
 //                print(sdata)
 
                 // check if the access token is expired, then if it is then refresh to get new access token and post a notification that a new refresh token was received and call fetchData again
-                if self.checkError(safeData) == true {
-                    
-                    print("Access token is expired")
-                    print("Getting new access token")
+                if self.expiredAccessToken(safeData) == true {
                     UIDelegate?.updateSpotifyStatus(isPlaying: true)
+                    previousSong = nil
                     tokenManager.refreshToken()
                 }
                 
                 else {
                     if let info = self.parseJSON(data: safeData) {
                         // update the UI that shows currently playing songs, song artist(s)
-                        UIDelegate?.updateSongInfoUI(info)
-                        let songAndArtist = "\(info.songName) \(info.allArtists)"
                         // pass info to Main VC which will call API to get lyrics from passed data
-                        UIDelegate?.passData(songAndArtist, songName: info.songName, songArtist: info.artistName)
+                        print("API song name: \(info.apiSongName)")
+                        print("Previous song: \(previousSong)")
+                        if info.apiSongName != previousSong {
+                            UIDelegate?.updateSongInfoUI(info)
+                            let songAndArtist = "\(info.apiSongName) \(info.allArtists)"
+                            print("songs aren't equal")
+                            UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
+                            previousSong = info.apiSongName
+                        }
+
+//                        UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
                     }
                     else {
+                        // will reach here if no song is playing
                         UIDelegate?.updateSpotifyStatus(isPlaying: false)
+                        previousSong = nil
                     }
                 }
             }
@@ -99,7 +104,7 @@ class CurrentlyPlayingManager {
                 }
                 // checks of the song title has any - or () which could get the wrong info from lyric API
                 let correctSongName = checkSongName(songName)
-                let currentlyPlayingInfo = CurrentlyPlayingInfo(artistName: singleArtist, songName: correctSongName, allArtists: artists, albumURL: albumURL)
+                let currentlyPlayingInfo = CurrentlyPlayingInfo(artistName: singleArtist, fullSongName: songName, apiSongName: correctSongName, allArtists: artists, albumURL: albumURL, isPlaying: info.is_playing)
                 return currentlyPlayingInfo
             }
             return nil
@@ -110,7 +115,7 @@ class CurrentlyPlayingManager {
         }
     }
     
-    func checkError(_ potentialError: Data) -> Bool? {
+    func expiredAccessToken(_ potentialError: Data) -> Bool? {
         let expireAccessTokenCode = 401
         let decoder = JSONDecoder()
         do {

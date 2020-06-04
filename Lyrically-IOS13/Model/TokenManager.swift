@@ -19,6 +19,7 @@ struct TokenManager {
     
     func getAccessToken(spotifyCode: String) {
         let parameters = ["code": spotifyCode]
+        dispatchGroup.enter()
         AF.request(tokenSwap, method: .post, parameters: parameters).responseJSON(completionHandler: {
             response in
 //            if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
@@ -31,9 +32,12 @@ struct TokenManager {
 
                 let _: Bool = KeychainWrapper.standard.set(accessToken!, forKey: "accessToken")
                 let _: Bool = KeychainWrapper.standard.set(refreshToken!, forKey: "refreshToken")
-
+                self.dispatchGroup.leave()
             }
         })
+        dispatchGroup.notify(queue: .main) {
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
+        }
     }
     
     func refreshToken() {

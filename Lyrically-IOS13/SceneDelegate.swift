@@ -12,9 +12,8 @@ import SwiftKeychainWrapper
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelegate {
     
-    let dispatchGroup = DispatchGroup()
-    
     var tokenManager = TokenManager()
+    var currentlyPlaying = CurrentlyPlayingManager()
     
     var window: UIWindow?
     
@@ -75,14 +74,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         let possibleCode: String? = KeychainWrapper.standard.string(forKey: Constants.code)
         // call method to exchange code for access token
         if let code = possibleCode {
-            dispatchGroup.enter()
             tokenManager.getAccessToken(spotifyCode: code)
-            dispatchGroup.leave()
-            
-            dispatchGroup.notify(queue: .main) {
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
-            }
-//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
         }
     }
     
@@ -94,7 +87,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
-        print(#function)
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.
         // Release any resources associated with this scene that can be re-created the next time the scene connects.
@@ -104,6 +96,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
+        print(#function)
+        NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
     }
@@ -121,7 +115,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
 //        else {
 //            print("Did not receive access token")
 //        }
+        NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
         print(#function)
+        
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
         
@@ -140,30 +136,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
 
 }
 
-public extension Int {
-    
-    var seconds: DispatchTimeInterval {
-        return DispatchTimeInterval.seconds(self)
-    }
-    
-    var second: DispatchTimeInterval {
-        return seconds
-    }
-    
-    var milliseconds: DispatchTimeInterval {
-        return DispatchTimeInterval.milliseconds(self)
-    }
-    
-    var millisecond: DispatchTimeInterval {
-        return milliseconds
-    }
-    
-}
-
-public extension DispatchTimeInterval {
-    var fromNow: DispatchTime {
-        return DispatchTime.now() + self
-    }
-}
 
 
