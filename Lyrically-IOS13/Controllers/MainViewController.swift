@@ -13,23 +13,25 @@ class MainViewController: UIViewController {
     var lyricManager = LyricManager()
 
     @IBOutlet weak var lyrics: UITextView!
+    
     @IBOutlet weak var songTitle: UILabel!
     @IBOutlet weak var songArtist: UILabel!
-    @IBOutlet weak var albumImage: UIImageView!
+    @IBOutlet weak var artistInfo: UIButton!
     
-    @IBOutlet weak var topLyricLabel: UILabel!
-    @IBOutlet weak var bottomLyricLabel: UILabel!
+    @IBAction func getArtistInfo(_ sender: UIButton) {
+        print("Getting info about artist!")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.isNavigationBarHidden = true
         self.lyrics.isHidden = true
         // creates the circle image of the logo/currently playing album
-        self.albumImage.layer.cornerRadius = self.albumImage.frame.height / 2
-        self.albumImage.clipsToBounds = true
-        self.albumImage.layer.borderWidth = 4
+        self.artistInfo.layer.cornerRadius = self.artistInfo.frame.height / 2
+        self.artistInfo.clipsToBounds = true
+        self.artistInfo.layer.borderWidth = 4
         // change the color to match the occasion (whether a button or dark/light mode)
-        self.albumImage.layer.borderColor = UIColor.black.cgColor
+        self.artistInfo.layer.borderColor = UIColor.black.cgColor
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.newAccessToken), object: nil)
     
@@ -67,7 +69,7 @@ extension MainViewController: UI {
     func updateSpotifyStatus(isPlaying: Bool) {
         DispatchQueue.main.async {
             self.lyrics.isHidden = true
-            self.albumImage.image = UIImage(named: "LyricallyLogo")
+            self.artistInfo.setImage(UIImage(named: "LyricallyLogo"), for: .normal)
             self.songArtist.font = UIFont(name: "Futura-Bold", size: 24)
             if isPlaying {
                 self.songTitle.text = "Getting Currently"
@@ -90,7 +92,7 @@ extension MainViewController: UI {
             self.lyrics.isHidden = false
             self.songTitle.text = songInfo.fullSongName
             self.songArtist.font = UIFont(name: "Futura-Medium", size: 22)
-            self.songArtist.text = "by " + songInfo.allArtists
+            self.songArtist.text = "by \(songInfo.allArtists)"
             self.updateAlbumImage(albumURL: songInfo.albumURL)
             self.lyrics.text = "Getting Lyrics..."
         }
@@ -101,7 +103,7 @@ extension MainViewController: UI {
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                 if let data = data {
                     DispatchQueue.main.async {
-                        self.albumImage.image = UIImage(data: data)
+                        self.artistInfo.setImage(UIImage(data: data), for: .normal)
                     }
                 }
             }
