@@ -66,17 +66,17 @@
                                 <rect key="frame" x="14" y="98" width="386" height="764"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="17" translatesAutoresizingMaskIntoConstraints="NO" id="cY7-Hh-fuh">
-                                        <rect key="frame" x="142" y="0.0" width="102" height="95"/>
+                                        <rect key="frame" x="142" y="0.0" width="102" height="145"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LyricallyLogo" translatesAutoresizingMaskIntoConstraints="NO" id="YGp-Ck-e1G">
-                                                <rect key="frame" x="0.0" y="5" width="85" height="85"/>
+                                                <rect key="frame" x="0.0" y="30" width="85" height="85"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="85" id="5Ra-tD-lSI"/>
                                                     <constraint firstAttribute="height" constant="85" id="BSf-oQ-M5u"/>
                                                 </constraints>
                                             </imageView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="tPD-Iy-VGe">
-                                                <rect key="frame" x="102" y="47.666666666666657" width="0.0" height="0.0"/>
+                                                <rect key="frame" x="102" y="72.666666666666657" width="0.0" height="0.0"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7kU-sw-sLz">
                                                         <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="23"/>
@@ -93,7 +93,7 @@
                                         </subviews>
                                     </stackView>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qYE-lw-Scg">
-                                        <rect key="frame" x="0.0" y="105" width="386" height="609"/>
+                                        <rect key="frame" x="0.0" y="155" width="386" height="609"/>
                                         <color key="backgroundColor" name="LyricBackground"/>
                                         <color key="textColor" name="Text"/>
                                         <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="18"/>
@@ -104,25 +104,6 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </textView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0bq-Y8-ugk">
-                                        <rect key="frame" x="118" y="724" width="150" height="40"/>
-                                        <color key="backgroundColor" red="0.29770779609999998" green="0.43337422609999998" blue="0.69806939359999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="150" id="aSJ-0q-KM5"/>
-                                            <constraint firstAttribute="height" constant="40" id="bGC-V8-ofe"/>
-                                        </constraints>
-                                        <state key="normal" title="Currently Playing">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <integer key="value" value="20"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="getCurrentlyPlaying:" destination="0Dk-oK-vUy" eventType="touchUpInside" id="Jfr-py-5iN"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="qYE-lw-Scg" secondAttribute="trailing" id="JT7-fX-X4w"/>
@@ -173,7 +154,7 @@
     <resources>
         <image name="LyricallyLogo" width="166.66667175292969" height="166.66667175292969"/>
         <namedColor name="AppBackground">
-            <color red="0.75884654539999996" green="0.78002506299999996" blue="0.82177038759999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.75900000333786011" green="0.77999997138977051" blue="0.82200002670288086" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="LyricBackground">
             <color red="0.87058823529411766" green="0.89411764705882357" blue="0.90588235294117647" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

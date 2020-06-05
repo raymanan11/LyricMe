@@ -42,6 +42,7 @@ class CurrentlyPlayingManager {
     func handle(data: Data?, response: URLResponse?, error: Error?) {
         if error != nil {
             print(error!)
+            UIDelegate?.updateSpotifyStatus(isPlaying: true)
             return
         }
         else {
@@ -69,8 +70,6 @@ class CurrentlyPlayingManager {
                             UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
                             previousSong = info.apiSongName
                         }
-
-//                        UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
                     }
                     else {
                         // will reach here if no song is playing
@@ -104,13 +103,13 @@ class CurrentlyPlayingManager {
                 }
                 // checks of the song title has any - or () which could get the wrong info from lyric API
                 let correctSongName = checkSongName(songName)
+                print(correctSongName)
                 let currentlyPlayingInfo = CurrentlyPlayingInfo(artistName: singleArtist, fullSongName: songName, apiSongName: correctSongName, allArtists: artists, albumURL: albumURL, isPlaying: info.is_playing)
                 return currentlyPlayingInfo
             }
             return nil
         }
         catch {
-            // update the lyrics info in the main to ask to play a song
             return nil
         }
     }
@@ -137,15 +136,23 @@ class CurrentlyPlayingManager {
             var correctSongName = ""
             for(index, value) in arr.enumerated() {
                 if value.contains("(") || value.contains("-") {
-                    let slicedArr = arr[0...index - 1]
-                    arr = Array(slicedArr)
-                    correctSongName = arr.joined(separator: " ")
-                    break
+                    if value.contains("-") && value.count > 1 {
+                        correctSongName += value.replacingOccurrences(of: "-", with: "") + " "
+                    }
+                    else {
+                        let slicedArr = arr[0...index - 1]
+                        arr = Array(slicedArr)
+                        correctSongName = arr.joined(separator: " ")
+                        break
+                    }
+                }
+                else {
+                    correctSongName += value + " "
                 }
             }
             return correctSongName
         }
-        return songName;
+        return songName
     }
 }
 

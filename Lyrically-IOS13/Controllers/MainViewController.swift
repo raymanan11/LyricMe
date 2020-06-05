@@ -35,17 +35,13 @@ class MainViewController: UIViewController {
     
         NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
         
-        _ = Timer.scheduledTimer(timeInterval: 15.0, target: self, selector: #selector(MainViewController.getInfo), userInfo: nil, repeats: true)
+        _ = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(MainViewController.getInfo), userInfo: nil, repeats: true)
 
     }
     
     override func viewWillAppear(_ animated: Bool) {
         currentlyPlaying.UIDelegate = self
         lyricManager.delegate = self
-    }
-    
-    @IBAction func getCurrentlyPlaying(_ sender: Any) {
-        currentlyPlaying.fetchData()
     }
     
     @objc func getInfo() {

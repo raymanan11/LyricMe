@@ -44,11 +44,11 @@ class LyricManager {
     func handle(data: Data?, response: URLResponse?, error: Error?) {
         if (error != nil) {
             print(error!)
-            //delegate?.updateLyrics("No lyrics found")
             return
         }
         if let safeData = data {
             if let lyrics = self.parseJson(safeData) {
+                // the triedOnce variable ensures that "no lyrics found" is showed after trying an alternate method of looking for lyrics from lyric API
                 if lyrics == Constants.noLyrics && LyricManager.triedOnce == false {
                     LyricManager.triedOnce = true
                     // another way of getting lyrics if not found is trying just one artist instead of all
@@ -58,7 +58,6 @@ class LyricManager {
                 else {
                     delegate?.updateLyrics(lyrics)
                 }
-                // goes back to the Main VC and updates the user interface to show the lyrics on the screen
             }
         }
     }
@@ -68,6 +67,7 @@ class LyricManager {
         do {
             let songInfo = try decoder.decode(SongInfo.self, from: safeData)
             // loop through the array contents and match if the songName and lyrics are contained in the titles of the content
+            print(songName)
             for(index, value) in songInfo.content.enumerated() {
                 let potentialSongName = value.title.lowercased()
                 // hopefully also include an and statement that will include the artist name for extra security/accuracy to get lyrics from API like the statement above

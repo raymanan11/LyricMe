@@ -16,11 +16,14 @@ struct SpotifyInfo: Decodable {
 struct Item: Decodable {
     var name: String?
     var album: Album?
+    // used to get artist names
     var artists: [Artist]
 }
 
 struct Album: Decodable {
     var images: [Images]
+    // used to get id of artist
+    var artists: [Artists]
 }
 
 struct Images: Decodable {
@@ -29,4 +32,8 @@ struct Images: Decodable {
 
 struct Artist: Decodable {
     var name: String?
+}
+
+struct Artists: Decodable {
+    var id: String?
 }
