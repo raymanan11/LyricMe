@@ -25,6 +25,7 @@ class ArtistInfoViewController: UIViewController {
     @IBOutlet weak var numFollowers: UILabel!
     @IBOutlet weak var artistPopularSongs: UITableView!
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("In artist data")
