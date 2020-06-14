@@ -21,7 +21,6 @@ class ArtistInfoViewController: UIViewController {
     
 
     @IBOutlet weak var artistImage: UIImageView!
-    
     @IBOutlet weak var artistName: UILabel!
     @IBOutlet weak var numFollowers: UILabel!
     @IBOutlet weak var artistPopularSongs: UITableView!
