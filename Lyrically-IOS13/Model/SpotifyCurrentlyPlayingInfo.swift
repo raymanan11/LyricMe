@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct SpotifyInfo: Decodable {
+struct SpotifyCurrentlyPlayingInfo: Decodable {
     var item: Item?
     var is_playing: Bool
 }

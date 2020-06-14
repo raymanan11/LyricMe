@@ -65,7 +65,7 @@ class LyricManager {
     func parseJson(_ safeData: Data) -> String? {
         let decoder = JSONDecoder()
         do {
-            let songInfo = try decoder.decode(SongInfo.self, from: safeData)
+            let songInfo = try decoder.decode(CanaradoSongInfo.self, from: safeData)
             // loop through the array contents and match if the songName and lyrics are contained in the titles of the content
             print(songName)
             for(index, value) in songInfo.content.enumerated() {

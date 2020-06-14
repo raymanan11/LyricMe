@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct SongInfo :Decodable {
+struct CanaradoSongInfo :Decodable {
     var content: [Content]
 }
 

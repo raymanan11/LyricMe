@@ -25,7 +25,6 @@ class CurrentlyPlayingManager {
     
     // gets the information of the currently playing song and artist
     @objc func fetchData() {
-        print("In fetchData()")
         let accessToken: String? = KeychainWrapper.standard.string(forKey: Constants.accessToken)
 
         let headers = ["Authorization" : "Bearer \(accessToken ?? "none")"]
@@ -61,12 +60,12 @@ class CurrentlyPlayingManager {
                     if let info = self.parseJSON(data: safeData) {
                         // update the UI that shows currently playing songs, song artist(s)
                         // pass info to Main VC which will call API to get lyrics from passed data
-                        print("API song name: \(info.apiSongName)")
-                        print("Previous song: \(previousSong)")
+//                        print("API song name: \(info.apiSongName)")
+//                        print("Previous song: \(previousSong)")
                         if info.apiSongName != previousSong {
                             UIDelegate?.updateSongInfoUI(info)
                             let songAndArtist = "\(info.apiSongName) \(info.allArtists)"
-                            print("songs aren't equal")
+//                            print("songs aren't equal")
                             UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
                             previousSong = info.apiSongName
                         }
@@ -87,9 +86,9 @@ class CurrentlyPlayingManager {
 //            if let JSONString = String(data: data, encoding: String.Encoding.utf8) {
 //               print(JSONString)
 //            }
-            let info = try decoder.decode(SpotifyInfo.self, from: data)
+            let info = try decoder.decode(SpotifyCurrentlyPlayingInfo.self, from: data)
             
-            if let singleArtist = info.item?.artists[0].name, let songName = info.item?.name, let albumURL = info.item?.album?.images[0].url {
+            if let singleArtist = info.item?.artists[0].name, let songName = info.item?.name, let albumURL = info.item?.album?.images[0].url, let artistID = info.item?.album?.artists[0].id {
                 var artists = ""
                 let artistInfo = info.item?.artists
                 // gets all of the artists in the song
@@ -103,8 +102,7 @@ class CurrentlyPlayingManager {
                 }
                 // checks of the song title has any - or () which could get the wrong info from lyric API
                 let correctSongName = checkSongName(songName)
-                print(correctSongName)
-                let currentlyPlayingInfo = CurrentlyPlayingInfo(artistName: singleArtist, fullSongName: songName, apiSongName: correctSongName, allArtists: artists, albumURL: albumURL, isPlaying: info.is_playing)
+                let currentlyPlayingInfo = CurrentlyPlayingInfo(artistName: singleArtist, fullSongName: songName, apiSongName: correctSongName, allArtists: artists, albumURL: albumURL, isPlaying: info.is_playing, artistID: artistID)
                 return currentlyPlayingInfo
             }
             return nil

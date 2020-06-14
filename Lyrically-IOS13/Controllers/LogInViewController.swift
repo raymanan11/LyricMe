@@ -38,12 +38,6 @@ class LogInViewController: UIViewController {
         performSegue(withIdentifier: Constants.goToMainVC, sender: self)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "goToMainView" {
-            let destinationVC = segue.destination as! MainViewController
-        }
-    }
-    
 }
 
 

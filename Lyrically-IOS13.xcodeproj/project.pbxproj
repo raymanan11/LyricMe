@@ -10,7 +10,7 @@
 		6BBE86DB817FFFA10082309E /* Pods_Lyrically_IOS13.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFAEA1116F41CB8AB2B20BD /* Pods_Lyrically_IOS13.framework */; };
 		7D37D3052471EEA90022EA8E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D37D3042471EEA90022EA8E /* MainViewController.swift */; };
 		7D37D307247203FB0022EA8E /* CurrentlyPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D37D306247203FB0022EA8E /* CurrentlyPlayingManager.swift */; };
-		7D37D30924720BA30022EA8E /* SpotifyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D37D30824720BA30022EA8E /* SpotifyInfo.swift */; };
+		7D37D30924720BA30022EA8E /* SpotifyCurrentlyPlayingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D37D30824720BA30022EA8E /* SpotifyCurrentlyPlayingInfo.swift */; };
 		7D37D30B247349800022EA8E /* CurrentlyPlayingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D37D30A247349800022EA8E /* CurrentlyPlayingInfo.swift */; };
 		7D3FA299246632E200EF389E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3FA298246632E200EF389E /* AppDelegate.swift */; };
 		7D3FA29B246632E200EF389E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3FA29A246632E200EF389E /* SceneDelegate.swift */; };
@@ -19,9 +19,17 @@
 		7D3FA2A2246632E700EF389E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D3FA2A1246632E700EF389E /* Assets.xcassets */; };
 		7D3FA2A5246632E700EF389E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D3FA2A3246632E700EF389E /* LaunchScreen.storyboard */; };
 		7D3FA2AD2466332500EF389E /* LyricManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3FA2AC2466332500EF389E /* LyricManager.swift */; };
-		7D3FA2AF2466333F00EF389E /* SongInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3FA2AE2466333F00EF389E /* SongInfo.swift */; };
+		7D3FA2AF2466333F00EF389E /* CanaradoSongInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3FA2AE2466333F00EF389E /* CanaradoSongInfo.swift */; };
 		7D802F792468D1110048CE94 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D802F782468D1110048CE94 /* AuthService.swift */; };
 		7D802F7B2468D11E0048CE94 /* Ext-UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D802F7A2468D11E0048CE94 /* Ext-UserDefaults.swift */; };
+		7D843199248B1AA300F8B063 /* ArtistInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D843198248B1AA300F8B063 /* ArtistInfo.swift */; };
+		7D84319B248B1AC800F8B063 /* SpotifyArtistInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D84319A248B1AC800F8B063 /* SpotifyArtistInfo.swift */; };
+		7D84319D248B229800F8B063 /* ArtistInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D84319C248B229800F8B063 /* ArtistInfoViewController.swift */; };
+		7D84319F248C1C2C00F8B063 /* SpotifyArtistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D84319E248C1C2C00F8B063 /* SpotifyArtistManager.swift */; };
+		7D8431A1248D53D600F8B063 /* SpotifyArtistInfo2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8431A0248D53D600F8B063 /* SpotifyArtistInfo2.swift */; };
+		7D8431A3248D53E800F8B063 /* ArtistInfo2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8431A2248D53E800F8B063 /* ArtistInfo2.swift */; };
+		7D8431A6248FE68100F8B063 /* ArtistSongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8431A4248FE68100F8B063 /* ArtistSongCell.swift */; };
+		7D8431A7248FE68100F8B063 /* ArtistSongCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D8431A5248FE68100F8B063 /* ArtistSongCell.xib */; };
 		7D976EC6248084F100700E63 /* ErrorInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D976EC5248084F100700E63 /* ErrorInfo.swift */; };
 		7D976EC82481684400700E63 /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D976EC72481684400700E63 /* TokenManager.swift */; };
 		7D9B36A4247B717900E4B7C7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9B36A3247B717900E4B7C7 /* Constants.swift */; };
@@ -34,7 +42,7 @@
 		2B921FBA6690388DF5FF347E /* Pods-Lyrically-IOS13.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lyrically-IOS13.debug.xcconfig"; path = "Target Support Files/Pods-Lyrically-IOS13/Pods-Lyrically-IOS13.debug.xcconfig"; sourceTree = "<group>"; };
 		7D37D3042471EEA90022EA8E /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		7D37D306247203FB0022EA8E /* CurrentlyPlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentlyPlayingManager.swift; sourceTree = "<group>"; };
-		7D37D30824720BA30022EA8E /* SpotifyInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyInfo.swift; sourceTree = "<group>"; };
+		7D37D30824720BA30022EA8E /* SpotifyCurrentlyPlayingInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyCurrentlyPlayingInfo.swift; sourceTree = "<group>"; };
 		7D37D30A247349800022EA8E /* CurrentlyPlayingInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentlyPlayingInfo.swift; sourceTree = "<group>"; };
 		7D3FA295246632E200EF389E /* Lyrically.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lyrically.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D3FA298246632E200EF389E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -45,10 +53,18 @@
 		7D3FA2A4246632E700EF389E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7D3FA2A6246632E700EF389E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7D3FA2AC2466332500EF389E /* LyricManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricManager.swift; sourceTree = "<group>"; };
-		7D3FA2AE2466333F00EF389E /* SongInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongInfo.swift; sourceTree = "<group>"; };
+		7D3FA2AE2466333F00EF389E /* CanaradoSongInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanaradoSongInfo.swift; sourceTree = "<group>"; };
 		7D3FA2B724663EF300EF389E /* LyricallyHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LyricallyHeader.h; sourceTree = "<group>"; };
 		7D802F782468D1110048CE94 /* AuthService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		7D802F7A2468D11E0048CE94 /* Ext-UserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Ext-UserDefaults.swift"; sourceTree = "<group>"; };
+		7D843198248B1AA300F8B063 /* ArtistInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistInfo.swift; sourceTree = "<group>"; };
+		7D84319A248B1AC800F8B063 /* SpotifyArtistInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyArtistInfo.swift; sourceTree = "<group>"; };
+		7D84319C248B229800F8B063 /* ArtistInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistInfoViewController.swift; sourceTree = "<group>"; };
+		7D84319E248C1C2C00F8B063 /* SpotifyArtistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyArtistManager.swift; sourceTree = "<group>"; };
+		7D8431A0248D53D600F8B063 /* SpotifyArtistInfo2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyArtistInfo2.swift; sourceTree = "<group>"; };
+		7D8431A2248D53E800F8B063 /* ArtistInfo2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistInfo2.swift; sourceTree = "<group>"; };
+		7D8431A4248FE68100F8B063 /* ArtistSongCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistSongCell.swift; sourceTree = "<group>"; };
+		7D8431A5248FE68100F8B063 /* ArtistSongCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtistSongCell.xib; sourceTree = "<group>"; };
 		7D976EC5248084F100700E63 /* ErrorInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorInfo.swift; sourceTree = "<group>"; };
 		7D976EC72481684400700E63 /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
 		7D9B36A3247B717900E4B7C7 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -81,6 +97,7 @@
 			children = (
 				7D3FA29C246632E200EF389E /* LogInViewController.swift */,
 				7D37D3042471EEA90022EA8E /* MainViewController.swift */,
+				7D84319C248B229800F8B063 /* ArtistInfoViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -90,6 +107,8 @@
 			children = (
 				7D3FA2A3246632E700EF389E /* LaunchScreen.storyboard */,
 				7D3FA29E246632E200EF389E /* Main.storyboard */,
+				7D8431A4248FE68100F8B063 /* ArtistSongCell.swift */,
+				7D8431A5248FE68100F8B063 /* ArtistSongCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -135,12 +154,17 @@
 			isa = PBXGroup;
 			children = (
 				7D3FA2AC2466332500EF389E /* LyricManager.swift */,
-				7D3FA2AE2466333F00EF389E /* SongInfo.swift */,
+				7D3FA2AE2466333F00EF389E /* CanaradoSongInfo.swift */,
 				7D37D306247203FB0022EA8E /* CurrentlyPlayingManager.swift */,
-				7D37D30824720BA30022EA8E /* SpotifyInfo.swift */,
+				7D37D30824720BA30022EA8E /* SpotifyCurrentlyPlayingInfo.swift */,
 				7D37D30A247349800022EA8E /* CurrentlyPlayingInfo.swift */,
 				7D976EC5248084F100700E63 /* ErrorInfo.swift */,
 				7D976EC72481684400700E63 /* TokenManager.swift */,
+				7D84319E248C1C2C00F8B063 /* SpotifyArtistManager.swift */,
+				7D84319A248B1AC800F8B063 /* SpotifyArtistInfo.swift */,
+				7D843198248B1AA300F8B063 /* ArtistInfo.swift */,
+				7D8431A0248D53D600F8B063 /* SpotifyArtistInfo2.swift */,
+				7D8431A2248D53E800F8B063 /* ArtistInfo2.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -215,6 +239,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D3FA2A5246632E700EF389E /* LaunchScreen.storyboard in Resources */,
+				7D8431A7248FE68100F8B063 /* ArtistSongCell.xib in Resources */,
 				7D3FA2A2246632E700EF389E /* Assets.xcassets in Resources */,
 				7D3FA2A0246632E200EF389E /* Main.storyboard in Resources */,
 			);
@@ -269,15 +294,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D8431A6248FE68100F8B063 /* ArtistSongCell.swift in Sources */,
+				7D84319B248B1AC800F8B063 /* SpotifyArtistInfo.swift in Sources */,
+				7D8431A1248D53D600F8B063 /* SpotifyArtistInfo2.swift in Sources */,
 				7D3FA29D246632E200EF389E /* LogInViewController.swift in Sources */,
 				7D976EC6248084F100700E63 /* ErrorInfo.swift in Sources */,
+				7D84319D248B229800F8B063 /* ArtistInfoViewController.swift in Sources */,
 				7D3FA299246632E200EF389E /* AppDelegate.swift in Sources */,
+				7D84319F248C1C2C00F8B063 /* SpotifyArtistManager.swift in Sources */,
 				7D3FA29B246632E200EF389E /* SceneDelegate.swift in Sources */,
-				7D3FA2AF2466333F00EF389E /* SongInfo.swift in Sources */,
+				7D843199248B1AA300F8B063 /* ArtistInfo.swift in Sources */,
+				7D8431A3248D53E800F8B063 /* ArtistInfo2.swift in Sources */,
+				7D3FA2AF2466333F00EF389E /* CanaradoSongInfo.swift in Sources */,
 				7D3FA2AD2466332500EF389E /* LyricManager.swift in Sources */,
 				7D37D3052471EEA90022EA8E /* MainViewController.swift in Sources */,
 				7D9B36A4247B717900E4B7C7 /* Constants.swift in Sources */,
-				7D37D30924720BA30022EA8E /* SpotifyInfo.swift in Sources */,
+				7D37D30924720BA30022EA8E /* SpotifyCurrentlyPlayingInfo.swift in Sources */,
 				7D802F7B2468D11E0048CE94 /* Ext-UserDefaults.swift in Sources */,
 				7D37D30B247349800022EA8E /* CurrentlyPlayingInfo.swift in Sources */,
 				7D802F792468D1110048CE94 /* AuthService.swift in Sources */,
