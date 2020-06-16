@@ -28,8 +28,6 @@ class ArtistInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        artistPopularSongs.rowHeight = UITableView.automaticDimension
-        artistPopularSongs.estimatedRowHeight = 50
         artistPopularSongs.clipsToBounds = true
         artistPopularSongs.layer.cornerRadius = 17
         artistName.text = nameOfArtist
