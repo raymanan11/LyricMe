@@ -28,12 +28,14 @@ class ArtistInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("In artist data")
+        artistPopularSongs.rowHeight = UITableView.automaticDimension
+        artistPopularSongs.estimatedRowHeight = 50
         artistPopularSongs.clipsToBounds = true
         artistPopularSongs.layer.cornerRadius = 17
         artistName.text = nameOfArtist
         numFollowers.text = "Followers: \(numberOfFollowers ?? 0)"
         setArtistImage(artistImageURL: artistImageURL!, imageView: artistImage)
+        artistPopularSongs.delegate = self
         artistPopularSongs.dataSource = self
         artistPopularSongs.register(UINib(nibName: "ArtistSongCell", bundle: nil), forCellReuseIdentifier: "ArtistSong")
     }
@@ -49,7 +51,7 @@ class ArtistInfoViewController: UIViewController {
                         imageView.layer.borderWidth = 2
                         // change the color to match the occasion (whether a button or dark/light mode)
                         imageView.layer.borderColor = UIColor.white.cgColor
-                    }
+                    } 
                 }
             }
             task.resume()
@@ -58,16 +60,21 @@ class ArtistInfoViewController: UIViewController {
 
 }
 
-extension ArtistInfoViewController: UITableViewDataSource {
+extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return popularSongs?.count ?? 0
     }
-
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistSong", for: indexPath) as! ArtistSongCell
         setArtistImage(artistImageURL: albumPhotosURL![indexPath.row], imageView: cell.albumImage)
         cell.songName.text = popularSongs![indexPath.row]
         return cell
     }
-    
+
 }

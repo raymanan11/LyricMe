@@ -43,6 +43,7 @@ struct TokenManager {
     func refreshToken() {
         let refreshToken: String? = KeychainWrapper.standard.string(forKey: Constants.refreshToken)
         let parameters = ["refresh_token" : refreshToken]
+        print("trying to get refresh token")
         dispatchGroup.enter()
         AF.request(refresh, method: .post, parameters: parameters).responseJSON(completionHandler: {
             response in
@@ -51,6 +52,7 @@ struct TokenManager {
 //                print("Data: \(utf8Text)")
 //            }
             if let result = response.value {
+                print("got refresh token")
                 let jsonData = result as! NSDictionary
                 let accessToken = jsonData.value(forKey: "access_token") as? String
 
