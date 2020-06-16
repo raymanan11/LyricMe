@@ -70,7 +70,8 @@ extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistSong", for: indexPath) as! ArtistSongCell
-        
+        setArtistImage(artistImageURL: albumPhotosURL![indexPath.row], imageView: cell.albumImage)
+        cell.songName.text = popularSongs![indexPath.row]
 //        setArtistImage(artistImageURL: albumPhotosURL![indexPath.row], imageView: cell.albumImage)
 //        cell.songName.text = popularSongs![indexPath.row]
         

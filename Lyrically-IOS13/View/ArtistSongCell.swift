@@ -61,8 +61,8 @@ class ArtistSongCell: UITableViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints  = false
         imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        imageView.layer.cornerRadius = 50
-        imageView.layer.masksToBounds = true
+//        imageView.layer.cornerRadius = 50
+//        imageView.layer.masksToBounds = true
 
         return imageView
     }()
@@ -95,7 +95,7 @@ class ArtistSongCell: UITableViewCell {
     }
 
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
     
 }
