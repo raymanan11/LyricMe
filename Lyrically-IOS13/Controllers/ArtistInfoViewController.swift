@@ -19,23 +19,34 @@ class ArtistInfoViewController: UIViewController {
     var popularSongs: [String]?
     var songURI: [String]?
     
-
     @IBOutlet weak var artistImage: UIImageView!
     @IBOutlet weak var artistName: UILabel!
     @IBOutlet weak var numFollowers: UILabel!
-    @IBOutlet weak var artistPopularSongs: UITableView!
     
+    let cellId = "ArtistSong"
+    let tableView = UITableView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        artistPopularSongs.clipsToBounds = true
-        artistPopularSongs.layer.cornerRadius = 17
-        artistName.text = nameOfArtist
-        numFollowers.text = "Followers: \(numberOfFollowers ?? 0)"
-        setArtistImage(artistImageURL: artistImageURL!, imageView: artistImage)
-        artistPopularSongs.delegate = self
-        artistPopularSongs.dataSource = self
-        artistPopularSongs.register(UINib(nibName: "ArtistSongCell", bundle: nil), forCellReuseIdentifier: "ArtistSong")
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        
+        navigationItem.title = nameOfArtist
+        navigationController?.navigationBar.prefersLargeTitles = true
+
+        tableView.register(ArtistSongCell.self, forCellReuseIdentifier: cellId)
+
+        view.addSubview(tableView)
+        tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+
+//        artistName.text = nameOfArtist
+//        numFollowers.text = "Followers: \(numberOfFollowers ?? 0)"
+//        setArtistImage(artistImageURL: artistImageURL!, imageView: artistImage)
+
     }
     
     func setArtistImage(artistImageURL: String, imageView: UIImageView) {
@@ -65,7 +76,7 @@ extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+        return 80
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
