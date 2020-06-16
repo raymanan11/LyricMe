@@ -28,8 +28,6 @@ class ArtistInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        artistPopularSongs.rowHeight = UITableView.automaticDimension
-        artistPopularSongs.estimatedRowHeight = 50
         artistPopularSongs.clipsToBounds = true
         artistPopularSongs.layer.cornerRadius = 17
         artistName.text = nameOfArtist
@@ -72,8 +70,10 @@ extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistSong", for: indexPath) as! ArtistSongCell
-        setArtistImage(artistImageURL: albumPhotosURL![indexPath.row], imageView: cell.albumImage)
-        cell.songName.text = popularSongs![indexPath.row]
+        
+//        setArtistImage(artistImageURL: albumPhotosURL![indexPath.row], imageView: cell.albumImage)
+//        cell.songName.text = popularSongs![indexPath.row]
+        
         return cell
     }
 
