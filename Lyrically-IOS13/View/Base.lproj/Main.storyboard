@@ -186,6 +186,7 @@
                                     <constraint firstAttribute="trailing" secondItem="EzP-bu-0Lh" secondAttribute="trailing" id="VLY-86-7Xx"/>
                                     <constraint firstItem="EzP-bu-0Lh" firstAttribute="leading" secondItem="NEc-oW-28o" secondAttribute="leading" id="ekC-MQ-KvP"/>
                                     <constraint firstItem="EzP-bu-0Lh" firstAttribute="top" secondItem="5N5-NA-94d" secondAttribute="bottom" constant="10" id="g7K-H7-0qY"/>
+                                    <constraint firstAttribute="bottom" secondItem="EzP-bu-0Lh" secondAttribute="bottom" id="hub-tl-arF"/>
                                 </constraints>
                             </stackView>
                         </subviews>
