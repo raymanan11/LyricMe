@@ -130,7 +130,6 @@
                         <outlet property="lyrics" destination="qYE-lw-Scg" id="OG0-ok-jiA"/>
                         <outlet property="songArtist" destination="Uje-YQ-zzC" id="m2J-Zo-ZTD"/>
                         <outlet property="songTitle" destination="7kU-sw-sLz" id="syS-bY-cjO"/>
-                        <segue destination="u79-L4-qTp" kind="presentation" identifier="goToArtistInfo" id="nDA-Kx-9C9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wGP-Fo-Ro9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -142,20 +141,9 @@
             <objects>
                 <viewController storyboardIdentifier="artistInfo" id="u79-L4-qTp" customClass="ArtistInfoViewController" customModule="Lyrically" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1NT-Ub-Y4C">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="758"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="NEc-oW-28o">
-                                <rect key="frame" x="10" y="10" width="355" height="724"/>
-                            </stackView>
-                        </subviews>
                         <color key="backgroundColor" name="AppBackground"/>
-                        <constraints>
-                            <constraint firstItem="zAP-LQ-ZmZ" firstAttribute="trailing" secondItem="NEc-oW-28o" secondAttribute="trailing" constant="10" id="0Rr-CX-Hom"/>
-                            <constraint firstItem="NEc-oW-28o" firstAttribute="bottom" secondItem="zAP-LQ-ZmZ" secondAttribute="bottom" constant="10" id="dSc-Xa-tW5"/>
-                            <constraint firstItem="NEc-oW-28o" firstAttribute="top" secondItem="zAP-LQ-ZmZ" secondAttribute="top" constant="10" id="iIs-JD-AEZ"/>
-                            <constraint firstItem="NEc-oW-28o" firstAttribute="leading" secondItem="1NT-Ub-Y4C" secondAttribute="leading" constant="10" id="xJX-nQ-Ddl"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="zAP-LQ-ZmZ"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="boolean" keyPath="labelize" value="YES"/>

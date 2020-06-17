@@ -32,20 +32,19 @@ class ArtistInfoViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(returnToVC), name: NSNotification.Name("playButtonPressed"), object: nil)
         
         artistLabel.text = nameOfArtist
+//        artistLabel.text = "Artist Name\nArtist Song Name"
         artistLabel.font = .systemFont(ofSize: 16, weight: .semibold)
         artistLabel.numberOfLines = 0
         artistLabel.textColor = .white
         
-        if artistImageURL != nil {
-            setArtistImage(artistImageURL: artistImageURL!, imageView: artistImage)
-        }
-//        setArtistImage(artistImageURL: artistImageURL, imageView: artistImage)
+        setArtistImage(artistImageURL: artistImageURL!, imageView: artistImage)
+//        artistImage.image = UIImage(named: "LyricallyLogo.png")
         artistImage.contentMode = .scaleAspectFill
         artistImage.clipsToBounds = true
         artistImage.translatesAutoresizingMaskIntoConstraints = false
-        artistImage.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        artistImage.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        artistImage.layer.cornerRadius = 50
+        artistImage.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        artistImage.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        artistImage.layer.cornerRadius = 75
 
         containerView.backgroundColor = .darkGray
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -73,14 +72,9 @@ class ArtistInfoViewController: UIViewController {
         stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20).isActive = true
         stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10).isActive = true
         stackView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-        
-//        let controller = storyboard!.instantiateViewController(identifier: "artistInfo")
-//        addChild(controller)
-//        controller.view.translatesAutoresizingMaskIntoConstraints = false
-//        containerView.addSubview(controller.view)
-//        controller.didMove(toParent: self)
+
         view.addSubview(tableView)
-        tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        tableView.topAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
@@ -119,7 +113,7 @@ extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+        return 120
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

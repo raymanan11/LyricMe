@@ -23,8 +23,8 @@ class ArtistSongCell: UITableViewCell {
     let containerView: UIView = {
         let myView = UIView()
         myView.translatesAutoresizingMaskIntoConstraints = false
-        myView.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        myView.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        myView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        myView.widthAnchor.constraint(equalToConstant: 100).isActive = true
         
         return myView
     }()
@@ -53,8 +53,10 @@ class ArtistSongCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.backgroundColor = .quaternarySystemFill
         imageView.translatesAutoresizingMaskIntoConstraints  = false
-        imageView.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        imageView.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        imageView.layer.cornerRadius = 50
+        imageView.layer.masksToBounds = true
         // deal with the border of the album song here
 
         return imageView
