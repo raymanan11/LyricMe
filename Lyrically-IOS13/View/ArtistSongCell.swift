@@ -61,7 +61,7 @@ class ArtistSongCell: UITableViewCell {
     }()
     
     @objc fileprivate func handlePlay() {
-        print("Play...")
+        NotificationCenter.default.post(name: NSNotification.Name("playButtonPressed"), object: nil)
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

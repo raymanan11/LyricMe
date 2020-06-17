@@ -19,33 +19,72 @@ class ArtistInfoViewController: UIViewController {
     var popularSongs: [String]?
     var songURI: [String]?
     
-    @IBOutlet weak var artistImage: UIImageView!
-    @IBOutlet weak var artistName: UILabel!
-    @IBOutlet weak var numFollowers: UILabel!
-    
     let cellId = "ArtistSong"
     let tableView = UITableView()
     
+    let containerView = UIView()
+    let artistImage = UIImageView()
+    let artistLabel = UILabel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(returnToVC), name: NSNotification.Name("playButtonPressed"), object: nil)
+        
+        artistLabel.text = nameOfArtist
+        artistLabel.font = .systemFont(ofSize: 16, weight: .semibold)
+        artistLabel.numberOfLines = 0
+        artistLabel.textColor = .white
+        
+        if artistImageURL != nil {
+            setArtistImage(artistImageURL: artistImageURL!, imageView: artistImage)
+        }
+//        setArtistImage(artistImageURL: artistImageURL, imageView: artistImage)
+        artistImage.contentMode = .scaleAspectFill
+        artistImage.clipsToBounds = true
+        artistImage.translatesAutoresizingMaskIntoConstraints = false
+        artistImage.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        artistImage.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        artistImage.layer.cornerRadius = 50
+
+        containerView.backgroundColor = .darkGray
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        
-        navigationItem.title = nameOfArtist
-        navigationController?.navigationBar.prefersLargeTitles = true
 
         tableView.register(ArtistSongCell.self, forCellReuseIdentifier: cellId)
+        
+        view.addSubview(containerView)
+        containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        containerView.heightAnchor.constraint(equalToConstant: 200).isActive = true
 
+        let stackView = UIStackView(arrangedSubviews: [artistImage, artistLabel])
+        stackView.axis = .horizontal
+        stackView.spacing = 10
+        stackView.distribution = .fillProportionally
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        containerView.addSubview(stackView)
+        stackView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10).isActive = true
+        stackView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        
+//        let controller = storyboard!.instantiateViewController(identifier: "artistInfo")
+//        addChild(controller)
+//        controller.view.translatesAutoresizingMaskIntoConstraints = false
+//        containerView.addSubview(controller.view)
+//        controller.didMove(toParent: self)
+        
         view.addSubview(tableView)
         tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-
-//        artistName.text = nameOfArtist
-//        numFollowers.text = "Followers: \(numberOfFollowers ?? 0)"
-//        setArtistImage(artistImageURL: artistImageURL!, imageView: artistImage)
 
     }
     
@@ -67,6 +106,11 @@ class ArtistInfoViewController: UIViewController {
         }
     }
 
+    @objc func returnToVC() {
+        navigationController?.popViewController(animated: true)
+        dismiss(animated: true, completion: nil)
+    }
+    
 }
 
 extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {

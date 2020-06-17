@@ -23,7 +23,6 @@ class LogInViewController: UIViewController {
             // if not valid, call refresh token
             // if is, then use it to get currently playing info
             print(#function)
-//            print("Access Token: \(accessToken)")
             let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
             let mainViewController = storyBoard.instantiateViewController(withIdentifier: "main") as! MainViewController
             self.navigationController?.pushViewController(mainViewController, animated: false)

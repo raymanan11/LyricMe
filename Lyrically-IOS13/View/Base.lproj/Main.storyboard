@@ -140,46 +140,13 @@
         <!--Artist Info View Controller-->
         <scene sceneID="bl8-hW-DRq">
             <objects>
-                <viewController id="u79-L4-qTp" customClass="ArtistInfoViewController" customModule="Lyrically" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="artistInfo" id="u79-L4-qTp" customClass="ArtistInfoViewController" customModule="Lyrically" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1NT-Ub-Y4C">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="758"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="NEc-oW-28o">
                                 <rect key="frame" x="10" y="10" width="355" height="724"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="5N5-NA-94d">
-                                        <rect key="frame" x="99.333333333333329" y="0.0" width="156.33333333333337" height="724"/>
-                                        <subviews>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="e2i-FE-QSI">
-                                                <rect key="frame" x="0.0" y="321.33333333333331" width="81.666666666666671" height="81.333333333333314"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" secondItem="e2i-FE-QSI" secondAttribute="height" multiplier="1:1" id="ZsC-jR-oos"/>
-                                                </constraints>
-                                            </imageView>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="kQ2-mq-Gsl">
-                                                <rect key="frame" x="89.666666666666657" y="333.33333333333331" width="66.666666666666657" height="57.333333333333314"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YLl-Kh-XGU">
-                                                        <rect key="frame" x="0.0" y="0.0" width="66.666666666666671" height="30"/>
-                                                        <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="23"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Kd-Iu-R0g">
-                                                        <rect key="frame" x="0.0" y="30" width="66.666666666666671" height="27.333333333333329"/>
-                                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="21"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                            </stackView>
-                                        </subviews>
-                                    </stackView>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="e2i-FE-QSI" firstAttribute="width" secondItem="NEc-oW-28o" secondAttribute="width" multiplier="0.23" id="Sc5-JD-APc"/>
-                                </constraints>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" name="AppBackground"/>
@@ -201,11 +168,6 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <navigationItem key="navigationItem" id="oPH-wT-IF0"/>
-                    <connections>
-                        <outlet property="artistImage" destination="e2i-FE-QSI" id="N8Z-p9-wUj"/>
-                        <outlet property="artistName" destination="YLl-Kh-XGU" id="8lG-Lo-w0i"/>
-                        <outlet property="numFollowers" destination="7Kd-Iu-R0g" id="SXi-n3-PTT"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yY5-sd-If5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
