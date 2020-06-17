@@ -42,8 +42,11 @@ class LyricManager {
     }
     
     func handle(data: Data?, response: URLResponse?, error: Error?) {
+        let songAndArtist = "\(songName) \(songArtist)"
         if (error != nil) {
             print(error!)
+            print("Problem with Lyric API, calling again")
+            fetchData(songAndArtist: songAndArtist, songName: self.songName, songArtist: self.songArtist)
             return
         }
         if let safeData = data {
@@ -52,7 +55,7 @@ class LyricManager {
                 if lyrics == Constants.noLyrics && LyricManager.triedOnce == false {
                     LyricManager.triedOnce = true
                     // another way of getting lyrics if not found is trying just one artist instead of all
-                    let songAndArtist = "\(songName) \(songArtist)"
+                    print("No lyrics found for singleArtist, trying again")
                     fetchData(songAndArtist: songAndArtist, songName: self.songName, songArtist: self.songArtist)
                 }
                 else {

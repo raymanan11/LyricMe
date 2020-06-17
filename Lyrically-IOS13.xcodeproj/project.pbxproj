@@ -29,7 +29,6 @@
 		7D8431A1248D53D600F8B063 /* SpotifyArtistInfo2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8431A0248D53D600F8B063 /* SpotifyArtistInfo2.swift */; };
 		7D8431A3248D53E800F8B063 /* ArtistInfo2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8431A2248D53E800F8B063 /* ArtistInfo2.swift */; };
 		7D8431A6248FE68100F8B063 /* ArtistSongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8431A4248FE68100F8B063 /* ArtistSongCell.swift */; };
-		7D8431A7248FE68100F8B063 /* ArtistSongCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D8431A5248FE68100F8B063 /* ArtistSongCell.xib */; };
 		7D976EC6248084F100700E63 /* ErrorInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D976EC5248084F100700E63 /* ErrorInfo.swift */; };
 		7D976EC82481684400700E63 /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D976EC72481684400700E63 /* TokenManager.swift */; };
 		7D9B36A4247B717900E4B7C7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9B36A3247B717900E4B7C7 /* Constants.swift */; };
@@ -64,7 +63,6 @@
 		7D8431A0248D53D600F8B063 /* SpotifyArtistInfo2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyArtistInfo2.swift; sourceTree = "<group>"; };
 		7D8431A2248D53E800F8B063 /* ArtistInfo2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistInfo2.swift; sourceTree = "<group>"; };
 		7D8431A4248FE68100F8B063 /* ArtistSongCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistSongCell.swift; sourceTree = "<group>"; };
-		7D8431A5248FE68100F8B063 /* ArtistSongCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtistSongCell.xib; sourceTree = "<group>"; };
 		7D976EC5248084F100700E63 /* ErrorInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorInfo.swift; sourceTree = "<group>"; };
 		7D976EC72481684400700E63 /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
 		7D9B36A3247B717900E4B7C7 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -108,7 +106,6 @@
 				7D3FA2A3246632E700EF389E /* LaunchScreen.storyboard */,
 				7D3FA29E246632E200EF389E /* Main.storyboard */,
 				7D8431A4248FE68100F8B063 /* ArtistSongCell.swift */,
-				7D8431A5248FE68100F8B063 /* ArtistSongCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -239,7 +236,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D3FA2A5246632E700EF389E /* LaunchScreen.storyboard in Resources */,
-				7D8431A7248FE68100F8B063 /* ArtistSongCell.xib in Resources */,
 				7D3FA2A2246632E700EF389E /* Assets.xcassets in Resources */,
 				7D3FA2A0246632E200EF389E /* Main.storyboard in Resources */,
 			);
@@ -474,6 +470,7 @@
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Lyrically-IOS13/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -509,6 +506,7 @@
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Lyrically-IOS13/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

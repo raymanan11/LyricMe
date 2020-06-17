@@ -44,7 +44,7 @@ struct SpotifyArtistManager {
             for track in info.tracks {
                 songs.append(track.name)
                 songURI.append(track.uri)
-                songAlbumImage.append(track.album.images[2].url)
+                songAlbumImage.append(track.album.images[0].url)
             }
             let artistInfo = ArtistInfo(artistName: artistName, songAlbumImage: songAlbumImage, popularSongs: songs, songURI: songURI)
             return artistInfo

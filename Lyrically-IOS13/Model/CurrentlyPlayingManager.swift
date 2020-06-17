@@ -42,6 +42,8 @@ class CurrentlyPlayingManager {
         if error != nil {
             print(error!)
             UIDelegate?.updateSpotifyStatus(isPlaying: true)
+            print("Error occurred! Trying to get info again!")
+            fetchData()
             return
         }
         else {
@@ -60,12 +62,9 @@ class CurrentlyPlayingManager {
                     if let info = self.parseJSON(data: safeData) {
                         // update the UI that shows currently playing songs, song artist(s)
                         // pass info to Main VC which will call API to get lyrics from passed data
-//                        print("API song name: \(info.apiSongName)")
-//                        print("Previous song: \(previousSong)")
                         if info.apiSongName != previousSong {
                             UIDelegate?.updateSongInfoUI(info)
                             let songAndArtist = "\(info.apiSongName) \(info.allArtists)"
-//                            print("songs aren't equal")
                             UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
                             previousSong = info.apiSongName
                         }

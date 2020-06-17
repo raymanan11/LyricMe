@@ -30,7 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     }
 
     let spotifyClientID = Constants.clientID
-    let spotifyRedirectURL = Constants.redirectURI!
+    let spotifyRedirectURL = Constants.redirectURI
     
     lazy var configuration = SPTConfiguration(clientID: spotifyClientID, redirectURL: URL(string: "Lyrically://callback")!)
     
@@ -38,14 +38,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     let refresh = "https://tangible-lean-level.glitch.me/api/refresh_token"
     
     lazy var sessionManager: SPTSessionManager = {
-      if let tokenSwapURL = URL(string: tokenSwap),
-         let tokenRefreshURL = URL(string: refresh) {
-        self.configuration.tokenSwapURL = tokenSwapURL
-        self.configuration.tokenRefreshURL = tokenRefreshURL
-        self.configuration.playURI = ""
-      }
-      let manager = SPTSessionManager(configuration: self.configuration, delegate: self)
-      return manager
+        if let tokenSwapURL = URL(string: tokenSwap), let tokenRefreshURL = URL(string: refresh) {
+            self.configuration.tokenSwapURL = tokenSwapURL
+            self.configuration.tokenRefreshURL = tokenRefreshURL
+            self.configuration.playURI = ""
+        }
+        let manager = SPTSessionManager(configuration: self.configuration, delegate: self)
+        return manager
     }()
     
     func login() {
@@ -83,7 +82,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        window = UIWindow(windowScene: windowScene)
+        let controller = UINavigationController(rootViewController: LogInViewController())//if you want navigation controller uncomment that
+//            let controller = ViewController() // if you want navigation Controller COMMENT That
+        window?.makeKeyAndVisible()
+        window?.rootViewController = controller
+
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -133,7 +138,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         // decide whether user has already logged in, so they won't have to log in again or if the access token is still valid
 
     }
-
+    
+    
 }
 
 

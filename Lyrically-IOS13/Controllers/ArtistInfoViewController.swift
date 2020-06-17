@@ -19,23 +19,65 @@ class ArtistInfoViewController: UIViewController {
     var popularSongs: [String]?
     var songURI: [String]?
     
-
-    @IBOutlet weak var artistImage: UIImageView!
-    @IBOutlet weak var artistName: UILabel!
-    @IBOutlet weak var numFollowers: UILabel!
-    @IBOutlet weak var artistPopularSongs: UITableView!
+    let cellId = "ArtistSong"
+    let tableView = UITableView()
     
+    let containerView = UIView()
+    let artistImage = UIImageView()
+    let artistLabel = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        artistPopularSongs.clipsToBounds = true
-        artistPopularSongs.layer.cornerRadius = 17
-        artistName.text = nameOfArtist
-        numFollowers.text = "Followers: \(numberOfFollowers ?? 0)"
+        NotificationCenter.default.addObserver(self, selector: #selector(returnToVC), name: NSNotification.Name("playButtonPressed"), object: nil)
+        
+        artistLabel.text = "\(nameOfArtist!)\n\nFollowers: \(numberOfFollowers!)"
+        artistLabel.font = .systemFont(ofSize: 19, weight: .semibold)
+        artistLabel.numberOfLines = 0
+        artistLabel.textColor = .label
+        
         setArtistImage(artistImageURL: artistImageURL!, imageView: artistImage)
-        artistPopularSongs.delegate = self
-        artistPopularSongs.dataSource = self
-        artistPopularSongs.register(UINib(nibName: "ArtistSongCell", bundle: nil), forCellReuseIdentifier: "ArtistSong")
+        artistImage.contentMode = .scaleAspectFill
+        artistImage.clipsToBounds = true
+        artistImage.translatesAutoresizingMaskIntoConstraints = false
+        // affects artist image size
+        artistImage.widthAnchor.constraint(equalToConstant: 130).isActive = true
+        artistImage.heightAnchor.constraint(equalToConstant: 130).isActive = true
+
+        containerView.backgroundColor = .darkGray
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+
+        tableView.register(ArtistSongCell.self, forCellReuseIdentifier: cellId)
+        
+        view.addSubview(containerView)
+        containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        containerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        containerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        // set's how big artist info is
+        containerView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+
+        let stackView = UIStackView(arrangedSubviews: [artistImage, artistLabel])
+        stackView.axis = .horizontal
+        stackView.spacing = 15
+        stackView.distribution = .fillProportionally
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        containerView.addSubview(stackView)
+        // affects artist image size
+        stackView.heightAnchor.constraint(equalToConstant: 130).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10).isActive = true
+        stackView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+
+        view.addSubview(tableView)
+        tableView.topAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+
     }
     
     func setArtistImage(artistImageURL: String, imageView: UIImageView) {
@@ -46,7 +88,7 @@ class ArtistInfoViewController: UIViewController {
                         imageView.image = UIImage(data: data)
                         imageView.layer.cornerRadius = imageView.frame.height / 2
                         imageView.clipsToBounds = true
-                        imageView.layer.borderWidth = 2
+                        imageView.layer.borderWidth = 4
                         // change the color to match the occasion (whether a button or dark/light mode)
                         imageView.layer.borderColor = UIColor.white.cgColor
                     } 
@@ -56,6 +98,11 @@ class ArtistInfoViewController: UIViewController {
         }
     }
 
+    @objc func returnToVC() {
+        navigationController?.popViewController(animated: true)
+        dismiss(animated: true, completion: nil)
+    }
+    
 }
 
 extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
@@ -65,14 +112,13 @@ extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+        return 120
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistSong", for: indexPath) as! ArtistSongCell
         setArtistImage(artistImageURL: albumPhotosURL![indexPath.row], imageView: cell.albumImage)
         cell.songName.text = popularSongs![indexPath.row]
-        cell.songName.numberOfLines = 0
         return cell
     }
 

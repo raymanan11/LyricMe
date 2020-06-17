@@ -130,7 +130,6 @@
                         <outlet property="lyrics" destination="qYE-lw-Scg" id="OG0-ok-jiA"/>
                         <outlet property="songArtist" destination="Uje-YQ-zzC" id="m2J-Zo-ZTD"/>
                         <outlet property="songTitle" destination="7kU-sw-sLz" id="syS-bY-cjO"/>
-                        <segue destination="u79-L4-qTp" kind="presentation" identifier="goToArtistInfo" id="nDA-Kx-9C9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wGP-Fo-Ro9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -140,63 +139,11 @@
         <!--Artist Info View Controller-->
         <scene sceneID="bl8-hW-DRq">
             <objects>
-                <viewController id="u79-L4-qTp" customClass="ArtistInfoViewController" customModule="Lyrically" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="artistInfo" id="u79-L4-qTp" customClass="ArtistInfoViewController" customModule="Lyrically" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1NT-Ub-Y4C">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="758"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="NEc-oW-28o">
-                                <rect key="frame" x="10" y="10" width="355" height="724"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="5N5-NA-94d">
-                                        <rect key="frame" x="99.333333333333329" y="0.0" width="156.33333333333337" height="149"/>
-                                        <subviews>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="e2i-FE-QSI">
-                                                <rect key="frame" x="0.0" y="33.666666666666664" width="81.666666666666671" height="81.666666666666686"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" secondItem="e2i-FE-QSI" secondAttribute="height" multiplier="1:1" id="ZsC-jR-oos"/>
-                                                </constraints>
-                                            </imageView>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="kQ2-mq-Gsl">
-                                                <rect key="frame" x="89.666666666666657" y="46" width="66.666666666666657" height="57.333333333333343"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YLl-Kh-XGU">
-                                                        <rect key="frame" x="0.0" y="0.0" width="66.666666666666671" height="30"/>
-                                                        <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="23"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Kd-Iu-R0g">
-                                                        <rect key="frame" x="0.0" y="30" width="66.666666666666671" height="27.333333333333329"/>
-                                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="21"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                            </stackView>
-                                        </subviews>
-                                    </stackView>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="EzP-bu-0Lh">
-                                        <rect key="frame" x="0.0" y="159" width="355" height="565"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                    </tableView>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="e2i-FE-QSI" firstAttribute="width" secondItem="NEc-oW-28o" secondAttribute="width" multiplier="0.23" id="Sc5-JD-APc"/>
-                                    <constraint firstAttribute="trailing" secondItem="EzP-bu-0Lh" secondAttribute="trailing" id="VLY-86-7Xx"/>
-                                    <constraint firstItem="EzP-bu-0Lh" firstAttribute="leading" secondItem="NEc-oW-28o" secondAttribute="leading" id="ekC-MQ-KvP"/>
-                                    <constraint firstItem="EzP-bu-0Lh" firstAttribute="top" secondItem="5N5-NA-94d" secondAttribute="bottom" constant="10" id="g7K-H7-0qY"/>
-                                    <constraint firstAttribute="bottom" secondItem="EzP-bu-0Lh" secondAttribute="bottom" id="hub-tl-arF"/>
-                                </constraints>
-                            </stackView>
-                        </subviews>
                         <color key="backgroundColor" name="AppBackground"/>
-                        <constraints>
-                            <constraint firstItem="zAP-LQ-ZmZ" firstAttribute="trailing" secondItem="NEc-oW-28o" secondAttribute="trailing" constant="10" id="0Rr-CX-Hom"/>
-                            <constraint firstItem="NEc-oW-28o" firstAttribute="bottom" secondItem="zAP-LQ-ZmZ" secondAttribute="bottom" constant="10" id="dSc-Xa-tW5"/>
-                            <constraint firstItem="NEc-oW-28o" firstAttribute="top" secondItem="zAP-LQ-ZmZ" secondAttribute="top" constant="10" id="iIs-JD-AEZ"/>
-                            <constraint firstItem="NEc-oW-28o" firstAttribute="leading" secondItem="1NT-Ub-Y4C" secondAttribute="leading" constant="10" id="xJX-nQ-Ddl"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="zAP-LQ-ZmZ"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="boolean" keyPath="labelize" value="YES"/>
@@ -209,12 +156,6 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <navigationItem key="navigationItem" id="oPH-wT-IF0"/>
-                    <connections>
-                        <outlet property="artistImage" destination="e2i-FE-QSI" id="N8Z-p9-wUj"/>
-                        <outlet property="artistName" destination="YLl-Kh-XGU" id="8lG-Lo-w0i"/>
-                        <outlet property="artistPopularSongs" destination="EzP-bu-0Lh" id="uru-Q1-Qat"/>
-                        <outlet property="numFollowers" destination="7Kd-Iu-R0g" id="SXi-n3-PTT"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yY5-sd-If5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

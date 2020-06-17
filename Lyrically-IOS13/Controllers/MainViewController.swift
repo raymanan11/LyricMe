@@ -61,27 +61,19 @@ class MainViewController: UIViewController {
 
         DispatchQueue.main.asyncAfter(deadline: 1.seconds.fromNow) {
             DispatchQueue.main.async {
-//                self.performSegue(withIdentifier: "goToArtistInfo", sender: self)
-                self.performSegue(withIdentifier: "goToArtistInfo", sender: self)
+                let artistInfo: ArtistInfoViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "artistInfo") as! ArtistInfoViewController
+                artistInfo.artistImageURL = self.spotifyArtist2?.artistImageURL
+                artistInfo.nameOfArtist = self.spotifyArtist?.artistName
+                artistInfo.numberOfFollowers = self.spotifyArtist2?.numFollowers
+                artistInfo.albumPhotosURL = self.spotifyArtist?.songAlbumImage
+                artistInfo.popularSongs = self.spotifyArtist?.popularSongs
+                artistInfo.songURI = self.spotifyArtist?.songURI
+                
+                self.present(artistInfo, animated: true, completion: nil)
                 print("Getting artist data")
             }
-//            self.performSegue(withIdentifier: "goToArtistInfo", sender: self)
-//            print("Getting artist data")
         }
         
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "goToArtistInfo" {
-            print("segue is correct")
-            let destinationVC = segue.destination as! ArtistInfoViewController
-            destinationVC.artistImageURL = self.spotifyArtist2?.artistImageURL
-            destinationVC.nameOfArtist = self.spotifyArtist?.artistName
-            destinationVC.numberOfFollowers = self.spotifyArtist2?.numFollowers
-            destinationVC.albumPhotosURL = self.spotifyArtist?.songAlbumImage
-            destinationVC.popularSongs = self.spotifyArtist?.popularSongs
-            destinationVC.songURI = self.spotifyArtist?.songURI
-        }
     }
     
     @objc func getInfo() {
