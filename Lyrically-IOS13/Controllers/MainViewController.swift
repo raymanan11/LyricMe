@@ -61,12 +61,9 @@ class MainViewController: UIViewController {
 
         DispatchQueue.main.asyncAfter(deadline: 1.seconds.fromNow) {
             DispatchQueue.main.async {
-//                self.performSegue(withIdentifier: "goToArtistInfo", sender: self)
                 self.performSegue(withIdentifier: "goToArtistInfo", sender: self)
                 print("Getting artist data")
             }
-//            self.performSegue(withIdentifier: "goToArtistInfo", sender: self)
-//            print("Getting artist data")
         }
         
     }

@@ -79,7 +79,6 @@ class ArtistInfoViewController: UIViewController {
 //        controller.view.translatesAutoresizingMaskIntoConstraints = false
 //        containerView.addSubview(controller.view)
 //        controller.didMove(toParent: self)
-        
         view.addSubview(tableView)
         tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
