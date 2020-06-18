@@ -9,7 +9,7 @@
 import UIKit
 
 class ArtistInfoViewController: UIViewController {
-    
+
     var artistInfo: ArtistInfo?
     
     var artistImageURL: String?
@@ -25,6 +25,14 @@ class ArtistInfoViewController: UIViewController {
     let containerView = UIView()
     let artistImage = UIImageView()
     let artistLabel = UILabel()
+
+    var currentSongURI: String?
+    
+    var configuration: SPTConfiguration? {
+        get {
+            return (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.configuration
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -97,6 +105,15 @@ class ArtistInfoViewController: UIViewController {
             task.resume()
         }
     }
+    
+    func updateSongURI(songURI: String) {
+        currentSongURI = songURI
+        if let safeURI = currentSongURI {
+            print("in updateSongURI")
+            configuration?.playURI = safeURI
+        }
+        print("Current song uri: \(currentSongURI ?? "nothing")")
+    }
 
     @objc func returnToVC() {
         navigationController?.popViewController(animated: true)
@@ -119,6 +136,8 @@ extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistSong", for: indexPath) as! ArtistSongCell
         setArtistImage(artistImageURL: albumPhotosURL![indexPath.row], imageView: cell.albumImage)
         cell.songName.text = popularSongs![indexPath.row]
+        // set the song URI for the song that the cell has
+        cell.songURI = songURI![indexPath.row]
         return cell
     }
 

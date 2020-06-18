@@ -8,7 +8,16 @@
 
 import UIKit
 
+protocol UpdateSpotify {
+    func exitAndUpdateSpotify(currentSongURI: String)
+}
+
 class ArtistSongCell: UITableViewCell {
+    
+//    var delegate: UpdateSpotify?
+    
+    var songURI: String?
+    var artistVC = ArtistInfoViewController()
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -63,7 +72,16 @@ class ArtistSongCell: UITableViewCell {
     }()
     
     @objc fileprivate func handlePlay() {
+        if let safeSongURI = songURI {
+            artistVC.updateSongURI(songURI: safeSongURI)
+        }
         NotificationCenter.default.post(name: NSNotification.Name("playButtonPressed"), object: nil)
+        
+        // when the play button is pressed, exit the artist info VC and change song to the one that was jut pressed
+//        if let safeSongURI = songURI {
+//            print("delegate is trying to be called")
+//            delegate?.exitAndUpdateSpotify(currentSongURI: safeSongURI)
+//        }
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

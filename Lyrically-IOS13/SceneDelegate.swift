@@ -18,6 +18,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     var window: UIWindow?
     
     func sessionManager(manager: SPTSessionManager, didInitiate session: SPTSession) {
+        appRemote.connectionParameters.accessToken = session.accessToken
+        appRemote.connect()
         print("success", session)
     }
     
@@ -47,7 +49,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         return manager
     }()
     
+    lazy var appRemote: SPTAppRemote = {
+        let appRemote = SPTAppRemote(configuration: self.configuration, logLevel: .debug)
+        appRemote.connectionParameters.accessToken = Constants.accessToken
+        appRemote.delegate = self
+        return appRemote
+    }()
+    
     func login() {
+        // check if spotify app is installed
+        
         // gets the requuested scopes of the user
         let requestedScopes: SPTScope = [.appRemoteControl, .userReadCurrentlyPlaying, .userReadPlaybackState]
         self.sessionManager.initiateSession(with: requestedScopes, options: .default)
@@ -82,12 +93,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let windowScene = (scene as? UIWindowScene) else { return }
-        window = UIWindow(windowScene: windowScene)
-        let controller = UINavigationController(rootViewController: LogInViewController())//if you want navigation controller uncomment that
-//            let controller = ViewController() // if you want navigation Controller COMMENT That
-        window?.makeKeyAndVisible()
-        window?.rootViewController = controller
+        guard let _ = (scene as? UIWindowScene) else { return }
 
     }
 
@@ -139,7 +145,34 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
 
     }
     
+}
+
+extension SceneDelegate: SPTAppRemoteDelegate, SPTAppRemotePlayerStateDelegate {
     
+
+    func appRemoteDidEstablishConnection(_ appRemote: SPTAppRemote) {
+        self.appRemote = appRemote
+        self.appRemote.playerAPI?.delegate = self
+        self.appRemote.playerAPI?.subscribe(toPlayerState: { (result, error) in
+          if let error = error {
+            debugPrint(error.localizedDescription)
+          }
+        })
+        print("connected")
+    }
+
+    func appRemote(_ appRemote: SPTAppRemote, didDisconnectWithError error: Error?) {
+        print("disconnected")
+    }
+
+    func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
+        print("failed")
+    }
+
+    func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
+        print("player state changed")
+    }
+
 }
 
 
