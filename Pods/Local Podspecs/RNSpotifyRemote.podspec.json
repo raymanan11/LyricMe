@@ -1,0 +1,29 @@
+{
+  "name": "RNSpotifyRemote",
+  "version": "0.3.2",
+  "summary": "React Native wrapper around the Spotify Remote SDK",
+  "license": "ISC",
+  "authors": {
+    "name": "Colter McQuay"
+  },
+  "homepage": "git+https://github.com/cjam/react-native-spotify-remote.git",
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source": {
+    "git": "git+https://github.com/cjam/react-native-spotify-remote.git",
+    "tag": "v0.3.2",
+    "submodules": true
+  },
+  "source_files": [
+    "ios/*.{h,m}",
+    "ios/external/SpotifySDK/SpotifyiOS.framework/**/Headers/*.{h,m}"
+  ],
+  "preserve_paths": "ios/external/SpotifySDK/SpotifyiOS.framework",
+  "vendored_frameworks": "ios/external/SpotifySDK/SpotifyiOS.framework",
+  "dependencies": {
+    "React-Core": [
+
+    ]
+  }
+}
