@@ -28,12 +28,6 @@ class ArtistInfoViewController: UIViewController {
 
     var currentSongURI: String?
     
-    var configuration: SPTConfiguration? {
-        get {
-            return (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.configuration
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(returnToVC), name: NSNotification.Name("playButtonPressed"), object: nil)
@@ -109,8 +103,7 @@ class ArtistInfoViewController: UIViewController {
     func updateSongURI(songURI: String) {
         currentSongURI = songURI
         if let safeURI = currentSongURI {
-            print("in updateSongURI")
-            configuration?.playURI = safeURI
+            
         }
         print("Current song uri: \(currentSongURI ?? "nothing")")
     }
