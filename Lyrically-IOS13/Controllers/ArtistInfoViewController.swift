@@ -28,6 +28,66 @@ class ArtistInfoViewController: UIViewController {
 
     var currentSongURI: String?
     
+    private var playerState: SPTAppRemotePlayerState?
+    private var subscribedToPlayerState: Bool = false
+    private var subscribedToCapabilities: Bool = false
+    
+    var defaultCallback: SPTAppRemoteCallback {
+        get {
+            return {[weak self] _, error in
+                if let error = error {
+                    print(error)
+                }
+            }
+        }
+    }
+    
+    var appRemote: SPTAppRemote? {
+        get {
+            return (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.appRemote
+        }
+    }
+    
+    func appRemoteConnected() {
+        print("appRemoteConnected")
+        subscribeToPlayerState()
+        subscribeToCapabilityChanges()
+        getPlayerState()
+    }
+    
+    private func subscribeToPlayerState() {
+        guard (!subscribedToPlayerState) else { return }
+        appRemote?.playerAPI!.delegate = self
+        appRemote?.playerAPI?.subscribe { (_, error) -> Void in
+            guard error == nil else { return }
+            self.subscribedToPlayerState = true
+        }
+    }
+    
+    private func subscribeToCapabilityChanges() {
+        guard (!subscribedToCapabilities) else { return }
+        appRemote?.userAPI?.delegate = self
+        appRemote?.userAPI?.subscribe(toCapabilityChanges: { (success, error) in
+            guard error == nil else { return }
+
+            self.subscribedToCapabilities = true
+        })
+    }
+    
+    private func getPlayerState() {
+        appRemote?.playerAPI?.getPlayerState { (result, error) -> Void in
+            guard error == nil else { return }
+
+            print("player state changed")
+        }
+    }
+    
+    func appRemoteDisconnect() {
+        print("appRemoteDisconnect()")
+        self.subscribedToPlayerState = false
+        self.subscribedToCapabilities = false
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(returnToVC), name: NSNotification.Name("playButtonPressed"), object: nil)
@@ -103,7 +163,7 @@ class ArtistInfoViewController: UIViewController {
     func updateSongURI(songURI: String) {
         currentSongURI = songURI
         if let safeURI = currentSongURI {
-            
+            appRemote?.playerAPI?.play(safeURI, callback: defaultCallback)
         }
         print("Current song uri: \(currentSongURI ?? "nothing")")
     }
@@ -113,6 +173,18 @@ class ArtistInfoViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
+}
+
+extension ArtistInfoViewController: SPTAppRemotePlayerStateDelegate {
+    func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
+       self.playerState = playerState
+    }
+}
+
+extension ArtistInfoViewController: SPTAppRemoteUserAPIDelegate {
+    func userAPI(_ userAPI: SPTAppRemoteUserAPI, didReceive capabilities: SPTAppRemoteUserCapabilities) {
+    
+    }
 }
 
 extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {

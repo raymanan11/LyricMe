@@ -16,18 +16,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     var currentlyPlaying = CurrentlyPlayingManager()
     
     static private let kAccessTokenKey = "access-token-key"
-    private let redirectUri = URL(string:"Lyrically://callback")!
-    private let clientIdentifier = "13be0b60a54143b48acd80ba925c0d22"
     
     var window: UIWindow?
     
-    lazy var configuration = SPTConfiguration(clientID: self.clientIdentifier, redirectURL: self.redirectUri)
-    
-    let tokenSwap = "https://tangible-lean-level.glitch.me/api/token"
-    let refresh = "https://tangible-lean-level.glitch.me/api/refresh_token"
+    lazy var configuration = SPTConfiguration(clientID: Constants.clientID, redirectURL: Constants.redirectURI)
     
     lazy var sessionManager: SPTSessionManager = {
-        if let tokenSwapURL = URL(string: tokenSwap), let tokenRefreshURL = URL(string: refresh) {
+        if let tokenSwapURL = URL(string: Constants.tokenSwapURL), let tokenRefreshURL = URL(string: Constants.refreshURL) {
             self.configuration.tokenSwapURL = tokenSwapURL
             self.configuration.tokenRefreshURL = tokenRefreshURL
             self.configuration.playURI = ""
@@ -36,6 +31,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         return manager
     }()
     
+    // whenever a new value is assigned to this variable, didSet is called so it will update the userDefaults for the access token, otherwise you just get the value of the variable
     var accessToken = UserDefaults.standard.string(forKey: kAccessTokenKey) {
         didSet {
             let defaults = UserDefaults.standard
@@ -46,7 +42,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     lazy var appRemote: SPTAppRemote = {
         let appRemote = SPTAppRemote(configuration: self.configuration, logLevel: .debug)
         appRemote.connectionParameters.accessToken = self.accessToken
-        print("self.accessToken: \(self.accessToken)")
         appRemote.delegate = self
         return appRemote
     }()
@@ -63,18 +58,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         guard let url = URLContexts.first?.url else {
             return
         }
-//
-//        print("opened url")
-//        let parameters = appRemote.authorizationParameters(from: url);
-//
-//        print(parameters)
-//        if let access_token = parameters?[SPTAppRemoteAccessTokenKey] {
-//            print(access_token)
-//            appRemote.connectionParameters.accessToken = access_token
-//            self.accessToken = access_token
-//        } else if let errorDescription = parameters?[SPTAppRemoteErrorDescriptionKey] {
-//            print(errorDescription)
-//        }
+        sessionManager.application(UIApplication.shared, open: url, options: [:])
     }
     
     func sessionManager(manager: SPTSessionManager, didInitiate session: SPTSession) {
@@ -94,7 +78,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let _ = (scene as? UIWindowScene) else { return }
-
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -103,15 +86,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
 
     func sceneDidBecomeActive(_ scene: UIScene) {
         print(#function)
-//        appRemote.connect()
+        appRemote.connect()
         NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
-        logInVC.appRemoteDisconnect()
+        artistInfoVC.appRemoteDisconnect()
         appRemote.disconnect()
-        // Called when the scene will move from an active state to an inactive state.
-        // This may occur due to temporary interruptions (ex. an incoming phone call).
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
@@ -123,10 +104,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
 
     }
     
-    var logInVC: LogInViewController {
+    var artistInfoVC: ArtistInfoViewController {
         get {
-            let navController = self.window?.rootViewController as! UINavigationController
-            return navController.topViewController as! LogInViewController
+            let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            let artistVC = mainStoryboard.instantiateViewController(withIdentifier: "artistInfo") as! ArtistInfoViewController
+            return artistVC
         }
     }
     
@@ -136,18 +118,18 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     
     func appRemoteDidEstablishConnection(_ appRemote: SPTAppRemote) {
         self.appRemote = appRemote
-        logInVC.appRemoteConnected()
+        artistInfoVC.appRemoteConnected()
         print("connected")
         NotificationCenter.default.post(name: NSNotification.Name("logInSuccessful"), object: nil)
     }
 
     func appRemote(_ appRemote: SPTAppRemote, didDisconnectWithError error: Error?) {
-        logInVC.appRemoteDisconnect()
+        artistInfoVC.appRemoteDisconnect()
         print("disconnected")
     }
 
     func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
-        logInVC.appRemoteDisconnect()
+        artistInfoVC.appRemoteDisconnect()
         print("failed")
     }
 
