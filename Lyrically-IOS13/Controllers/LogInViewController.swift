@@ -8,13 +8,22 @@ import SwiftKeychainWrapper
 class LogInViewController: UIViewController {
     
     var sceneDelegate = SceneDelegate()
+    
+    @IBOutlet weak var logInButton: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let defaults = UserDefaults.standard
+        if defaults.initiatedSession {
+            hideLogInButton()
+        }
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.moveToNextVC), name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.showMainVC), name: NSNotification.Name(rawValue: "alreadyLoggedIn"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.hideLogInButton), name: NSNotification.Name(rawValue: "openSpotify"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.showLogInButton), name: NSNotification.Name(rawValue: "spotifyClosed"), object: nil)
     }
     
 //    override func viewWillAppear(_ animated: Bool) {
@@ -29,13 +38,21 @@ class LogInViewController: UIViewController {
 //            self.navigationController?.pushViewController(mainViewController, animated: false)
 //        }
 //    }
-   
+    
     @IBAction func logIn(_ sender: Any) {
         sceneDelegate.login()
     }
     
     @objc func moveToNextVC() {
         performSegue(withIdentifier: Constants.goToMainVC, sender: self)
+    }
+    
+    @objc func hideLogInButton() {
+        logInButton.isHidden = true
+    }
+    
+    @objc func showLogInButton() {
+        logInButton.isHidden = false
     }
     
     @objc func showMainVC() {

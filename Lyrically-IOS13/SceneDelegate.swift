@@ -67,6 +67,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
             return
         }
         print("Opened url!")
+        NotificationCenter.default.post(name: NSNotification.Name("openSpotify"), object: nil)
         sessionManager.application(UIApplication.shared, open: url, options: [:])
     }
     
@@ -177,6 +178,8 @@ extension SceneDelegate: SPTAppRemoteDelegate {
 
     func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
 //        artistInfoVC.appRemoteDisconnect()
+        // post notification that spotify app has been closed and show the log in button again
+        NotificationCenter.default.post(name: NSNotification.Name("spotifyClosed"), object: nil)
         print("failed")
     }
 
