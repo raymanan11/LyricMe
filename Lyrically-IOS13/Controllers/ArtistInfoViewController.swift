@@ -48,45 +48,44 @@ class ArtistInfoViewController: UIViewController {
         }
     }
     
-    func appRemoteConnected() {
-        print("appRemoteConnected")
-        subscribeToPlayerState()
-        subscribeToCapabilityChanges()
-        getPlayerState()
-    }
+//    func appRemoteConnected() {
+//        print("appRemoteConnected")
+//        subscribeToPlayerState()
+//        subscribeToCapabilityChanges()
+//        getPlayerState()
+//    }
+//
+//    private func subscribeToPlayerState() {
+//        guard (!subscribedToPlayerState) else { return }
+//        appRemote?.playerAPI?.delegate = self
+//        appRemote?.playerAPI?.subscribe { (_, error) -> Void in
+//            guard error == nil else { return }
+//            self.subscribedToPlayerState = true
+//        }
+//    }
     
-    private func subscribeToPlayerState() {
-        guard (!subscribedToPlayerState) else { return }
-        appRemote?.playerAPI!.delegate = self
-        appRemote?.playerAPI?.subscribe { (_, error) -> Void in
-            guard error == nil else { return }
-            self.subscribedToPlayerState = true
-        }
-    }
+//    private func subscribeToCapabilityChanges() {
+//        guard (!subscribedToCapabilities) else { return }
+//        appRemote?.userAPI?.delegate = self
+//        appRemote?.userAPI?.subscribe(toCapabilityChanges: { (success, error) in
+//            guard error == nil else { return }
+//
+//            self.subscribedToCapabilities = true
+//        })
+//    }
+//
+//    private func getPlayerState() {
+//        appRemote?.playerAPI?.getPlayerState { (result, error) -> Void in
+//            guard error == nil else { return }
+//            print("state of spotify changed")
+//        }
+//    }
     
-    private func subscribeToCapabilityChanges() {
-        guard (!subscribedToCapabilities) else { return }
-        appRemote?.userAPI?.delegate = self
-        appRemote?.userAPI?.subscribe(toCapabilityChanges: { (success, error) in
-            guard error == nil else { return }
-
-            self.subscribedToCapabilities = true
-        })
-    }
-    
-    private func getPlayerState() {
-        appRemote?.playerAPI?.getPlayerState { (result, error) -> Void in
-            guard error == nil else { return }
-
-            print("player state changed")
-        }
-    }
-    
-    func appRemoteDisconnect() {
-        print("appRemoteDisconnect()")
-        self.subscribedToPlayerState = false
-        self.subscribedToCapabilities = false
-    }
+//    func appRemoteDisconnect() {
+//        print("appRemoteDisconnect()")
+//        self.subscribedToPlayerState = false
+//        self.subscribedToCapabilities = false
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -175,17 +174,18 @@ class ArtistInfoViewController: UIViewController {
     
 }
 
-extension ArtistInfoViewController: SPTAppRemotePlayerStateDelegate {
-    func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
-       self.playerState = playerState
-    }
-}
-
-extension ArtistInfoViewController: SPTAppRemoteUserAPIDelegate {
-    func userAPI(_ userAPI: SPTAppRemoteUserAPI, didReceive capabilities: SPTAppRemoteUserCapabilities) {
-    
-    }
-}
+//extension ArtistInfoViewController: SPTAppRemotePlayerStateDelegate {
+//    func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
+//        print("Song name: \(playerState.track.name)")
+//        self.playerState = playerState
+//    }
+//}
+//
+//extension ArtistInfoViewController: SPTAppRemoteUserAPIDelegate {
+//    func userAPI(_ userAPI: SPTAppRemoteUserAPI, didReceive capabilities: SPTAppRemoteUserCapabilities) {
+//
+//    }
+//}
 
 extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
     

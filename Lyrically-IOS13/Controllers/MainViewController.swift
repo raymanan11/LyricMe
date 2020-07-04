@@ -12,13 +12,14 @@ protocol ArtistData {
     func passData(artistData: ArtistInfo)
 }
 
-class MainViewController: UIViewController {
+class MainViewController: UIViewController, HasLyrics {
     
     var delegate: ArtistData?
 
     var currentlyPlaying = CurrentlyPlayingManager()
     var lyricManager = LyricManager()
     var spotifyArtistManager = SpotifyArtistManager()
+    var sceneDelegate = SceneDelegate()
     
     var artistID: String?
     
@@ -38,6 +39,7 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        sceneDelegate.delegate = self
         navigationController?.isNavigationBarHidden = true
         self.lyrics.isHidden = true
         // creates the circle image of the logo/currently playing album
@@ -48,10 +50,8 @@ class MainViewController: UIViewController {
         self.artistInfo.layer.borderColor = UIColor.white.cgColor
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.newAccessToken), object: nil)
-    
-        NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
         
-        _ = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(MainViewController.getInfo), userInfo: nil, repeats: true)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
 
     }
     
@@ -130,7 +130,7 @@ extension MainViewController: UI {
     func updateSongInfoUI(_ songInfo: CurrentlyPlayingInfo) {
         DispatchQueue.main.async {
             self.lyrics.isHidden = false
-            self.lyrics.textContainerInset = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
+            self.lyrics.textContainerInset = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
             self.songTitle.text = songInfo.fullSongName
             self.songArtist.font = UIFont(name: "Futura-Medium", size: 22)
             self.songArtist.text = "by \(songInfo.allArtists)"

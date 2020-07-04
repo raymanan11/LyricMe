@@ -23,9 +23,13 @@ class CurrentlyPlayingManager {
     
     var UIDelegate: UI?
     
+    var triedOnce = false
+    
     // gets the information of the currently playing song and artist
     @objc func fetchData() {
+        print("getting currently playing song!")
         let accessToken: String? = KeychainWrapper.standard.string(forKey: Constants.accessToken)
+        print("Currently playing manager access token: \(accessToken)")
 
         let headers = ["Authorization" : "Bearer \(accessToken ?? "none")"]
         
@@ -54,7 +58,7 @@ class CurrentlyPlayingManager {
                 // check if the access token is expired, then if it is then refresh to get new access token and post a notification that a new refresh token was received and call fetchData again
                 if self.expiredAccessToken(safeData) == true {
                     UIDelegate?.updateSpotifyStatus(isPlaying: true)
-                    previousSong = nil
+//                    previousSong = nil
                     tokenManager.refreshToken()
                 }
                 
@@ -62,17 +66,28 @@ class CurrentlyPlayingManager {
                     if let info = self.parseJSON(data: safeData) {
                         // update the UI that shows currently playing songs, song artist(s)
                         // pass info to Main VC which will call API to get lyrics from passed data
-                        if info.apiSongName != previousSong {
-                            UIDelegate?.updateSongInfoUI(info)
-                            let songAndArtist = "\(info.apiSongName) \(info.allArtists)"
-                            UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
-                            previousSong = info.apiSongName
-                        }
+//                        if info.apiSongName != previousSong {
+//                            UIDelegate?.updateSongInfoUI(info)
+//                            let songAndArtist = "\(info.apiSongName) \(info.allArtists)"
+//                            UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
+//                            previousSong = info.apiSongName
+//                        }
+                        UIDelegate?.updateSongInfoUI(info)
+                        let songAndArtist = "\(info.apiSongName) \(info.allArtists)"
+                        UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
                     }
                     else {
                         // will reach here if no song is playing
+//                        if triedOnce == false {
+//                            print("Not playing a song, trying again")
+//                            UIDelegate?.updateSpotifyStatus(isPlaying: false)
+//                            triedOnce = true
+//                            NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
+//                        }
                         UIDelegate?.updateSpotifyStatus(isPlaying: false)
-                        previousSong = nil
+                        triedOnce = true
+                        NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
+//                        previousSong = nil
                     }
                 }
             }

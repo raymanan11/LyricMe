@@ -10,14 +10,22 @@ import UIKit
 import Alamofire
 import SwiftKeychainWrapper
 
+protocol HasLyrics {
+    func getInfo()
+}
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelegate {
     
     var tokenManager = TokenManager()
     var currentlyPlaying = CurrentlyPlayingManager()
     
+    private var firstLogIn: Bool = true
     static private let kAccessTokenKey = "access-token-key"
     
+    var delegate: HasLyrics?
+    
     var window: UIWindow?
+    var lastSong: String?
     
     lazy var configuration = SPTConfiguration(clientID: Constants.clientID, redirectURL: Constants.redirectURI)
     
@@ -58,11 +66,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         guard let url = URLContexts.first?.url else {
             return
         }
+        print("Opened url!")
         sessionManager.application(UIApplication.shared, open: url, options: [:])
     }
     
     func sessionManager(manager: SPTSessionManager, didInitiate session: SPTSession) {
+        // boolean for login
         print("inititated session")
+        print("Scene delegate access token: \(session.accessToken)")
+        
+        let defaults = UserDefaults.standard
+        defaults.initiatedSession = true
+//        initiatedSession = true
         appRemote.connectionParameters.accessToken = session.accessToken
         self.accessToken = session.accessToken
         appRemote.connect()
@@ -86,17 +101,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
 
     func sceneDidBecomeActive(_ scene: UIScene) {
         print(#function)
-        appRemote.connect()
-        NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
+        print("returned to app")
+        let defaults = UserDefaults.standard
+        print(defaults.initiatedSession)
+        if defaults.initiatedSession {
+            print("initiated session and getting app remote to connect")
+            appRemote.connect()
+        }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
-        artistInfoVC.appRemoteDisconnect()
+//        artistInfoVC.appRemoteDisconnect()
         appRemote.disconnect()
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
-        NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
         print(#function)
     }
 
@@ -114,25 +133,65 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     
 }
 
+extension UserDefaults {
+    var initiatedSession: Bool {
+        get {
+            if let initiateSession = UserDefaults.standard.object(forKey: "initiatedSession") as? Bool {
+                return initiateSession
+            }
+            else {
+                print("in here")
+                return false
+            }
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "initiatedSession")
+        }
+    }
+}
+
 extension SceneDelegate: SPTAppRemoteDelegate {
     
     func appRemoteDidEstablishConnection(_ appRemote: SPTAppRemote) {
         self.appRemote = appRemote
-        artistInfoVC.appRemoteConnected()
+        self.appRemote.playerAPI?.delegate = self
+        self.appRemote.playerAPI?.subscribe(toPlayerState: { (result, error) in
+          if let error = error {
+            debugPrint(error.localizedDescription)
+          }
+        })
+//        artistInfoVC.appRemoteConnected()
         print("connected")
-        NotificationCenter.default.post(name: NSNotification.Name("logInSuccessful"), object: nil)
+        print("First time logging in: \(firstLogIn)")
+        if firstLogIn {
+            // maybe hide login button and get rid of chcking whether there is a access token to determine if skipping log in VC
+            NotificationCenter.default.post(name: NSNotification.Name("logInSuccessful"), object: nil)
+            firstLogIn = false
+        }
     }
 
     func appRemote(_ appRemote: SPTAppRemote, didDisconnectWithError error: Error?) {
-        artistInfoVC.appRemoteDisconnect()
+//        artistInfoVC.appRemoteDisconnect()
         print("disconnected")
     }
 
     func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
-        artistInfoVC.appRemoteDisconnect()
+//        artistInfoVC.appRemoteDisconnect()
         print("failed")
     }
 
+}
+
+extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
+    func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
+        if playerState.track.name != lastSong {
+            print("in here")
+            DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
+                NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
+            }
+            lastSong = playerState.track.name
+        }
+    }
 }
 
 

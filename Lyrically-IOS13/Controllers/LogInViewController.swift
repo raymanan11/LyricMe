@@ -13,6 +13,8 @@ class LogInViewController: UIViewController {
         super.viewDidLoad()
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.moveToNextVC), name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.showMainVC), name: NSNotification.Name(rawValue: "alreadyLoggedIn"), object: nil)
     }
     
 //    override func viewWillAppear(_ animated: Bool) {
@@ -35,7 +37,13 @@ class LogInViewController: UIViewController {
     @objc func moveToNextVC() {
         performSegue(withIdentifier: Constants.goToMainVC, sender: self)
     }
-
+    
+    @objc func showMainVC() {
+        let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let mainViewController = storyBoard.instantiateViewController(withIdentifier: "main") as! MainViewController
+        self.navigationController?.pushViewController(mainViewController, animated: false)
+    }
+    
 }
 
 
