@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     var tokenManager = TokenManager()
     var currentlyPlaying = CurrentlyPlayingManager()
     
-    private var firstLogIn: Bool = true
+    private var firstAppEntry: Bool = true
     static private let kAccessTokenKey = "access-token-key"
     
     var delegate: HasLyrics?
@@ -68,6 +68,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         }
         print("Opened url!")
         NotificationCenter.default.post(name: NSNotification.Name("openSpotify"), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name("logInSuccessful"), object: nil)
+        firstAppEntry = false
         sessionManager.application(UIApplication.shared, open: url, options: [:])
     }
     
@@ -101,14 +103,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
-        print(#function)
-        print("returned to app")
-        let defaults = UserDefaults.standard
-        print(defaults.initiatedSession)
-        if defaults.initiatedSession {
-            print("initiated session and getting app remote to connect")
-            appRemote.connect()
-        }
+//        print(#function)
+//        print("returned to app")
+//        let defaults = UserDefaults.standard
+//        // first is false so that means app remotes won't conflict when connecting from both sceneDidBecomeActive and didInitiate session, only runs the appRemote.connect from the didInitiate instead of sceneDidBecomeActive
+//        // only runs after user has authenticated and has spotify app open
+//        if defaults.initiatedSession {
+//            print("initiated session and getting app remote to connect")
+//            appRemote.connect()
+//        }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
@@ -118,6 +121,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
 
     func sceneWillEnterForeground(_ scene: UIScene) {
         print(#function)
+        print("returned to app")
+        let defaults = UserDefaults.standard
+        // first is false so that means app remotes won't conflict when connecting from both sceneDidBecomeActive and didInitiate session, only runs the appRemote.connect from the didInitiate instead of sceneDidBecomeActive
+        // only runs after user has authenticated and has spotify app open
+        if defaults.initiatedSession {
+            print("initiated session and getting app remote to connect")
+            appRemote.connect()
+        }
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
@@ -163,11 +174,11 @@ extension SceneDelegate: SPTAppRemoteDelegate {
         })
 //        artistInfoVC.appRemoteConnected()
         print("connected")
-        print("First time logging in: \(firstLogIn)")
-        if firstLogIn {
-            // maybe hide login button and get rid of chcking whether there is a access token to determine if skipping log in VC
+        print("First time logging in: \(firstAppEntry)")
+        // only goes to mainVC if first entering app so that it won't keep showing transition screen every time user switches back and forth between spotify screen
+        if firstAppEntry {
             NotificationCenter.default.post(name: NSNotification.Name("logInSuccessful"), object: nil)
-            firstLogIn = false
+            firstAppEntry = false
         }
     }
 

@@ -42,6 +42,7 @@ class MainViewController: UIViewController, HasLyrics {
         sceneDelegate.delegate = self
         navigationController?.isNavigationBarHidden = true
         self.lyrics.isHidden = true
+        artistInfo.isEnabled = false
         // creates the circle image of the logo/currently playing album
         self.artistInfo.layer.cornerRadius = self.artistInfo.frame.height / 2
         self.artistInfo.clipsToBounds = true
@@ -129,6 +130,7 @@ extension MainViewController: UI {
     
     func updateSongInfoUI(_ songInfo: CurrentlyPlayingInfo) {
         DispatchQueue.main.async {
+            self.artistInfo.isEnabled = true
             self.lyrics.isHidden = false
             self.lyrics.textContainerInset = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
             self.songTitle.text = songInfo.fullSongName
