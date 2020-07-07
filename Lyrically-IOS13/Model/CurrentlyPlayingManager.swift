@@ -29,7 +29,7 @@ class CurrentlyPlayingManager {
     @objc func fetchData() {
         print("getting currently playing song!")
         let accessToken: String? = KeychainWrapper.standard.string(forKey: Constants.accessToken)
-        print("Currently playing manager access token: \(accessToken)")
+        let refreshToken: String? = KeychainWrapper.standard.string(forKey: Constants.refreshToken)
 
         let headers = ["Authorization" : "Bearer \(accessToken ?? "none")"]
         
@@ -76,21 +76,15 @@ class CurrentlyPlayingManager {
                         let songAndArtist = "\(info.apiSongName) \(info.allArtists)"
                         UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
                     }
-                    else {
-                        // will reach here if no song is playing
+//                    else {
+//                        // will reach here if no song is playing
+//                        UIDelegate?.updateSpotifyStatus(isPlaying: false)
+//                        // only way this works if it 100% works after posting notification to get fetchData() again
 //                        if triedOnce == false {
-//                            print("Not playing a song, trying again")
-//                            UIDelegate?.updateSpotifyStatus(isPlaying: false)
 //                            triedOnce = true
 //                            NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
 //                        }
-                        UIDelegate?.updateSpotifyStatus(isPlaying: false)
-                        // only way this works if it 100% works after posting notification to get fetchData() again
-                        if triedOnce == false {
-                            triedOnce = true
-                            NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
-                        }
-                    }
+//                    }
                 }
             }
         }

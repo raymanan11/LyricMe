@@ -16,6 +16,7 @@ class LogInViewController: UIViewController {
         
         let defaults = UserDefaults.standard
         if defaults.initiatedSession {
+            print("initiated bitch")
             hideLogInButton()
         }
 
@@ -23,21 +24,12 @@ class LogInViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.hideLogInButton), name: NSNotification.Name(rawValue: "openSpotify"), object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.showLogInButton), name: NSNotification.Name(rawValue: "spotifyClosed"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.showLogInButton), name: NSNotification.Name(rawValue: "closedSpotify"), object: nil)
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        let accessToken: String? = KeychainWrapper.standard.string(forKey: Constants.accessToken)
-//        if accessToken != nil {
-//            // go straight to main VC to check if access token is valid or not
-//            // if not valid, call refresh token
-//            // if is, then use it to get currently playing info
-//            print(#function)
-//            let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-//            let mainViewController = storyBoard.instantiateViewController(withIdentifier: "main") as! MainViewController
-//            self.navigationController?.pushViewController(mainViewController, animated: false)
-//        }
-//    }
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
+    }
     
     @IBAction func logIn(_ sender: Any) {
         sceneDelegate.login()
@@ -58,9 +50,9 @@ class LogInViewController: UIViewController {
     @objc func showMainVC() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let mainViewController = storyBoard.instantiateViewController(withIdentifier: "main") as! MainViewController
-        self.navigationController?.pushViewController(mainViewController, animated: false)
+        self.navigationController?.pushViewController(mainViewController, animated: true)
     }
-    
+
 }
 
 

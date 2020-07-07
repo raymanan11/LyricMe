@@ -53,32 +53,40 @@ class MainViewController: UIViewController, HasLyrics {
         NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.newAccessToken), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
-
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.getSpotifyArtist), name: NSNotification.Name(rawValue: "getSpotifyArtist"), object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        print("View will disappear and removing observer")
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.newAccessToken), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "getSpotifyArtist"), object: nil)
     }
     
     @IBAction func getArtistInfo(_ sender: UIButton) {
-        spotifyArtistManager.getArtistInfo(id: artistID!)
-        spotifyArtistManager.getArtistPicture(id: artistID!)
 
-        DispatchQueue.main.asyncAfter(deadline: 1.seconds.fromNow) {
-            DispatchQueue.main.async {
-                let artistInfo: ArtistInfoViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "artistInfo") as! ArtistInfoViewController
-                artistInfo.artistImageURL = self.spotifyArtist2?.artistImageURL
-                artistInfo.nameOfArtist = self.spotifyArtist?.artistName
-                artistInfo.numberOfFollowers = self.spotifyArtist2?.numFollowers
-                artistInfo.albumPhotosURL = self.spotifyArtist?.songAlbumImage
-                artistInfo.popularSongs = self.spotifyArtist?.popularSongs
-                artistInfo.songURI = self.spotifyArtist?.songURI
-                
-                self.present(artistInfo, animated: true, completion: nil)
-                print("Getting artist data")
-            }
-        }
+        let artistInfo: ArtistInfoViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "artistInfo") as! ArtistInfoViewController
+        artistInfo.nameOfArtist = self.spotifyArtist?.artistName
+        artistInfo.albumPhotosURL = self.spotifyArtist?.songAlbumImage
+        artistInfo.popularSongs = self.spotifyArtist?.popularSongs
+        artistInfo.songURI = self.spotifyArtist?.songURI
+        artistInfo.artistImageURL = self.spotifyArtist2?.artistImageURL
+        artistInfo.numberOfFollowers = self.spotifyArtist2?.numFollowers
+        
+        self.present(artistInfo, animated: true, completion: nil)
+        print("Getting artist data")
         
     }
     
     @objc func getInfo() {
         currentlyPlaying.fetchData()
+    }
+    
+    @objc func getSpotifyArtist() {
+        print("got spotify aritst info, picture and number of followers")
+        spotifyArtistManager.getArtistInfo(id: artistID!)
+        spotifyArtistManager.getArtistPicture(id: artistID!)
     }
     
 }
@@ -130,6 +138,7 @@ extension MainViewController: UI {
     
     func updateSongInfoUI(_ songInfo: CurrentlyPlayingInfo) {
         DispatchQueue.main.async {
+            print("in updateSongInfoUI")
             self.artistInfo.isEnabled = true
             self.lyrics.isHidden = false
             self.lyrics.textContainerInset = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
@@ -139,9 +148,10 @@ extension MainViewController: UI {
             self.updateAlbumImage(albumURL: songInfo.albumURL)
             self.lyrics.text = "Getting Lyrics..."
             self.artistID = songInfo.artistID
+            NotificationCenter.default.post(name: NSNotification.Name("getSpotifyArtist"), object: nil)
         }
     }
-    
+     
     func updateAlbumImage(albumURL: String) {
         if let url = URL(string: albumURL) {
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
