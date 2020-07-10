@@ -48,45 +48,6 @@ class ArtistInfoViewController: UIViewController {
         }
     }
     
-//    func appRemoteConnected() {
-//        print("appRemoteConnected")
-//        subscribeToPlayerState()
-//        subscribeToCapabilityChanges()
-//        getPlayerState()
-//    }
-//
-//    private func subscribeToPlayerState() {
-//        guard (!subscribedToPlayerState) else { return }
-//        appRemote?.playerAPI?.delegate = self
-//        appRemote?.playerAPI?.subscribe { (_, error) -> Void in
-//            guard error == nil else { return }
-//            self.subscribedToPlayerState = true
-//        }
-//    }
-    
-//    private func subscribeToCapabilityChanges() {
-//        guard (!subscribedToCapabilities) else { return }
-//        appRemote?.userAPI?.delegate = self
-//        appRemote?.userAPI?.subscribe(toCapabilityChanges: { (success, error) in
-//            guard error == nil else { return }
-//
-//            self.subscribedToCapabilities = true
-//        })
-//    }
-//
-//    private func getPlayerState() {
-//        appRemote?.playerAPI?.getPlayerState { (result, error) -> Void in
-//            guard error == nil else { return }
-//            print("state of spotify changed")
-//        }
-//    }
-    
-//    func appRemoteDisconnect() {
-//        print("appRemoteDisconnect()")
-//        self.subscribedToPlayerState = false
-//        self.subscribedToCapabilities = false
-//    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(returnToVC), name: NSNotification.Name("playButtonPressed"), object: nil)
@@ -96,13 +57,16 @@ class ArtistInfoViewController: UIViewController {
         artistLabel.numberOfLines = 0
         artistLabel.textColor = .label
         
-        setArtistImage(artistImageURL: artistImageURL!, imageView: artistImage)
-        artistImage.contentMode = .scaleAspectFill
-        artistImage.clipsToBounds = true
-        artistImage.translatesAutoresizingMaskIntoConstraints = false
+        setArtistImage(artistImageURL: artistImageURL!, imageView: artistImage, artist: true)
         // affects artist image size
-        artistImage.widthAnchor.constraint(equalToConstant: 130).isActive = true
-        artistImage.heightAnchor.constraint(equalToConstant: 130).isActive = true
+        artistImage.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        artistImage.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        artistImage.contentMode = .scaleAspectFill
+        artistImage.translatesAutoresizingMaskIntoConstraints = false
+
+        print("Album image height: \(artistImage.frame.height)")
+        print("Album image width: \(artistImage.frame.width)")
+        print("Album image corner radius: \(artistImage.layer.cornerRadius)")
 
         containerView.backgroundColor = .darkGray
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -128,9 +92,9 @@ class ArtistInfoViewController: UIViewController {
 
         containerView.addSubview(stackView)
         // affects artist image size
-        stackView.heightAnchor.constraint(equalToConstant: 130).isActive = true
-        stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20).isActive = true
-        stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10).isActive = true
+        stackView.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 15).isActive = true
         stackView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
 
         view.addSubview(tableView)
@@ -141,15 +105,25 @@ class ArtistInfoViewController: UIViewController {
 
     }
     
-    func setArtistImage(artistImageURL: String, imageView: UIImageView) {
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("playButtonPressed"), object: nil)
+    }
+    
+    func setArtistImage(artistImageURL: String, imageView: UIImageView, artist: Bool) {
         if let url = URL(string: artistImageURL) {
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                 if let data = data {
                     DispatchQueue.main.async {
                         imageView.image = UIImage(data: data)
-                        imageView.layer.cornerRadius = imageView.frame.height / 2
+                        if artist {
+                            imageView.layer.cornerRadius = 60
+                        }
+                        else {
+                            imageView.layer.cornerRadius = imageView.frame.height / 2
+                        }
+                        print(imageView.frame.height)
+                        print(imageView.layer.cornerRadius)
                         imageView.clipsToBounds = true
-                        imageView.layer.borderWidth = 4
                         // change the color to match the occasion (whether a button or dark/light mode)
                         imageView.layer.borderColor = UIColor.white.cgColor
                     } 
@@ -174,19 +148,6 @@ class ArtistInfoViewController: UIViewController {
     
 }
 
-//extension ArtistInfoViewController: SPTAppRemotePlayerStateDelegate {
-//    func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
-//        print("Song name: \(playerState.track.name)")
-//        self.playerState = playerState
-//    }
-//}
-//
-//extension ArtistInfoViewController: SPTAppRemoteUserAPIDelegate {
-//    func userAPI(_ userAPI: SPTAppRemoteUserAPI, didReceive capabilities: SPTAppRemoteUserCapabilities) {
-//
-//    }
-//}
-
 extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -199,7 +160,7 @@ extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistSong", for: indexPath) as! ArtistSongCell
-        setArtistImage(artistImageURL: albumPhotosURL![indexPath.row], imageView: cell.albumImage)
+        setArtistImage(artistImageURL: albumPhotosURL![indexPath.row], imageView: cell.albumImage, artist: false)
         cell.songName.text = popularSongs![indexPath.row]
         // set the song URI for the song that the cell has
         cell.songURI = songURI![indexPath.row]

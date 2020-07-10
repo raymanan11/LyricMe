@@ -14,8 +14,6 @@ protocol UpdateSpotify {
 
 class ArtistSongCell: UITableViewCell {
     
-//    var delegate: UpdateSpotify?
-    
     var songURI: String?
     var artistVC = ArtistInfoViewController()
     
@@ -64,9 +62,11 @@ class ArtistSongCell: UITableViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints  = false
         imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        imageView.layer.cornerRadius = 50
+//        imageView.layer.cornerRadius = 50
         imageView.layer.masksToBounds = true
-        // deal with the border of the album song here
+        print("Album image height: \(imageView.frame.height)")
+        print("Album image width: \(imageView.frame.width)")
+        print("Album image corner radius: \(imageView.layer.cornerRadius)")
 
         return imageView
     }()
@@ -76,12 +76,6 @@ class ArtistSongCell: UITableViewCell {
             artistVC.updateSongURI(songURI: safeSongURI)
         }
         NotificationCenter.default.post(name: NSNotification.Name("playButtonPressed"), object: nil)
-        
-        // when the play button is pressed, exit the artist info VC and change song to the one that was jut pressed
-//        if let safeSongURI = songURI {
-//            print("delegate is trying to be called")
-//            delegate?.exitAndUpdateSpotify(currentSongURI: safeSongURI)
-//        }
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

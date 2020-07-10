@@ -21,13 +21,14 @@ struct SpotifyArtistManager {
     var delegate: ReceiveArtist?
     
     func getArtistInfo(id: String) {
-        if let accesstoken = KeychainWrapper.standard.string(forKey: Constants.accessToken) {
-            let headers: HTTPHeaders = ["Authorization": "Bearer \(accesstoken)"]
+        if let accessToken = KeychainWrapper.standard.string(forKey: Constants.accessToken) {
+            let headers: HTTPHeaders = ["Authorization": "Bearer \(accessToken)"]
             let parameters = ["country": "US"]
-            print(id)
             AF.request("https://api.spotify.com/v1/artists/\(id)/top-tracks?", method: .get, parameters: parameters, headers: headers).responseJSON { response in
-                if let info = self.parseJSON(songData: response.data!) {
-                    self.delegate?.getArtist(info: info)
+                if let safeData = response.data {
+                    if let info = self.parseJSON(songData: safeData) {
+                        self.delegate?.getArtist(info: info)
+                    }
                 }
             }
         }

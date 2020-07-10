@@ -72,6 +72,7 @@ class CurrentlyPlayingManager {
 //                            UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
 //                            previousSong = info.apiSongName
 //                        }
+                        print("Going to update artist info")
                         UIDelegate?.updateSongInfoUI(info)
                         let songAndArtist = "\(info.apiSongName) \(info.allArtists)"
                         UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
@@ -98,7 +99,7 @@ class CurrentlyPlayingManager {
 //            }
             let info = try decoder.decode(SpotifyCurrentlyPlayingInfo.self, from: data)
             
-            if let singleArtist = info.item?.artists[0].name, let songName = info.item?.name, let albumURL = info.item?.album?.images[0].url, let artistID = info.item?.album?.artists[0].id {
+            if let singleArtist = info.item?.artists[0].name, let songName = info.item?.name, let albumURL = info.item?.album?.images[0].url, let artistID = info.item?.album?.artists?[0].id {
                 var artists = ""
                 let artistInfo = info.item?.artists
                 // gets all of the artists in the song
@@ -112,12 +113,15 @@ class CurrentlyPlayingManager {
                 }
                 // checks of the song title has any - or () which could get the wrong info from lyric API
                 let correctSongName = checkSongName(songName)
-                let currentlyPlayingInfo = CurrentlyPlayingInfo(artistName: singleArtist, fullSongName: songName, apiSongName: correctSongName, allArtists: artists, albumURL: albumURL, isPlaying: info.is_playing, artistID: artistID)
+                print("Artist ID: \(artistID)")
+                let currentlyPlayingInfo = CurrentlyPlayingInfo(artistName: singleArtist, fullSongName: songName, apiSongName: correctSongName, allArtists: artists, albumURL: albumURL, artistID: artistID)
                 return currentlyPlayingInfo
             }
             return nil
         }
         catch {
+            print(error)
+            NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
             return nil
         }
     }
@@ -162,5 +166,8 @@ class CurrentlyPlayingManager {
         }
         return songName
     }
+    
+    // add a method that will be called using notification or delegation which will be observed by the main VC
+    // parse the playerState.track.artist.uri for the artistID which can then be used for the artist image as well
 }
 

@@ -10,7 +10,6 @@ import Foundation
 
 struct SpotifyCurrentlyPlayingInfo: Decodable {
     var item: Item?
-    var is_playing: Bool
 }
 
 struct Item: Decodable {
@@ -23,7 +22,7 @@ struct Item: Decodable {
 struct Album: Decodable {
     var images: [Images]
     // used to get id of artist
-    var artists: [Artists]
+    var artists: [Artists]?
 }
 
 struct Images: Decodable {

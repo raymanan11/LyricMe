@@ -14,6 +14,5 @@ struct CurrentlyPlayingInfo {
     var apiSongName: String
     var allArtists: String
     var albumURL: String
-    var isPlaying: Bool
-    var artistID: String
+    var artistID: String?
 }
