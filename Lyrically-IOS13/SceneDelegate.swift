@@ -75,14 +75,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         openURL = true
         NotificationCenter.default.post(name: NSNotification.Name("openSpotify"), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name("logInSuccessful"), object: nil)
-        NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
         print("Moved to Main VC from openURL")
         firstAppEntry = false
         sessionManager.application(UIApplication.shared, open: url, options: [:])
     }
     
     func sessionManager(manager: SPTSessionManager, didInitiate session: SPTSession) {
-        // boolean for login
         print("inititated session")
         let defaults = UserDefaults.standard
         defaults.initiatedSession = true
@@ -150,30 +148,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         print(#function)
     }
     
-    var artistInfoVC: ArtistInfoViewController {
-        get {
-            let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            let artistVC = mainStoryboard.instantiateViewController(withIdentifier: "artistInfo") as! ArtistInfoViewController
-            return artistVC
-        }
-    }
-    
     var mainVC: MainViewController {
         get {
-            let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            let mainVC = mainStoryboard.instantiateViewController(withIdentifier: "main") as! MainViewController
+            let mainVC = self.window?.rootViewController?.children[1] as! MainViewController
             return mainVC
         }
     }
-    
-    var logInVC: LogInViewController {
-        get {
-            let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            let logInVC = mainStoryboard.instantiateViewController(withIdentifier: "logIn") as! LogInViewController
-            return logInVC
-        }
-    }
-    
+
 }
 
 extension UserDefaults {
@@ -231,13 +212,14 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     }
 
     func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
-        // post notification that spotify app has been closed and show the log in button again
+        
         let defaults = UserDefaults.standard
         defaults.initiatedSession = false
         
         NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
         print("failed")
         if !firstAppEntry {
+            print("Not the first entry")
             lastSong = nil
             let rootViewController = self.window!.rootViewController as! UINavigationController
             let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
@@ -253,17 +235,12 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
         if playerState.track.name != lastSong {
             if openURL {
                 print("First time coming back after opening url using playerStateDidChange info for currently playing info")
-                //mainVC.firstLogIn(firstCurrentSong)
-                // this method sets main VC's own currentlyPlayingSong to this one then calls spotifyArtistImageManager to get the albumURL using delegation to mainVC
                 let artistName = playerState.track.artist.name
                 let fullSongName = playerState.track.name
                 let apiSongName = currentlyPlaying.checkSongName(fullSongName)
                 let artistID = parseURI(artistURI: playerState.track.artist.uri)
                 let firstCurrentSong = CurrentlyPlayingInfo(artistName: artistName, fullSongName: fullSongName, apiSongName: apiSongName, allArtists: artistName, albumURL: "", artistID: artistID)
                 mainVC.getFirstSong(firstSong: firstCurrentSong)
-//                DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
-//                    NotificationCenter.default.post(name: NSNotification.Name("firstSong"), object: nil)
-//                }
                 openURL = false
                 // be aware of state of openURL like when force closing app for example
             }
@@ -272,19 +249,6 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
                     NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
                 }
             }
-
-//            print("Previous song is different than current song, updating song info")
-//            print("in player state did change")
-//            print(playerState.track.name)
-//            print(lastSong)
-//            print(playerState.track.artist.name)
-//            print(playerState.track.artist.uri)
-//            print(playerState.track.uri)
-//            // if first time coming in the app, use this statement below but if not, take out the dispatch queue
-//            DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
-//                NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
-//            }
-//            NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
         }
         lastSong = playerState.track.name
     }

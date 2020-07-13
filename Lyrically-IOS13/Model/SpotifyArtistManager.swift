@@ -19,14 +19,15 @@ struct SpotifyArtistManager {
     
     var dispatchGroup = DispatchGroup()
     var delegate: ReceiveArtist?
+    var artistName: String?
     
-    func getArtistInfo(id: String) {
+    func getArtistInfo(id: String, artistName: String) {
         if let accessToken = KeychainWrapper.standard.string(forKey: Constants.accessToken) {
             let headers: HTTPHeaders = ["Authorization": "Bearer \(accessToken)"]
             let parameters = ["country": "US"]
             AF.request("https://api.spotify.com/v1/artists/\(id)/top-tracks?", method: .get, parameters: parameters, headers: headers).responseJSON { response in
                 if let safeData = response.data {
-                    if let info = self.parseJSON(songData: safeData) {
+                    if let info = self.parseJSON(songData: safeData, artistName: artistName) {
                         self.delegate?.getArtist(info: info)
                     }
                 }
@@ -34,13 +35,15 @@ struct SpotifyArtistManager {
         }
     }
     
-    func parseJSON(songData: Data) -> ArtistInfo? {
+    func parseJSON(songData: Data, artistName: String) -> ArtistInfo? {
         let decoder = JSONDecoder()
         var songs = [String]()
         var songURI = [String]()
         var songAlbumImage = [String]()
         do {
             let info = try decoder.decode(SpotifyArtistInfo.self, from: songData)
+            // check whether info from currently playing song matches info from here (loop through array to see which one matches
+            // used the passed in artist name to check this
             let artistName = info.tracks[0].album.artists[0].name
             for track in info.tracks {
                 songs.append(track.name)

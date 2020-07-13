@@ -24,13 +24,6 @@ struct SpotifyArtistImageManager {
             AF.request("https://api.spotify.com/v1/artists/\(id)", method: .get, headers: headers).responseJSON { response in
                 if let safeData = response.data {
                     if let info = self.parseJSON(artistData: safeData) {
-                        print(info)
-                        if self.delegate != nil {
-                            print("delegate is not nil")
-                        }
-                        else {
-                            print("delegate is nil")
-                        }
                         self.delegate?.setAlbumURL(albumURL: info)
                     }
                 }

@@ -51,9 +51,11 @@ class ArtistInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(returnToVC), name: NSNotification.Name("playButtonPressed"), object: nil)
-        
-        artistLabel.text = "\(nameOfArtist!)\n\nFollowers: \(numberOfFollowers!)"
-        artistLabel.font = .systemFont(ofSize: 19, weight: .semibold)
+        if let safeNumFollowers = numberOfFollowers {
+            let followers = addCommas(safeNumFollowers)
+            artistLabel.text = "\(nameOfArtist!)\n\nFollowers: \(followers)"
+        }
+        artistLabel.font = .systemFont(ofSize: 23, weight: .semibold)
         artistLabel.numberOfLines = 0
         artistLabel.textColor = .label
         
@@ -63,10 +65,6 @@ class ArtistInfoViewController: UIViewController {
         artistImage.heightAnchor.constraint(equalToConstant: 120).isActive = true
         artistImage.contentMode = .scaleAspectFill
         artistImage.translatesAutoresizingMaskIntoConstraints = false
-
-        print("Album image height: \(artistImage.frame.height)")
-        print("Album image width: \(artistImage.frame.width)")
-        print("Album image corner radius: \(artistImage.layer.cornerRadius)")
 
         containerView.backgroundColor = .darkGray
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -121,8 +119,6 @@ class ArtistInfoViewController: UIViewController {
                         else {
                             imageView.layer.cornerRadius = imageView.frame.height / 2
                         }
-                        print(imageView.frame.height)
-                        print(imageView.layer.cornerRadius)
                         imageView.clipsToBounds = true
                         // change the color to match the occasion (whether a button or dark/light mode)
                         imageView.layer.borderColor = UIColor.white.cgColor
@@ -144,6 +140,18 @@ class ArtistInfoViewController: UIViewController {
     @objc func returnToVC() {
         navigationController?.popViewController(animated: true)
         dismiss(animated: true, completion: nil)
+    }
+    
+    func addCommas(_ numberOfFollowers: Int) -> String {
+        var numFollowers = String(numberOfFollowers)
+        var count = numFollowers.count
+        let threePlaces = 3
+        
+        while count > threePlaces {
+            count = count - threePlaces
+            numFollowers.insert(",", at: numFollowers.index(numFollowers.startIndex, offsetBy: count))
+        }
+        return numFollowers
     }
     
 }

@@ -73,9 +73,7 @@ class CurrentlyPlayingManager {
 //                            previousSong = info.apiSongName
 //                        }
                         print("Going to update artist info")
-                        UIDelegate?.updateSongInfoUI(info)
-                        let songAndArtist = "\(info.apiSongName) \(info.allArtists)"
-                        UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
+                        updateSongInfo(info: info)
                     }
 //                    else {
 //                        // will reach here if no song is playing
@@ -89,6 +87,16 @@ class CurrentlyPlayingManager {
                 }
             }
         }
+    }
+    
+    func updateSongInfo(info: CurrentlyPlayingInfo) {
+        print(info.fullSongName)
+        if UIDelegate == nil {
+            print("UIDelegate is nil!")
+        }
+        UIDelegate?.updateSongInfoUI(info)
+        let songAndArtist = "\(info.apiSongName) \(info.allArtists)"
+        UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
     }
     
     func parseJSON(data: Data) -> CurrentlyPlayingInfo? {

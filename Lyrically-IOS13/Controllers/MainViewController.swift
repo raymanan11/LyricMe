@@ -57,16 +57,16 @@ class MainViewController: UIViewController, HasLyrics {
         NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.getSpotifyArtist), name: NSNotification.Name(rawValue: "getSpotifyArtist"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.getFirstSongAlbumURL), name: NSNotification.Name(rawValue: "firstSong"), object: nil)
+    
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         print("View will disappear and removing observer")
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.newAccessToken), object: nil)
+        
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
+        
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "getSpotifyArtist"), object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "firstSong"), object: nil)
     }
     
     @IBAction func getArtistInfo(_ sender: UIButton) {
@@ -91,7 +91,8 @@ class MainViewController: UIViewController, HasLyrics {
     @objc func getSpotifyArtist() {
         print("got spotify aritst info, picture and number of followers")
         if let safeArtistID = artistID {
-            spotifyArtistManager.getArtistInfo(id: safeArtistID)
+            // add in the artist name received by API call to currently playing info
+//            spotifyArtistManager.getArtistInfo(id: safeArtistID)
             spotifyArtistManager.getArtistPicture(id: safeArtistID)
         }
     }
@@ -182,12 +183,14 @@ extension MainViewController: UI {
         getFirstSongAlbumURL()
     }
 
-    @objc func getFirstSongAlbumURL() {
+    func getFirstSongAlbumURL() {
         print("in getFirstSongAlbumURL")
         if firstSong != nil {
-            print(firstSong!.fullSongName)
-            print(firstSong!.artistName)
             spotifyArtistImageManager.getArtistImageURL(id: firstSong!.artistID!)
+            DispatchQueue.main.asyncAfter(deadline: 5.second.fromNow) {
+                print(self.firstSong?.albumURL)
+                self.currentlyPlaying.updateSongInfo(info: self.firstSong!)
+            }
         }
         else {
             print("first song is nil")
@@ -198,9 +201,9 @@ extension MainViewController: UI {
 
 extension MainViewController: FirstSong {
     func setAlbumURL(albumURL: String) {
+        print("in setAlbumURL")
         if firstSong != nil {
             firstSong!.albumURL = albumURL
-            print(firstSong!.albumURL)
         }
     }
 }

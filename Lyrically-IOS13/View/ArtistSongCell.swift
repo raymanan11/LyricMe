@@ -56,17 +56,17 @@ class ArtistSongCell: UITableViewCell {
     }()
 
     let albumImage: UIImageView = {
-
         let imageView = UIImageView()
+//        if artistVC.traitCollection.userInterfaceStyle == .dark {
+//
+//        }
+//        else {
+//
+//        }
         imageView.backgroundColor = .quaternarySystemFill
         imageView.translatesAutoresizingMaskIntoConstraints  = false
         imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-//        imageView.layer.cornerRadius = 50
-        imageView.layer.masksToBounds = true
-        print("Album image height: \(imageView.frame.height)")
-        print("Album image width: \(imageView.frame.width)")
-        print("Album image corner radius: \(imageView.layer.cornerRadius)")
 
         return imageView
     }()
@@ -91,7 +91,7 @@ class ArtistSongCell: UITableViewCell {
 
         let stackView = UIStackView(arrangedSubviews: [albumImage, songName, containerView])
         stackView.distribution = .fillProportionally
-        stackView.spacing = 10
+        stackView.spacing = 25
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(stackView)
