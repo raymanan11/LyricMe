@@ -40,17 +40,20 @@ struct SpotifyArtistManager {
         var songs = [String]()
         var songURI = [String]()
         var songAlbumImage = [String]()
+        var correctArtistName: String?
         do {
             let info = try decoder.decode(SpotifyArtistInfo.self, from: songData)
             // check whether info from currently playing song matches info from here (loop through array to see which one matches
             // used the passed in artist name to check this
-            let artistName = info.tracks[0].album.artists[0].name
             for track in info.tracks {
-                songs.append(track.name)
-                songURI.append(track.uri)
-                songAlbumImage.append(track.album.images[0].url)
+                if track.album.artists[0].name == artistName {
+                    correctArtistName = track.album.artists[0].name
+                    songs.append(track.name)
+                    songURI.append(track.uri)
+                    songAlbumImage.append(track.album.images[0].url)
+                }
             }
-            let artistInfo = ArtistInfo(artistName: artistName, songAlbumImage: songAlbumImage, popularSongs: songs, songURI: songURI)
+            let artistInfo = ArtistInfo(artistName: correctArtistName!, songAlbumImage: songAlbumImage, popularSongs: songs, songURI: songURI)
             return artistInfo
         }
         catch {

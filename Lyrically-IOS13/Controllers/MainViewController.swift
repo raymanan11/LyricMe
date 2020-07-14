@@ -21,8 +21,8 @@ class MainViewController: UIViewController, HasLyrics {
     var spotifyArtistManager = SpotifyArtistManager()
     var spotifyArtistImageManager = SpotifyArtistImageManager()
     
-    
     var artistID: String?
+    var artistName: String?
     
     var firstSong: CurrentlyPlayingInfo?
     var spotifyArtist: ArtistInfo?
@@ -90,10 +90,30 @@ class MainViewController: UIViewController, HasLyrics {
     
     @objc func getSpotifyArtist() {
         print("got spotify aritst info, picture and number of followers")
-        if let safeArtistID = artistID {
+        if let safeArtistID = artistID, let safeArtistName = artistName {
+            print("Artist name to be used for accuracy: \(safeArtistName)")
             // add in the artist name received by API call to currently playing info
-//            spotifyArtistManager.getArtistInfo(id: safeArtistID)
+            spotifyArtistManager.getArtistInfo(id: safeArtistID, artistName: safeArtistName)
             spotifyArtistManager.getArtistPicture(id: safeArtistID)
+        }
+    }
+    
+    func getFirstSong(firstSong: CurrentlyPlayingInfo) {
+        self.firstSong = firstSong
+        getFirstSongAlbumURL()
+    }
+
+    func getFirstSongAlbumURL() {
+        print("in getFirstSongAlbumURL")
+        if firstSong != nil {
+            spotifyArtistImageManager.getArtistImageURL(id: firstSong!.artistID!)
+            DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
+                print("trying to get info again!")
+                self.currentlyPlaying.updateSongInfo(info: self.firstSong!)
+            }
+        }
+        else {
+            print("first song is nil")
         }
     }
     
@@ -147,6 +167,8 @@ extension MainViewController: UI {
     func updateSongInfoUI(_ songInfo: CurrentlyPlayingInfo) {
         DispatchQueue.main.async {
             print("in updateSongInfoUI")
+            print("Song artist: \(songInfo.artistName)")
+            self.artistName = songInfo.artistName
             self.artistInfo.isEnabled = true
             self.lyrics.isHidden = false
             self.lyrics.textContainerInset = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
@@ -156,6 +178,7 @@ extension MainViewController: UI {
             self.updateAlbumImage(albumURL: songInfo.albumURL)
             self.lyrics.text = "Getting Lyrics..."
             if songInfo.artistID != nil {
+                print("Artist ID is not nil: \(songInfo.artistID)")
                 self.artistID = songInfo.artistID
                 NotificationCenter.default.post(name: NSNotification.Name("getSpotifyArtist"), object: nil)
             }
@@ -175,25 +198,6 @@ extension MainViewController: UI {
                 }
             }
             task.resume()
-        }
-    }
-    
-    func getFirstSong(firstSong: CurrentlyPlayingInfo) {
-        self.firstSong = firstSong
-        getFirstSongAlbumURL()
-    }
-
-    func getFirstSongAlbumURL() {
-        print("in getFirstSongAlbumURL")
-        if firstSong != nil {
-            spotifyArtistImageManager.getArtistImageURL(id: firstSong!.artistID!)
-            DispatchQueue.main.asyncAfter(deadline: 5.second.fromNow) {
-                print(self.firstSong?.albumURL)
-                self.currentlyPlaying.updateSongInfo(info: self.firstSong!)
-            }
-        }
-        else {
-            print("first song is nil")
         }
     }
     

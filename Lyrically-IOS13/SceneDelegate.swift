@@ -18,12 +18,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     
     var window: UIWindow?
     
+    let defaults = UserDefaults.standard
     var currentlyPlaying = CurrentlyPlayingManager()
     var spotifyArtistImageManager = SpotifyArtistImageManager()
 
     var lastSong: String?
     var openURL: Bool = false
     private var firstAppEntry: Bool = true
+    private var firstSignIn: Bool = true
     private var didEnterForeground: Bool = false
     private var didEnterBackground: Bool = true
     private var connected: Bool = true
@@ -82,7 +84,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     
     func sessionManager(manager: SPTSessionManager, didInitiate session: SPTSession) {
         print("inititated session")
-        let defaults = UserDefaults.standard
         defaults.initiatedSession = true
         appRemote.connectionParameters.accessToken = session.accessToken
         self.accessToken = session.accessToken
@@ -103,6 +104,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
+        firstSignIn = true
         print(#function)
     }
 
@@ -132,7 +134,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         print("returned to app")
         didEnterForeground = true
         didEnterBackground = false
-        let defaults = UserDefaults.standard
         // first is false so that means app remotes won't conflict when connecting from both sceneWillEnterForeground and didInitiate session, only runs the appRemote.connect from the didInitiate instead of sceneDidBecomeActive
         // only runs after user has authenticated and has spotify app open
         if defaults.initiatedSession {
@@ -193,6 +194,7 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     }
 
     func appRemote(_ appRemote: SPTAppRemote, didDisconnectWithError error: Error?) {
+//        firstSignIn = false
         connected = false
         if !self.connected && !self.didEnterBackground {
             print("Spotify app has been on pause for too long and can't connect again, going back to the log in screen!")
@@ -212,8 +214,6 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     }
 
     func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
-        
-        let defaults = UserDefaults.standard
         defaults.initiatedSession = false
         
         NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
@@ -233,7 +233,8 @@ extension SceneDelegate: SPTAppRemoteDelegate {
 extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
     func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
         if playerState.track.name != lastSong {
-            if openURL {
+            print(firstSignIn)
+            if openURL && firstSignIn {
                 print("First time coming back after opening url using playerStateDidChange info for currently playing info")
                 let artistName = playerState.track.artist.name
                 let fullSongName = playerState.track.name
@@ -241,6 +242,7 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
                 let artistID = parseURI(artistURI: playerState.track.artist.uri)
                 let firstCurrentSong = CurrentlyPlayingInfo(artistName: artistName, fullSongName: fullSongName, apiSongName: apiSongName, allArtists: artistName, albumURL: "", artistID: artistID)
                 mainVC.getFirstSong(firstSong: firstCurrentSong)
+                firstSignIn = false
                 openURL = false
                 // be aware of state of openURL like when force closing app for example
             }
