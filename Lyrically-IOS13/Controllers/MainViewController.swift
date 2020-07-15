@@ -28,10 +28,10 @@ class MainViewController: UIViewController, HasLyrics {
     var spotifyArtist: ArtistInfo?
     var spotifyArtist2: ArtistInfo2?
 
-    @IBOutlet weak var lyrics: UITextView!
-    @IBOutlet weak var songTitle: UILabel!
-    @IBOutlet weak var songArtist: UILabel!
-    @IBOutlet weak var artistInfo: UIButton!
+    @IBOutlet var lyrics: UITextView!
+    @IBOutlet var songTitle: UILabel!
+    @IBOutlet var songArtist: UILabel!
+    @IBOutlet var artistInfo: UIButton!
     
     override func viewWillAppear(_ animated: Bool) {
         currentlyPlaying.UIDelegate = self
@@ -56,7 +56,7 @@ class MainViewController: UIViewController, HasLyrics {
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.getSpotifyArtist), name: NSNotification.Name(rawValue: "getSpotifyArtist"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.returnToLogIn), name: NSNotification.Name(rawValue: "returnToLogIn"), object: nil)
     
     }
     
@@ -66,7 +66,7 @@ class MainViewController: UIViewController, HasLyrics {
         
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
         
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "getSpotifyArtist"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "returnToLogIn"), object: nil)
     }
     
     @IBAction func getArtistInfo(_ sender: UIButton) {
@@ -115,6 +115,10 @@ class MainViewController: UIViewController, HasLyrics {
         else {
             print("first song is nil")
         }
+    }
+    
+    @objc func returnToLogIn() {
+        _ = navigationController?.popToRootViewController(animated: true)
     }
     
 }
@@ -180,7 +184,7 @@ extension MainViewController: UI {
             if songInfo.artistID != nil {
                 print("Artist ID is not nil: \(songInfo.artistID)")
                 self.artistID = songInfo.artistID
-                NotificationCenter.default.post(name: NSNotification.Name("getSpotifyArtist"), object: nil)
+                self.getSpotifyArtist()
             }
             else {
                 print("No artist ID!")

@@ -9,6 +9,8 @@ class LogInViewController: UIViewController {
     
     var sceneDelegate = SceneDelegate()
     
+    var oneMainVC: UIViewController!
+    
     @IBOutlet weak var logInButton: UIButton!
 
     override func viewDidLoad() {
@@ -20,7 +22,7 @@ class LogInViewController: UIViewController {
             hideLogInButton()
         }
 
-        NotificationCenter.default.addObserver(self, selector: #selector(self.moveToNextVC), name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.showMainVC), name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.hideLogInButton), name: NSNotification.Name(rawValue: "openSpotify"), object: nil)
         
@@ -48,9 +50,12 @@ class LogInViewController: UIViewController {
     }
     
     @objc func showMainVC() {
-        let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        let mainViewController = storyBoard.instantiateViewController(withIdentifier: "main") as! MainViewController
-        self.navigationController?.pushViewController(mainViewController, animated: true)
+        if oneMainVC == nil {
+            print("oneMainVC is nil!")
+            let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            oneMainVC = storyBoard.instantiateViewController(withIdentifier: "main") as! MainViewController
+        }
+        self.navigationController?.pushViewController(oneMainVC, animated: true)
     }
 
 }

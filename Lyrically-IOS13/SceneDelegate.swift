@@ -194,7 +194,6 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     }
 
     func appRemote(_ appRemote: SPTAppRemote, didDisconnectWithError error: Error?) {
-//        firstSignIn = false
         connected = false
         if !self.connected && !self.didEnterBackground {
             print("Spotify app has been on pause for too long and can't connect again, going back to the log in screen!")
@@ -204,6 +203,7 @@ extension SceneDelegate: SPTAppRemoteDelegate {
             lastSong = nil
 
             NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
+//            NotificationCenter.default.post(name: NSNotification.Name("returnToLogIn"), object: nil)
             let rootViewController = self.window!.rootViewController as! UINavigationController
             let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
             let logInVC = mainStoryboard.instantiateViewController(withIdentifier: "logIn") as! LogInViewController
@@ -216,15 +216,17 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
         defaults.initiatedSession = false
         
-        NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
+        firstSignIn = true
         print("failed")
+        NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
         if !firstAppEntry {
             print("Not the first entry")
             lastSong = nil
+//            NotificationCenter.default.post(name: NSNotification.Name("returnToLogIn"), object: nil)
             let rootViewController = self.window!.rootViewController as! UINavigationController
             let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
             let logInVC = mainStoryboard.instantiateViewController(withIdentifier: "logIn") as! LogInViewController
-            rootViewController.pushViewController(logInVC, animated: false)
+            rootViewController.pushViewController(logInVC, animated: true)
         }
     }
 
