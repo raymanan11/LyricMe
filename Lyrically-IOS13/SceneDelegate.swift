@@ -21,6 +21,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     let defaults = UserDefaults.standard
     var currentlyPlaying = CurrentlyPlayingManager()
     var spotifyArtistImageManager = SpotifyArtistImageManager()
+    
+    var firstCurrentSong: CurrentlyPlayingInfo?
 
     var lastSong: String?
     var openURL: Bool = false
@@ -80,6 +82,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         print("Moved to Main VC from openURL")
         firstAppEntry = false
         sessionManager.application(UIApplication.shared, open: url, options: [:])
+
     }
     
     func sessionManager(manager: SPTSessionManager, didInitiate session: SPTSession) {
@@ -203,7 +206,6 @@ extension SceneDelegate: SPTAppRemoteDelegate {
             lastSong = nil
 
             NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
-//            NotificationCenter.default.post(name: NSNotification.Name("returnToLogIn"), object: nil)
             let rootViewController = self.window!.rootViewController as! UINavigationController
             let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
             let logInVC = mainStoryboard.instantiateViewController(withIdentifier: "logIn") as! LogInViewController
@@ -242,8 +244,8 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
                 let fullSongName = playerState.track.name
                 let apiSongName = currentlyPlaying.checkSongName(fullSongName)
                 let artistID = parseURI(artistURI: playerState.track.artist.uri)
-                let firstCurrentSong = CurrentlyPlayingInfo(artistName: artistName, fullSongName: fullSongName, apiSongName: apiSongName, allArtists: artistName, albumURL: "", artistID: artistID)
-                mainVC.getFirstSong(firstSong: firstCurrentSong)
+                firstCurrentSong = CurrentlyPlayingInfo(artistName: artistName, fullSongName: fullSongName, apiSongName: apiSongName, allArtists: artistName, albumURL: "", artistID: artistID)
+                NotificationCenter.default.post(name: NSNotification.Name("getFirstSong"), object: nil)
                 firstSignIn = false
                 openURL = false
                 // be aware of state of openURL like when force closing app for example

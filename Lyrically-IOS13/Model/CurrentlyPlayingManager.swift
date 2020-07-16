@@ -25,65 +25,22 @@ class CurrentlyPlayingManager {
     
     var triedOnce = false
     
-    // gets the information of the currently playing song and artist
     @objc func fetchData() {
-        print("getting currently playing song!")
-        let accessToken: String? = KeychainWrapper.standard.string(forKey: Constants.accessToken)
-        let refreshToken: String? = KeychainWrapper.standard.string(forKey: Constants.refreshToken)
-
-        let headers = ["Authorization" : "Bearer \(accessToken ?? "none")"]
-        
-        let request = NSMutableURLRequest(url: NSURL(string: "https://api.spotify.com/v1/me/player/currently-playing")! as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
-        
-        request.allHTTPHeaderFields = headers
-        
-        let session = URLSession(configuration: .default)
-        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: handle(data:response:error:))
-        dataTask.resume()
-    }
-    
-    func handle(data: Data?, response: URLResponse?, error: Error?) {
-        if error != nil {
-            print(error!)
-            UIDelegate?.updateSpotifyStatus(isPlaying: true)
-            print("Error occurred! Trying to get info again!")
-            fetchData()
-            return
-        }
-        else {
-            if let safeData = data {
-//                let sdata = String(data: safeData, encoding: String.Encoding.utf8) as String?
-//                print(sdata)
-
-                // check if the access token is expired, then if it is then refresh to get new access token and post a notification that a new refresh token was received and call fetchData again
-                if self.expiredAccessToken(safeData) == true {
-                    UIDelegate?.updateSpotifyStatus(isPlaying: true)
-//                    previousSong = nil
-                    tokenManager.refreshToken()
-                }
-                
-                else {
-                    if let info = self.parseJSON(data: safeData) {
-                        // update the UI that shows currently playing songs, song artist(s)
-                        // pass info to Main VC which will call API to get lyrics from passed data
-//                        if info.apiSongName != previousSong {
-//                            UIDelegate?.updateSongInfoUI(info)
-//                            let songAndArtist = "\(info.apiSongName) \(info.allArtists)"
-//                            UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
-//                            previousSong = info.apiSongName
-//                        }
-                        print("Going to update artist info")
-                        updateSongInfo(info: info)
+        if let accessToken = KeychainWrapper.standard.string(forKey: Constants.accessToken) {
+            let headers: HTTPHeaders = ["Authorization": "Bearer \(accessToken)"]
+            AF.request("https://api.spotify.com/v1/me/player/currently-playing", method: .get, headers: headers).responseJSON { response in
+                if let safeData = response.data {
+                    if self.expiredAccessToken(safeData) == true {
+                        self.UIDelegate?.updateSpotifyStatus(isPlaying: true)
+                        self.tokenManager.refreshToken()
                     }
-//                    else {
-//                        // will reach here if no song is playing
-//                        UIDelegate?.updateSpotifyStatus(isPlaying: false)
-//                        // only way this works if it 100% works after posting notification to get fetchData() again
-//                        if triedOnce == false {
-//                            triedOnce = true
-//                            NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
-//                        }
-//                    }
+                    
+                    else {
+                        if let info = self.parseJSON(data: safeData) {
+                            print("Going to update artist info")
+                            self.updateSongInfo(info: info)
+                        }
+                    }
                 }
             }
         }

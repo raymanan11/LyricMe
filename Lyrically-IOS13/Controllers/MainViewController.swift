@@ -57,6 +57,8 @@ class MainViewController: UIViewController, HasLyrics {
         NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.returnToLogIn), name: NSNotification.Name(rawValue: "returnToLogIn"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.getFirstSong), name: NSNotification.Name(rawValue: "getFirstSong"), object: nil)
     
     }
     
@@ -98,9 +100,19 @@ class MainViewController: UIViewController, HasLyrics {
         }
     }
     
-    func getFirstSong(firstSong: CurrentlyPlayingInfo) {
-        self.firstSong = firstSong
-        getFirstSongAlbumURL()
+    @objc func getFirstSong() {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+          let sceneDelegate = windowScene.delegate as? SceneDelegate
+        else {
+          return
+        }
+//        let sceneDelegate = self.view.window
+        let firstSong = sceneDelegate.firstCurrentSong
+        if let safeFirstSong = firstSong {
+            print("able to get first song from scene delegate")
+            self.firstSong = safeFirstSong
+            getFirstSongAlbumURL()
+        }
     }
 
     func getFirstSongAlbumURL() {
