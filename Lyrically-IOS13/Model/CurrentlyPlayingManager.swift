@@ -34,7 +34,6 @@ class CurrentlyPlayingManager {
                         self.UIDelegate?.updateSpotifyStatus(isPlaying: true)
                         self.tokenManager.refreshToken()
                     }
-                    
                     else {
                         if let info = self.parseJSON(data: safeData) {
                             print("Going to update artist info")

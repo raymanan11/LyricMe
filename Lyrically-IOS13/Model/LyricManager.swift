@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import NaturalLanguage
 
 protocol LyricManagerDelegate : class {
     func updateLyrics(_ fullLyrics: String)
@@ -29,6 +30,7 @@ class LyricManager {
         self.songName = songName
         self.songArtist = songArtist
         var songURL = songAndArtist.replacingOccurrences(of: " ", with: "%2520")
+        
         songURL = songURL.folding(options: .diacriticInsensitive, locale: .current)
         let request = NSMutableURLRequest(url: NSURL(string: "https://canarado-lyrics.p.rapidapi.com/lyrics/\(songURL)")! as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
         request.httpMethod = "GET"
@@ -69,12 +71,15 @@ class LyricManager {
         let decoder = JSONDecoder()
         do {
             let songInfo = try decoder.decode(CanaradoSongInfo.self, from: safeData)
+            let spotifySongName = songName.lowercased().replacingOccurrences(of: " ", with: "")
+            let spotifySongArtist = songArtist.lowercased().replacingOccurrences(of: " ", with: "")
             // loop through the array contents and match if the songName and lyrics are contained in the titles of the content
-            print(songName)
             for(index, value) in songInfo.content.enumerated() {
                 let potentialSongName = value.title.lowercased()
+                let canaradoSongName = potentialSongName.filter { !$0.isWhitespace }
                 // hopefully also include an and statement that will include the artist name for extra security/accuracy to get lyrics from API like the statement above
-                if potentialSongName.contains(songName.lowercased()) {
+                if canaradoSongName.contains(spotifySongName) && canaradoSongName.contains(spotifySongArtist) {
+                    print(potentialSongName)
                     return value.lyrics
                 }
             }
@@ -86,6 +91,15 @@ class LyricManager {
             return Constants.noLyrics
         }
     }
+    
+    func detectedLanguage(for string: String) -> String? {
+        let recognizer = NLLanguageRecognizer()
+        recognizer.processString(string)
+        guard let languageCode = recognizer.dominantLanguage?.rawValue else { return nil }
+        let detectedLanguage = Locale.current.localizedString(forIdentifier: languageCode)
+        return detectedLanguage
+    }
+    
 }
 
 

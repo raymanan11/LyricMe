@@ -42,6 +42,7 @@ class MainViewController: UIViewController, HasLyrics {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("in Main VC")
         navigationController?.isNavigationBarHidden = true
         self.lyrics.isHidden = true
         artistInfo.isEnabled = false
@@ -58,12 +59,9 @@ class MainViewController: UIViewController, HasLyrics {
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.returnToLogIn), name: NSNotification.Name(rawValue: "returnToLogIn"), object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.getFirstSong), name: NSNotification.Name(rawValue: "getFirstSong"), object: nil)
-    
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        print("View will disappear and removing observer")
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.newAccessToken), object: nil)
         
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
@@ -100,19 +98,20 @@ class MainViewController: UIViewController, HasLyrics {
         }
     }
     
-    @objc func getFirstSong() {
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-          let sceneDelegate = windowScene.delegate as? SceneDelegate
-        else {
-          return
-        }
-//        let sceneDelegate = self.view.window
-        let firstSong = sceneDelegate.firstCurrentSong
-        if let safeFirstSong = firstSong {
-            print("able to get first song from scene delegate")
-            self.firstSong = safeFirstSong
-            getFirstSongAlbumURL()
-        }
+    func getFirstSong(info: CurrentlyPlayingInfo) {
+//        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+//          let sceneDelegate = windowScene.delegate as? SceneDelegate
+//        else {
+//          return
+//        }
+//        let firstSong = sceneDelegate.firstCurrentSong
+//        if let safeFirstSong = firstSong {
+//            print("able to get first song from scene delegate")
+//                self.firstSong = safeFirstSong
+//                getFirstSongAlbumURL()
+//        }
+        self.firstSong = info
+        getFirstSongAlbumURL()
     }
 
     func getFirstSongAlbumURL() {

@@ -195,7 +195,7 @@ extension SceneDelegate: SPTAppRemoteDelegate {
             firstAppEntry = false
         }
     }
-
+    
     func appRemote(_ appRemote: SPTAppRemote, didDisconnectWithError error: Error?) {
         connected = false
         if !self.connected && !self.didEnterBackground {
@@ -206,30 +206,31 @@ extension SceneDelegate: SPTAppRemoteDelegate {
             lastSong = nil
 
             NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
-            let rootViewController = self.window!.rootViewController as! UINavigationController
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            let logInVC = mainStoryboard.instantiateViewController(withIdentifier: "logIn") as! LogInViewController
-            rootViewController.pushViewController(logInVC, animated: true)
+            NotificationCenter.default.post(name: NSNotification.Name("returnToLogIn"), object: nil)
+//            returnToLogIn()
         }
         print("Connected: \(self.connected)")
         print("disconnected")
     }
 
     func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
+        NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
         defaults.initiatedSession = false
-        
         firstSignIn = true
         print("failed")
-        NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
         if !firstAppEntry {
             print("Not the first entry")
             lastSong = nil
-//            NotificationCenter.default.post(name: NSNotification.Name("returnToLogIn"), object: nil)
-            let rootViewController = self.window!.rootViewController as! UINavigationController
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            let logInVC = mainStoryboard.instantiateViewController(withIdentifier: "logIn") as! LogInViewController
-            rootViewController.pushViewController(logInVC, animated: true)
+            NotificationCenter.default.post(name: NSNotification.Name("returnToLogIn"), object: nil)
+//            returnToLogIn()
         }
+    }
+    
+    private func returnToLogIn() {
+        let rootViewController = self.window!.rootViewController as! UINavigationController
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let logInVC = mainStoryboard.instantiateViewController(withIdentifier: "logIn") as! LogInViewController
+        rootViewController.pushViewController(logInVC, animated: true)
     }
 
 }
@@ -245,7 +246,10 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
                 let apiSongName = currentlyPlaying.checkSongName(fullSongName)
                 let artistID = parseURI(artistURI: playerState.track.artist.uri)
                 firstCurrentSong = CurrentlyPlayingInfo(artistName: artistName, fullSongName: fullSongName, apiSongName: apiSongName, allArtists: artistName, albumURL: "", artistID: artistID)
-                NotificationCenter.default.post(name: NSNotification.Name("getFirstSong"), object: nil)
+                if let safeFirstSong = firstCurrentSong {
+                    mainVC.getFirstSong(info: safeFirstSong)
+                }
+//                NotificationCenter.default.post(name: NSNotification.Name("getFirstSong"), object: nil)
                 firstSignIn = false
                 openURL = false
                 // be aware of state of openURL like when force closing app for example

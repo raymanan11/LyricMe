@@ -16,21 +16,19 @@ class LogInViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationController?.isNavigationBarHidden = true
+        
         let defaults = UserDefaults.standard
         if defaults.initiatedSession {
             print("initiated bitch")
             hideLogInButton()
         }
 
-        NotificationCenter.default.addObserver(self, selector: #selector(self.showMainVC), name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.moveToNextVC), name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.hideLogInButton), name: NSNotification.Name(rawValue: "openSpotify"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.showLogInButton), name: NSNotification.Name(rawValue: "closedSpotify"), object: nil)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
     }
     
     @IBAction func logIn(_ sender: Any) {
