@@ -34,11 +34,11 @@ class CurrentlyPlayingManager {
                         self.UIDelegate?.updateSpotifyStatus(isPlaying: true)
                         self.tokenManager.refreshToken()
                     }
+                    else if let info = self.parseJSON(data: safeData) {
+                        self.updateSongInfo(info: info)
+                    }
                     else {
-                        if let info = self.parseJSON(data: safeData) {
-                            print("Going to update artist info")
-                            self.updateSongInfo(info: info)
-                        }
+                        self.UIDelegate?.updateSpotifyStatus(isPlaying: false)
                     }
                 }
             }
@@ -46,10 +46,6 @@ class CurrentlyPlayingManager {
     }
     
     func updateSongInfo(info: CurrentlyPlayingInfo) {
-        print(info.fullSongName)
-        if UIDelegate == nil {
-            print("UIDelegate is nil!")
-        }
         UIDelegate?.updateSongInfoUI(info)
         let songAndArtist = "\(info.apiSongName) \(info.allArtists)"
         UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
@@ -77,7 +73,6 @@ class CurrentlyPlayingManager {
                 }
                 // checks of the song title has any - or () which could get the wrong info from lyric API
                 let correctSongName = checkSongName(songName)
-                print("Artist ID: \(artistID)")
                 let currentlyPlayingInfo = CurrentlyPlayingInfo(artistName: singleArtist, fullSongName: songName, apiSongName: correctSongName, allArtists: artists, albumURL: albumURL, artistID: artistID)
                 return currentlyPlayingInfo
             }

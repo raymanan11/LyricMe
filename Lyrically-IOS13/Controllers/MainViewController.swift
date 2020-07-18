@@ -42,7 +42,6 @@ class MainViewController: UIViewController, HasLyrics {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("in Main VC")
         navigationController?.isNavigationBarHidden = true
         self.lyrics.isHidden = true
         artistInfo.isEnabled = false
@@ -80,7 +79,6 @@ class MainViewController: UIViewController, HasLyrics {
         artistInfo.numberOfFollowers = self.spotifyArtist2?.numFollowers
         
         self.present(artistInfo, animated: true, completion: nil)
-        print("Getting artist data")
         
     }
     
@@ -89,9 +87,7 @@ class MainViewController: UIViewController, HasLyrics {
     }
     
     @objc func getSpotifyArtist() {
-        print("got spotify aritst info, picture and number of followers")
         if let safeArtistID = artistID, let safeArtistName = artistName {
-            print("Artist name to be used for accuracy: \(safeArtistName)")
             // add in the artist name received by API call to currently playing info
             spotifyArtistManager.getArtistInfo(id: safeArtistID, artistName: safeArtistName)
             spotifyArtistManager.getArtistPicture(id: safeArtistID)
@@ -99,33 +95,29 @@ class MainViewController: UIViewController, HasLyrics {
     }
     
     func getFirstSong(info: CurrentlyPlayingInfo) {
-//        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-//          let sceneDelegate = windowScene.delegate as? SceneDelegate
-//        else {
-//          return
-//        }
-//        let firstSong = sceneDelegate.firstCurrentSong
-//        if let safeFirstSong = firstSong {
-//            print("able to get first song from scene delegate")
-//                self.firstSong = safeFirstSong
-//                getFirstSongAlbumURL()
-//        }
         self.firstSong = info
         getFirstSongAlbumURL()
     }
 
     func getFirstSongAlbumURL() {
-        print("in getFirstSongAlbumURL")
-        if firstSong != nil {
-            spotifyArtistImageManager.getArtistImageURL(id: firstSong!.artistID!)
+        if let safeFirstSong = firstSong, let safeArtistID = safeFirstSong.artistID {
+            spotifyArtistImageManager.getArtistImageURL(id: safeArtistID)
             DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
-                print("trying to get info again!")
-                self.currentlyPlaying.updateSongInfo(info: self.firstSong!)
+                self.currentlyPlaying.updateSongInfo(info: safeFirstSong)
             }
         }
         else {
-            print("first song is nil")
+            self.currentlyPlaying.UIDelegate?.updateSpotifyStatus(isPlaying: false)
         }
+//        if firstSong != nil, let {
+//            spotifyArtistImageManager.getArtistImageURL(id: firstSong!.artistID!)
+//            DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
+//                self.currentlyPlaying.updateSongInfo(info: self.firstSong!)
+//            }
+//        }
+//        else {
+//            return
+//        }
     }
     
     @objc func returnToLogIn() {
@@ -181,8 +173,6 @@ extension MainViewController: UI {
     
     func updateSongInfoUI(_ songInfo: CurrentlyPlayingInfo) {
         DispatchQueue.main.async {
-            print("in updateSongInfoUI")
-            print("Song artist: \(songInfo.artistName)")
             self.artistName = songInfo.artistName
             self.artistInfo.isEnabled = true
             self.lyrics.isHidden = false
@@ -193,7 +183,6 @@ extension MainViewController: UI {
             self.updateAlbumImage(albumURL: songInfo.albumURL)
             self.lyrics.text = "Getting Lyrics..."
             if songInfo.artistID != nil {
-                print("Artist ID is not nil: \(songInfo.artistID)")
                 self.artistID = songInfo.artistID
                 self.getSpotifyArtist()
             }
@@ -220,7 +209,6 @@ extension MainViewController: UI {
 
 extension MainViewController: FirstSong {
     func setAlbumURL(albumURL: String) {
-        print("in setAlbumURL")
         if firstSong != nil {
             firstSong!.albumURL = albumURL
         }

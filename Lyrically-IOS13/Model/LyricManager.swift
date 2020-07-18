@@ -26,21 +26,46 @@ class LyricManager {
         "x-rapidapi-key": Constants.rapidAPIKey
     ]
     
-    func fetchData(songAndArtist: String, songName: String, songArtist: String) {
-        self.songName = songName
-        self.songArtist = songArtist
-        var songURL = songAndArtist.replacingOccurrences(of: " ", with: "%2520")
-        
-        songURL = songURL.folding(options: .diacriticInsensitive, locale: .current)
-        let request = NSMutableURLRequest(url: NSURL(string: "https://canarado-lyrics.p.rapidapi.com/lyrics/\(songURL)")! as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
+    func getLyrics(_ URL: NSURL) {
+        let request = NSMutableURLRequest(url: URL as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
         request.httpMethod = "GET"
         request.allHTTPHeaderFields = headers
-        
 
         let session = URLSession.shared
         let dataTask = session.dataTask(with: request as URLRequest, completionHandler: handle(data:response:error:))
 
         dataTask.resume()
+    }
+    
+    func fetchData(songAndArtist: String, songName: String, songArtist: String) {
+        self.songName = songName
+        self.songArtist = songArtist
+        let songURL = songAndArtist.replacingOccurrences(of: " ", with: "%2520")
+        let urlOptionOne = songURL.folding(options: .diacriticInsensitive, locale: .current)
+        let urlOptionTwo = songURL.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)
+        if let urlOne = NSURL(string: "https://canarado-lyrics.p.rapidapi.com/lyrics/\(urlOptionOne)") {
+            getLyrics(urlOne)
+        }
+        else if let safeStringURL = urlOptionTwo, let urlTwo = NSURL(string: "https://canarado-lyrics.p.rapidapi.com/lyrics/\(safeStringURL)") {
+            getLyrics(urlTwo)
+        }
+        else {
+            print("unable to get")
+        }
+//        self.songName = songName
+//        self.songArtist = songArtist
+//        var songURL = songAndArtist.replacingOccurrences(of: " ", with: "%2520")
+//
+//        songURL = songURL.folding(options: .diacriticInsensitive, locale: .current)
+//        let request = NSMutableURLRequest(url: NSURL(string: "https://canarado-lyrics.p.rapidapi.com/lyrics/\(songURL)")! as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
+//        request.httpMethod = "GET"
+//        request.allHTTPHeaderFields = headers
+//
+//
+//        let session = URLSession.shared
+//        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: handle(data:response:error:))
+//
+//        dataTask.resume()
     }
     
     func handle(data: Data?, response: URLResponse?, error: Error?) {
@@ -73,11 +98,9 @@ class LyricManager {
             let songInfo = try decoder.decode(CanaradoSongInfo.self, from: safeData)
             let spotifySongName = songName.lowercased().replacingOccurrences(of: " ", with: "")
             let spotifySongArtist = songArtist.lowercased().replacingOccurrences(of: " ", with: "")
-            // loop through the array contents and match if the songName and lyrics are contained in the titles of the content
             for(index, value) in songInfo.content.enumerated() {
                 let potentialSongName = value.title.lowercased()
                 let canaradoSongName = potentialSongName.filter { !$0.isWhitespace }
-                // hopefully also include an and statement that will include the artist name for extra security/accuracy to get lyrics from API like the statement above
                 if canaradoSongName.contains(spotifySongName) && canaradoSongName.contains(spotifySongArtist) {
                     print(potentialSongName)
                     return value.lyrics

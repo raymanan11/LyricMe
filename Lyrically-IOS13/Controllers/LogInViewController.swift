@@ -20,7 +20,6 @@ class LogInViewController: UIViewController {
         
         let defaults = UserDefaults.standard
         if defaults.initiatedSession {
-            print("initiated bitch")
             hideLogInButton()
         }
 
@@ -45,15 +44,6 @@ class LogInViewController: UIViewController {
     
     @objc func showLogInButton() {
         logInButton.isHidden = false
-    }
-    
-    @objc func showMainVC() {
-        if oneMainVC == nil {
-            print("oneMainVC is nil!")
-            let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            oneMainVC = storyBoard.instantiateViewController(withIdentifier: "main") as! MainViewController
-        }
-        self.navigationController?.pushViewController(oneMainVC, animated: true)
     }
 
 }

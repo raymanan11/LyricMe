@@ -25,12 +25,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     var firstCurrentSong: CurrentlyPlayingInfo?
 
     var lastSong: String?
-    var openURL: Bool = false
     private var firstAppEntry: Bool = true
     private var firstSignIn: Bool = true
-    private var didEnterForeground: Bool = false
     private var didEnterBackground: Bool = true
     private var connected: Bool = true
+    private var openURL: Bool = false
+    private var didEnterForeground: Bool = false
     
     lazy var configuration = SPTConfiguration(clientID: Constants.clientID, redirectURL: Constants.redirectURI)
     
@@ -75,11 +75,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         guard let url = URLContexts.first?.url else {
             return
         }
-        print("Opened url!")
         openURL = true
         NotificationCenter.default.post(name: NSNotification.Name("openSpotify"), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name("logInSuccessful"), object: nil)
-        print("Moved to Main VC from openURL")
         firstAppEntry = false
         sessionManager.application(UIApplication.shared, open: url, options: [:])
 
@@ -108,48 +106,38 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
 
     func sceneDidDisconnect(_ scene: UIScene) {
         firstSignIn = true
-        print(#function)
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
-        print(#function)
         // when first signing in, it will enter foreground (true) and appRemote.connect will connect which is why I did this so it won't call appRemote.connect() another time to stop any conflicts
         // but then will set didEnterForeground to false in order to call appRemote.connect() whenever user dismisses the pull down menu so that the app can track if user changed the song there
         didEnterBackground = false
         if didEnterForeground {
-            print("didEnterForeground and now changed to false")
             didEnterForeground = false
         }
         else {
-            print("Pull down menu engaged and app remote connecting")
             appRemote.connect()
         }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
-        print(#function)
         didEnterBackground = true
         appRemote.disconnect()
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
-        print(#function)
-        print("returned to app")
         didEnterForeground = true
         didEnterBackground = false
         // first is false so that means app remotes won't conflict when connecting from both sceneWillEnterForeground and didInitiate session, only runs the appRemote.connect from the didInitiate instead of sceneDidBecomeActive
         // only runs after user has authenticated and has spotify app open
         if defaults.initiatedSession {
             connected = true
-            print("Connected: \(connected)")
-            print("initiated session and getting app remote to connect")
             appRemote.connect()
         }
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
         didEnterBackground = true
-        print(#function)
     }
     
     var mainVC: MainViewController {
@@ -187,10 +175,8 @@ extension SceneDelegate: SPTAppRemoteDelegate {
             debugPrint(error.localizedDescription)
           }
         })
-        print("First time logging in: \(firstAppEntry)")
         // only goes to mainVC if first entering app so that it won't keep showing transition screen every time user switches back and forth between spotify screen
         if firstAppEntry {
-            print("Moved to Main VC from appRemoteDidEstablishConnection")
             NotificationCenter.default.post(name: NSNotification.Name("logInSuccessful"), object: nil)
             firstAppEntry = false
         }
@@ -199,7 +185,6 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     func appRemote(_ appRemote: SPTAppRemote, didDisconnectWithError error: Error?) {
         connected = false
         if !self.connected && !self.didEnterBackground {
-            print("Spotify app has been on pause for too long and can't connect again, going back to the log in screen!")
             let defaults = UserDefaults.standard
             defaults.initiatedSession = false
             
@@ -207,9 +192,7 @@ extension SceneDelegate: SPTAppRemoteDelegate {
 
             NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
             NotificationCenter.default.post(name: NSNotification.Name("returnToLogIn"), object: nil)
-//            returnToLogIn()
         }
-        print("Connected: \(self.connected)")
         print("disconnected")
     }
 
@@ -219,10 +202,8 @@ extension SceneDelegate: SPTAppRemoteDelegate {
         firstSignIn = true
         print("failed")
         if !firstAppEntry {
-            print("Not the first entry")
             lastSong = nil
             NotificationCenter.default.post(name: NSNotification.Name("returnToLogIn"), object: nil)
-//            returnToLogIn()
         }
     }
     
@@ -238,9 +219,8 @@ extension SceneDelegate: SPTAppRemoteDelegate {
 extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
     func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
         if playerState.track.name != lastSong {
-            print(firstSignIn)
+            print(playerState.track.name)
             if openURL && firstSignIn {
-                print("First time coming back after opening url using playerStateDidChange info for currently playing info")
                 let artistName = playerState.track.artist.name
                 let fullSongName = playerState.track.name
                 let apiSongName = currentlyPlaying.checkSongName(fullSongName)
@@ -249,10 +229,8 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
                 if let safeFirstSong = firstCurrentSong {
                     mainVC.getFirstSong(info: safeFirstSong)
                 }
-//                NotificationCenter.default.post(name: NSNotification.Name("getFirstSong"), object: nil)
                 firstSignIn = false
                 openURL = false
-                // be aware of state of openURL like when force closing app for example
             }
             else {
                 DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
@@ -263,9 +241,11 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
         lastSong = playerState.track.name
     }
 
-    func parseURI(artistURI: String) -> String {
+    func parseURI(artistURI: String) -> String? {
+        if artistURI == "" {
+            return nil
+        }
         let parts = artistURI.components(separatedBy: ":")
-        // find  more elegant way to get artistID
         return parts[2]
     }
 }
