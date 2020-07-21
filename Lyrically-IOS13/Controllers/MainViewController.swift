@@ -21,6 +21,7 @@ class MainViewController: UIViewController, HasLyrics {
     var spotifyArtistManager = SpotifyArtistManager()
     var spotifyArtistImageManager = SpotifyArtistImageManager()
     
+    var updateFirstSongPic: Bool = false
     var artistID: String?
     var artistName: String?
     
@@ -58,6 +59,8 @@ class MainViewController: UIViewController, HasLyrics {
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.returnToLogIn), name: NSNotification.Name(rawValue: "returnToLogIn"), object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateStatus), name: NSNotification.Name(rawValue: "updateStatus"), object: nil)
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -66,6 +69,8 @@ class MainViewController: UIViewController, HasLyrics {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
         
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "returnToLogIn"), object: nil)
+        
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "updateStatus"), object: nil)
     }
     
     @IBAction func getArtistInfo(_ sender: UIButton) {
@@ -100,39 +105,53 @@ class MainViewController: UIViewController, HasLyrics {
     }
 
     func getFirstSongAlbumURL() {
-        if let safeFirstSong = firstSong, let safeArtistID = safeFirstSong.artistID {
-            spotifyArtistImageManager.getArtistImageURL(id: safeArtistID)
+        if let _ = firstSong, let _ = firstSong?.artistID {
             DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
-                self.currentlyPlaying.updateSongInfo(info: safeFirstSong)
+                self.currentlyPlaying.updateSongInfo(info: self.firstSong!)
             }
         }
         else {
             self.currentlyPlaying.UIDelegate?.updateSpotifyStatus(isPlaying: false)
         }
-//        if firstSong != nil, let {
-//            spotifyArtistImageManager.getArtistImageURL(id: firstSong!.artistID!)
-//            DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
-//                self.currentlyPlaying.updateSongInfo(info: self.firstSong!)
-//            }
-//        }
-//        else {
-//            return
-//        }
     }
     
     @objc func returnToLogIn() {
         _ = navigationController?.popToRootViewController(animated: true)
     }
     
+    @objc func updateStatus() {
+        updateSpotifyStatus(isPlaying: true)
+    }
+    
 }
 
 extension MainViewController: ReceiveArtist {
+    
     func getArtist(info: ArtistInfo) {
         self.spotifyArtist = info
+        updateFirstSongPicture(info)
     }
     
     func getArtistPicture(info: ArtistInfo2) {
         self.spotifyArtist2 = info
+    }
+    
+    func updateFirstSongPicture(_ info: ArtistInfo) {
+        if firstSong != nil && updateFirstSongPic == false {
+            updateFirstSongPic = true
+            for (index, trackName) in info.popularSongs.enumerated() {
+                if trackName.localizedStandardContains(firstSong!.apiSongName) {
+                    print("updated 1")
+                    updateAlbumImage(albumURL: info.songAlbumImage[index])
+                    return
+                }
+            }
+            if let safeArtistID = artistID {
+                print("updated 2")
+                print("not one of the top songs so getting artist image")
+                spotifyArtistImageManager.getArtistImageURL(id: safeArtistID)
+            }
+        }
     }
 }
 
@@ -153,6 +172,7 @@ extension MainViewController: UI {
     func updateSpotifyStatus(isPlaying: Bool) {
         DispatchQueue.main.async {
             self.lyrics.isHidden = true
+            self.artistInfo.isEnabled = false
             self.artistInfo.setImage(UIImage(named: "LyricallyLogo"), for: .normal)
             self.songArtist.font = UIFont(name: "Futura-Bold", size: 24)
             if isPlaying {
@@ -180,9 +200,11 @@ extension MainViewController: UI {
             self.songTitle.text = songInfo.fullSongName
             self.songArtist.font = UIFont(name: "Futura-Medium", size: 22)
             self.songArtist.text = "by \(songInfo.allArtists)"
+            print("Main VC: \(songInfo.albumURL)")
             self.updateAlbumImage(albumURL: songInfo.albumURL)
             self.lyrics.text = "Getting Lyrics..."
             if songInfo.artistID != nil {
+                print(songInfo.artistID)
                 self.artistID = songInfo.artistID
                 self.getSpotifyArtist()
             }
@@ -208,10 +230,12 @@ extension MainViewController: UI {
 }
 
 extension MainViewController: FirstSong {
-    func setAlbumURL(albumURL: String) {
-        if firstSong != nil {
-            firstSong!.albumURL = albumURL
-        }
+    func updateFirstSongPicture(albumURL: String) {
+        print("in here")
+//        if firstSong != nil {
+//            firstSong!.albumURL = albumURL
+//        }
+        updateAlbumImage(albumURL: albumURL)
     }
 }
 

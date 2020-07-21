@@ -46,11 +46,14 @@ struct SpotifyArtistManager {
             // check whether info from currently playing song matches info from here (loop through array to see which one matches
             // used the passed in artist name to check this
             for track in info.tracks {
-                if track.album.artists[0].name == artistName {
-                    correctArtistName = track.album.artists[0].name
-                    songs.append(track.name)
-                    songURI.append(track.uri)
-                    songAlbumImage.append(track.album.images[0].url)
+                for artists in track.artists {
+                    if artists.name == artistName {
+                        correctArtistName = artists.name
+                        songs.append(track.name)
+                        songURI.append(track.uri)
+                        songAlbumImage.append(track.album.images[0].url)
+                        break
+                    }
                 }
             }
             let artistInfo = ArtistInfo(artistName: correctArtistName!, songAlbumImage: songAlbumImage, popularSongs: songs, songURI: songURI)
@@ -66,6 +69,9 @@ struct SpotifyArtistManager {
         if let accesstoken = KeychainWrapper.standard.string(forKey: Constants.accessToken) {
             let headers: HTTPHeaders = ["Authorization": "Bearer \(accesstoken)"]
             AF.request("https://api.spotify.com/v1/artists/\(id)", method: .get, headers: headers).responseJSON { response in
+//                if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+//                    print("Data: \(utf8Text)")
+//                }
                 if let info = self.parseJSON(artistData: response.data!) {
                     self.delegate?.getArtistPicture(info: info)
                 }

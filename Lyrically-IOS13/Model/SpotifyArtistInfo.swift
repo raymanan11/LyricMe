@@ -13,6 +13,7 @@ struct SpotifyArtistInfo: Decodable {
 }
 
 struct Track: Decodable {
+    var artists: [SpotifyArtist]
     // used to get the name of the artist
     var album: ArtistAlbum
     // name of all popular songs
@@ -20,6 +21,11 @@ struct Track: Decodable {
     // popularity maybe used to order the songs
     var popularity: Int
     var uri: String
+}
+
+struct SpotifyArtist: Decodable {
+    var name: String
+    var id: String
 }
 
 struct ArtistAlbum: Decodable {

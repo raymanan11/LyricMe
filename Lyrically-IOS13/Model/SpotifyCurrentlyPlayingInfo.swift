@@ -17,6 +17,7 @@ struct Item: Decodable {
     var album: Album?
     // used to get artist names
     var artists: [Artist]
+    var id: String
 }
 
 struct Album: Decodable {
@@ -31,6 +32,7 @@ struct Images: Decodable {
 
 struct Artist: Decodable {
     var name: String?
+    var id: String
 }
 
 struct Artists: Decodable {

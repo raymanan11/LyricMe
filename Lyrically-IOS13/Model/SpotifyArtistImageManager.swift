@@ -11,7 +11,7 @@ import Alamofire
 import SwiftKeychainWrapper
 
 protocol FirstSong {
-    func setAlbumURL(albumURL: String)
+    func updateFirstSongPicture(albumURL: String)
 }
 
 struct SpotifyArtistImageManager {
@@ -24,7 +24,7 @@ struct SpotifyArtistImageManager {
             AF.request("https://api.spotify.com/v1/artists/\(id)", method: .get, headers: headers).responseJSON { response in
                 if let safeData = response.data {
                     if let info = self.parseJSON(artistData: safeData) {
-                        self.delegate?.setAlbumURL(albumURL: info)
+                        self.delegate?.updateFirstSongPicture(albumURL: info)
                     }
                 }
             }

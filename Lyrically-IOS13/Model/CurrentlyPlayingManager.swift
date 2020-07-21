@@ -59,7 +59,8 @@ class CurrentlyPlayingManager {
 //            }
             let info = try decoder.decode(SpotifyCurrentlyPlayingInfo.self, from: data)
             
-            if let singleArtist = info.item?.artists[0].name, let songName = info.item?.name, let albumURL = info.item?.album?.images[0].url, let artistID = info.item?.album?.artists?[0].id {
+            if let singleArtist = info.item?.artists[0].name, let songName = info.item?.name, let albumURL = info.item?.album?.images[0].url, let artistID = info.item?.artists[0].id {
+                print("Currently playinh: \(albumURL)")
                 var artists = ""
                 let artistInfo = info.item?.artists
                 // gets all of the artists in the song
@@ -102,11 +103,11 @@ class CurrentlyPlayingManager {
     
     // this method is used to make sure song titles with characters like - and () don't affect the API call used to get lyrics
     func checkSongName(_ songName: String) -> String {
-        if songName.contains("(") || songName.contains("-") {
+        if songName.contains("(") || songName.contains("-") || songName.contains("/"){
             var arr = songName.components(separatedBy: " ")
             var correctSongName = ""
             for(index, value) in arr.enumerated() {
-                if value.contains("(") || value.contains("-") {
+                if value.contains("(") || value.contains("-") || value.contains("/"){
                     if value.contains("-") && value.count > 1 {
                         correctSongName += value.replacingOccurrences(of: "-", with: "") + " "
                     }
@@ -125,8 +126,6 @@ class CurrentlyPlayingManager {
         }
         return songName
     }
-    
-    // add a method that will be called using notification or delegation which will be observed by the main VC
-    // parse the playerState.track.artist.uri for the artistID which can then be used for the artist image as well
+
 }
 

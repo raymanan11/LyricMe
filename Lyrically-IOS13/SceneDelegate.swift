@@ -85,6 +85,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     
     func sessionManager(manager: SPTSessionManager, didInitiate session: SPTSession) {
         print("inititated session")
+        NotificationCenter.default.post(name: NSNotification.Name("updateStatus"), object: nil)
         defaults.initiatedSession = true
         appRemote.connectionParameters.accessToken = session.accessToken
         self.accessToken = session.accessToken
@@ -142,6 +143,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     
     var mainVC: MainViewController {
         get {
+            print("problem")
             let mainVC = self.window?.rootViewController?.children[1] as! MainViewController
             return mainVC
         }
@@ -178,7 +180,6 @@ extension SceneDelegate: SPTAppRemoteDelegate {
         // only goes to mainVC if first entering app so that it won't keep showing transition screen every time user switches back and forth between spotify screen
         if firstAppEntry {
             NotificationCenter.default.post(name: NSNotification.Name("logInSuccessful"), object: nil)
-            firstAppEntry = false
         }
     }
     
@@ -190,6 +191,7 @@ extension SceneDelegate: SPTAppRemoteDelegate {
             
             lastSong = nil
 
+            NotificationCenter.default.post(name: NSNotification.Name("playButtonPressed"), object: nil)
             NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
             NotificationCenter.default.post(name: NSNotification.Name("returnToLogIn"), object: nil)
         }
@@ -197,6 +199,7 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     }
 
     func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
+        NotificationCenter.default.post(name: NSNotification.Name("playButtonPressed"), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
         defaults.initiatedSession = false
         firstSignIn = true
@@ -219,7 +222,6 @@ extension SceneDelegate: SPTAppRemoteDelegate {
 extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
     func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
         if playerState.track.name != lastSong {
-            print(playerState.track.name)
             if openURL && firstSignIn {
                 let artistName = playerState.track.artist.name
                 let fullSongName = playerState.track.name
@@ -227,12 +229,13 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
                 let artistID = parseURI(artistURI: playerState.track.artist.uri)
                 firstCurrentSong = CurrentlyPlayingInfo(artistName: artistName, fullSongName: fullSongName, apiSongName: apiSongName, allArtists: artistName, albumURL: "", artistID: artistID)
                 if let safeFirstSong = firstCurrentSong {
-                    mainVC.getFirstSong(info: safeFirstSong)
+                    self.mainVC.getFirstSong(info: safeFirstSong)
                 }
                 firstSignIn = false
                 openURL = false
             }
             else {
+                firstAppEntry = false
                 DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
                     NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
                 }

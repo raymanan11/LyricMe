@@ -36,11 +36,11 @@ class LyricManager {
 
         dataTask.resume()
     }
-    
+    // (' or ’)
     func fetchData(songAndArtist: String, songName: String, songArtist: String) {
         self.songName = songName
         self.songArtist = songArtist
-        let songURL = songAndArtist.replacingOccurrences(of: " ", with: "%2520")
+        let songURL = songAndArtist.replacingOccurrences(of: " ", with: "%2520").replacingOccurrences(of: "’", with: "'")
         let urlOptionOne = songURL.folding(options: .diacriticInsensitive, locale: .current)
         let urlOptionTwo = songURL.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)
         if let urlOne = NSURL(string: "https://canarado-lyrics.p.rapidapi.com/lyrics/\(urlOptionOne)") {
@@ -52,20 +52,6 @@ class LyricManager {
         else {
             print("unable to get")
         }
-//        self.songName = songName
-//        self.songArtist = songArtist
-//        var songURL = songAndArtist.replacingOccurrences(of: " ", with: "%2520")
-//
-//        songURL = songURL.folding(options: .diacriticInsensitive, locale: .current)
-//        let request = NSMutableURLRequest(url: NSURL(string: "https://canarado-lyrics.p.rapidapi.com/lyrics/\(songURL)")! as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
-//        request.httpMethod = "GET"
-//        request.allHTTPHeaderFields = headers
-//
-//
-//        let session = URLSession.shared
-//        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: handle(data:response:error:))
-//
-//        dataTask.resume()
     }
     
     func handle(data: Data?, response: URLResponse?, error: Error?) {
@@ -92,18 +78,41 @@ class LyricManager {
         }
     }
     
+    fileprivate func getLyrics(_ songInfo: CanaradoSongInfo, _ spotifySongName: String, _ spotifySongArtist: String?) -> String? {
+        for(index, value) in songInfo.content.enumerated() {
+            let potentialSongName = value.title.lowercased()
+            let canaradoSongName = potentialSongName.replacingOccurrences(of: "&", with: "and").filter { !$0.isWhitespace && !"/-.,'".contains($0)}
+            print("Potential song name: \(canaradoSongName)")
+            if let safeSongArtist = spotifySongArtist {
+                if canaradoSongName.contains(spotifySongName) && canaradoSongName.contains(safeSongArtist) {
+                    return value.lyrics
+                }
+            }
+            else {
+                if canaradoSongName.contains(spotifySongName) {
+                    return value.lyrics
+                }
+            }
+        }
+        return nil
+    }
+    
     func parseJson(_ safeData: Data) -> String? {
         let decoder = JSONDecoder()
         do {
             let songInfo = try decoder.decode(CanaradoSongInfo.self, from: safeData)
-            let spotifySongName = songName.lowercased().replacingOccurrences(of: " ", with: "")
-            let spotifySongArtist = songArtist.lowercased().replacingOccurrences(of: " ", with: "")
-            for(index, value) in songInfo.content.enumerated() {
-                let potentialSongName = value.title.lowercased()
-                let canaradoSongName = potentialSongName.filter { !$0.isWhitespace }
-                if canaradoSongName.contains(spotifySongName) && canaradoSongName.contains(spotifySongArtist) {
-                    print(potentialSongName)
-                    return value.lyrics
+            let spotifySongName = songName.lowercased().filter { !" /-.,'".contains($0) }
+            let spotifySongArtist = songArtist.lowercased().replacingOccurrences(of: "&", with: "and").filter { !" /-.,'".contains($0) }
+            print("Spotify song name: \(spotifySongName)")
+            print("Spotify song artist: \(spotifySongArtist)")
+            if let lyricsOptionOne = getLyrics(songInfo, spotifySongName, spotifySongArtist) {
+                print("Lyrics Option One")
+                return lyricsOptionOne
+            }
+            else {
+                if let lyricsOptionTwo = getLyrics(songInfo, spotifySongName, nil) {
+                    print("Lyrics Option Two")
+                    return lyricsOptionTwo
                 }
             }
             // if it reaches this point then that means it is not able to find lyrics
