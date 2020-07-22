@@ -36,6 +36,22 @@ class MainViewController: UIViewController, HasLyrics {
     @IBOutlet weak var skipForward: UIButton!
     @IBOutlet weak var skipBackward: UIButton!
     
+    var defaultCallback: SPTAppRemoteCallback {
+        get {
+            return {[weak self] _, error in
+                if let error = error {
+                    print(error)
+                }
+            }
+        }
+    }
+    
+    var appRemote: SPTAppRemote? {
+        get {
+            return (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.appRemote
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         currentlyPlaying.UIDelegate = self
         lyricManager.delegate = self
@@ -89,6 +105,14 @@ class MainViewController: UIViewController, HasLyrics {
         
         self.present(artistInfo, animated: true, completion: nil)
         
+    }
+    
+    @IBAction func previousSongPressed(_ sender: Any) {
+        appRemote?.playerAPI?.skip(toPrevious: defaultCallback)
+    }
+    
+    @IBAction func nextSongPressed(_ sender: UIButton) {
+        appRemote?.playerAPI?.skip(toNext: defaultCallback)
     }
     
     @objc func getInfo() {
