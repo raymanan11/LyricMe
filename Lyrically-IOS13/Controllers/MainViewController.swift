@@ -33,6 +33,8 @@ class MainViewController: UIViewController, HasLyrics {
     @IBOutlet var songTitle: UILabel!
     @IBOutlet var songArtist: UILabel!
     @IBOutlet var artistInfo: UIButton!
+    @IBOutlet weak var skipForward: UIButton!
+    @IBOutlet weak var skipBackward: UIButton!
     
     override func viewWillAppear(_ animated: Bool) {
         currentlyPlaying.UIDelegate = self
@@ -44,6 +46,8 @@ class MainViewController: UIViewController, HasLyrics {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.isNavigationBarHidden = true
+        self.skipForward.isHidden = true
+        self.skipBackward.isHidden = true
         self.lyrics.isHidden = true
         artistInfo.isEnabled = false
         // creates the circle image of the logo/currently playing album
@@ -172,6 +176,8 @@ extension MainViewController: UI {
     func updateSpotifyStatus(isPlaying: Bool) {
         DispatchQueue.main.async {
             self.lyrics.isHidden = true
+            self.skipForward.isHidden = true
+            self.skipBackward.isHidden = true
             self.artistInfo.isEnabled = false
             self.artistInfo.setImage(UIImage(named: "LyricallyLogo"), for: .normal)
             self.songArtist.font = UIFont(name: "Futura-Bold", size: 24)
@@ -195,6 +201,8 @@ extension MainViewController: UI {
         DispatchQueue.main.async {
             self.artistName = songInfo.artistName
             self.artistInfo.isEnabled = true
+            self.skipForward.isHidden = false
+            self.skipBackward.isHidden = false
             self.lyrics.isHidden = false
             self.lyrics.textContainerInset = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
             self.songTitle.text = songInfo.fullSongName

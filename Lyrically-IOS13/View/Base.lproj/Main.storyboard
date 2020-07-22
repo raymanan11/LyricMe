@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="mtG-dd-mkS">
-    <device id="ipad11_0rounded" orientation="portrait" layout="fullscreen" appearance="dark"/>
+    <device id="retina5_9" orientation="portrait" appearance="dark"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
@@ -13,11 +13,11 @@
             <objects>
                 <viewController storyboardIdentifier="logIn" id="BYZ-38-t0r" customClass="LogInViewController" customModule="Lyrically" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JVw-FV-wHD">
-                                <rect key="frame" x="327" y="527" width="180" height="77"/>
+                                <rect key="frame" x="97.666666666666686" y="565" width="180" height="77"/>
                                 <color key="backgroundColor" name="SpotifyGreen"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="77" id="8Kt-dz-lDI"/>
@@ -59,68 +59,93 @@
             <objects>
                 <viewController storyboardIdentifier="main" id="0Dk-oK-vUy" customClass="MainViewController" customModule="Lyrically" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="x2j-6Z-U8d">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="DT1-Dw-kgC">
-                                <rect key="frame" x="10" y="60" width="814" height="1104"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="WZq-VM-Ejq">
+                                <rect key="frame" x="90" y="98" width="195" height="50"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="17" translatesAutoresizingMaskIntoConstraints="NO" id="cY7-Hh-fuh">
-                                        <rect key="frame" x="301" y="0.0" width="212" height="747"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yuY-k7-3M3">
+                                        <rect key="frame" x="0.0" y="2.3333333333333321" width="50" height="45.333333333333343"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="Abo-l3-DGk"/>
+                                            <constraint firstAttribute="width" constant="50" id="p4h-Fq-sst"/>
+                                        </constraints>
+                                        <state key="normal" backgroundImage="backward.end.fill" catalog="system"/>
+                                    </button>
+                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="QOw-Nq-HWA">
+                                        <rect key="frame" x="70" y="0.0" width="55" height="50"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xal-pg-wWX">
-                                                <rect key="frame" x="0.0" y="276" width="195" height="195"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" secondItem="Xal-pg-wWX" secondAttribute="height" multiplier="1:1" id="9mS-86-LVP"/>
-                                                </constraints>
-                                                <state key="normal" image="LyricallyLogo"/>
-                                                <connections>
-                                                    <action selector="getArtistInfo:" destination="0Dk-oK-vUy" eventType="touchUpInside" id="USm-HX-Zdx"/>
-                                                </connections>
-                                            </button>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="tPD-Iy-VGe">
-                                                <rect key="frame" x="212" y="373.5" width="0.0" height="0.0"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="17" translatesAutoresizingMaskIntoConstraints="NO" id="cY7-Hh-fuh">
+                                                <rect key="frame" x="0.0" y="6" width="55" height="38"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7kU-sw-sLz">
-                                                        <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="23"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uje-YQ-zzC">
-                                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="22"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xal-pg-wWX">
+                                                        <rect key="frame" x="0.0" y="0.0" width="38" height="38"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="Xal-pg-wWX" secondAttribute="height" multiplier="1:1" id="9mS-86-LVP"/>
+                                                        </constraints>
+                                                        <state key="normal" image="LyricallyLogo"/>
+                                                        <connections>
+                                                            <action selector="getArtistInfo:" destination="0Dk-oK-vUy" eventType="touchUpInside" id="USm-HX-Zdx"/>
+                                                        </connections>
+                                                    </button>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="tPD-Iy-VGe">
+                                                        <rect key="frame" x="55" y="4.6666666666666732" width="0.0" height="28.666666666666671"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7kU-sw-sLz">
+                                                                <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="23"/>
+                                                                <nil key="textColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uje-YQ-zzC">
+                                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="28.666666666666668"/>
+                                                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="22"/>
+                                                                <nil key="textColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                    </stackView>
                                                 </subviews>
                                             </stackView>
                                         </subviews>
                                     </stackView>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qYE-lw-Scg">
-                                        <rect key="frame" x="0.0" y="763" width="814" height="341"/>
-                                        <color key="backgroundColor" name="LyricBackground"/>
-                                        <color key="textColor" name="Text"/>
-                                        <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="18"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <integer key="value" value="20"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </textView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qPC-Sz-1p8">
+                                        <rect key="frame" x="145" y="2.3333333333333321" width="50" height="45.333333333333343"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="Bog-9s-acv"/>
+                                            <constraint firstAttribute="width" constant="50" id="x5J-bd-dVT"/>
+                                        </constraints>
+                                        <state key="normal" backgroundImage="forward.end.fill" catalog="system"/>
+                                    </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="qYE-lw-Scg" secondAttribute="trailing" id="JT7-fX-X4w"/>
-                                    <constraint firstItem="qYE-lw-Scg" firstAttribute="leading" secondItem="DT1-Dw-kgC" secondAttribute="leading" id="Llc-QB-bMV"/>
-                                    <constraint firstItem="Xal-pg-wWX" firstAttribute="width" secondItem="DT1-Dw-kgC" secondAttribute="width" multiplier="0.24" id="smh-Dv-c9s"/>
+                                    <constraint firstItem="QOw-Nq-HWA" firstAttribute="top" secondItem="WZq-VM-Ejq" secondAttribute="top" id="E99-U0-olL"/>
+                                    <constraint firstAttribute="bottom" secondItem="QOw-Nq-HWA" secondAttribute="bottom" id="NfT-Hd-wGn"/>
                                 </constraints>
                             </stackView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qYE-lw-Scg">
+                                <rect key="frame" x="15" y="173" width="345" height="595"/>
+                                <color key="backgroundColor" name="LyricBackground"/>
+                                <color key="textColor" name="Text"/>
+                                <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="18"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <integer key="value" value="20"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" name="AppBackground"/>
                         <constraints>
-                            <constraint firstItem="DT1-Dw-kgC" firstAttribute="leading" secondItem="qV0-cm-Gbz" secondAttribute="leading" constant="10" id="Jr6-tP-ORk"/>
-                            <constraint firstItem="DT1-Dw-kgC" firstAttribute="top" secondItem="qV0-cm-Gbz" secondAttribute="top" constant="10" id="QzD-H2-j8m"/>
-                            <constraint firstItem="qV0-cm-Gbz" firstAttribute="trailing" secondItem="DT1-Dw-kgC" secondAttribute="trailing" constant="10" id="mqg-iU-x6j"/>
-                            <constraint firstItem="qV0-cm-Gbz" firstAttribute="bottom" secondItem="DT1-Dw-kgC" secondAttribute="bottom" constant="10" id="ybr-hg-hbb"/>
+                            <constraint firstItem="Xal-pg-wWX" firstAttribute="width" secondItem="x2j-6Z-U8d" secondAttribute="width" multiplier="0.22" id="Dn7-L1-N04"/>
+                            <constraint firstItem="WZq-VM-Ejq" firstAttribute="top" secondItem="qV0-cm-Gbz" secondAttribute="top" constant="10" id="LwU-Mo-nQC"/>
+                            <constraint firstItem="WZq-VM-Ejq" firstAttribute="leading" secondItem="qV0-cm-Gbz" secondAttribute="leading" constant="90" id="SWW-TV-HaH"/>
+                            <constraint firstItem="qV0-cm-Gbz" firstAttribute="bottom" secondItem="qYE-lw-Scg" secondAttribute="bottom" constant="10" id="V1C-AU-e4m"/>
+                            <constraint firstItem="qYE-lw-Scg" firstAttribute="top" secondItem="WZq-VM-Ejq" secondAttribute="bottom" constant="25" id="Xb6-j2-asd"/>
+                            <constraint firstItem="qV0-cm-Gbz" firstAttribute="trailing" secondItem="WZq-VM-Ejq" secondAttribute="trailing" constant="90" id="eq4-4o-r5L"/>
+                            <constraint firstItem="qYE-lw-Scg" firstAttribute="leading" secondItem="qV0-cm-Gbz" secondAttribute="leading" constant="15" id="oAk-Pi-jr3"/>
+                            <constraint firstItem="qV0-cm-Gbz" firstAttribute="trailing" secondItem="qYE-lw-Scg" secondAttribute="trailing" constant="15" id="wA9-ln-Ydd"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="qV0-cm-Gbz"/>
                     </view>
@@ -128,6 +153,8 @@
                     <connections>
                         <outlet property="artistInfo" destination="Xal-pg-wWX" id="CrD-5p-Hte"/>
                         <outlet property="lyrics" destination="qYE-lw-Scg" id="OG0-ok-jiA"/>
+                        <outlet property="skipBackward" destination="yuY-k7-3M3" id="P0b-tZ-AwW"/>
+                        <outlet property="skipForward" destination="qPC-Sz-1p8" id="B8E-p9-hXb"/>
                         <outlet property="songArtist" destination="Uje-YQ-zzC" id="m2J-Zo-ZTD"/>
                         <outlet property="songTitle" destination="7kU-sw-sLz" id="syS-bY-cjO"/>
                     </connections>
@@ -141,7 +168,7 @@
             <objects>
                 <viewController storyboardIdentifier="artistInfo" id="u79-L4-qTp" customClass="ArtistInfoViewController" customModule="Lyrically" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1NT-Ub-Y4C">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" name="AppBackground"/>
                         <viewLayoutGuide key="safeArea" id="zAP-LQ-ZmZ"/>
@@ -167,7 +194,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="mtG-dd-mkS" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="xvI-Hs-tpa">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="50"/>
+                        <rect key="frame" x="0.0" y="44" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -181,7 +208,9 @@
         </scene>
     </scenes>
     <resources>
-        <image name="LyricallyLogo" width="166.5" height="166.5"/>
+        <image name="LyricallyLogo" width="166.66667175292969" height="166.66667175292969"/>
+        <image name="backward.end.fill" catalog="system" width="128" height="102"/>
+        <image name="forward.end.fill" catalog="system" width="128" height="102"/>
         <namedColor name="AppBackground">
             <color red="0.75900000333786011" green="0.77999997138977051" blue="0.82200002670288086" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
