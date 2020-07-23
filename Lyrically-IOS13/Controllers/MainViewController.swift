@@ -33,6 +33,24 @@ class MainViewController: UIViewController, HasLyrics {
     @IBOutlet var songTitle: UILabel!
     @IBOutlet var songArtist: UILabel!
     @IBOutlet var artistInfo: UIButton!
+    @IBOutlet weak var skipForward: UIButton!
+    @IBOutlet weak var skipBackward: UIButton!
+    
+    var defaultCallback: SPTAppRemoteCallback {
+        get {
+            return {[weak self] _, error in
+                if let error = error {
+                    print(error)
+                }
+            }
+        }
+    }
+    
+    var appRemote: SPTAppRemote? {
+        get {
+            return (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.appRemote
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         currentlyPlaying.UIDelegate = self
@@ -44,8 +62,10 @@ class MainViewController: UIViewController, HasLyrics {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.isNavigationBarHidden = true
-        self.lyrics.isHidden = true
         artistInfo.isEnabled = false
+        self.lyrics.isHidden = true
+        self.skipForward.isHidden = true
+        self.skipBackward.isHidden = true
         // creates the circle image of the logo/currently playing album
         self.artistInfo.layer.cornerRadius = self.artistInfo.frame.height / 2
         self.artistInfo.clipsToBounds = true
@@ -85,6 +105,14 @@ class MainViewController: UIViewController, HasLyrics {
         
         self.present(artistInfo, animated: true, completion: nil)
         
+    }
+    
+    @IBAction func previousSongPressed(_ sender: Any) {
+        appRemote?.playerAPI?.skip(toPrevious: defaultCallback)
+    }
+    
+    @IBAction func nextSongPressed(_ sender: UIButton) {
+        appRemote?.playerAPI?.skip(toNext: defaultCallback)
     }
     
     @objc func getInfo() {
@@ -172,6 +200,8 @@ extension MainViewController: UI {
     func updateSpotifyStatus(isPlaying: Bool) {
         DispatchQueue.main.async {
             self.lyrics.isHidden = true
+            self.skipForward.isHidden = true
+            self.skipBackward.isHidden = true
             self.artistInfo.isEnabled = false
             self.artistInfo.setImage(UIImage(named: "LyricallyLogo"), for: .normal)
             self.songArtist.font = UIFont(name: "Futura-Bold", size: 24)
@@ -195,6 +225,8 @@ extension MainViewController: UI {
         DispatchQueue.main.async {
             self.artistName = songInfo.artistName
             self.artistInfo.isEnabled = true
+            self.skipForward.isHidden = false
+            self.skipBackward.isHidden = false
             self.lyrics.isHidden = false
             self.lyrics.textContainerInset = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
             self.songTitle.text = songInfo.fullSongName
@@ -232,9 +264,6 @@ extension MainViewController: UI {
 extension MainViewController: FirstSong {
     func updateFirstSongPicture(albumURL: String) {
         print("in here")
-//        if firstSong != nil {
-//            firstSong!.albumURL = albumURL
-//        }
         updateAlbumImage(albumURL: albumURL)
     }
 }

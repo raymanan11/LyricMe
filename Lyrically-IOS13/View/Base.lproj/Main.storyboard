@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="mtG-dd-mkS">
-    <device id="ipad11_0rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
+    <device id="ipad11_0rounded" orientation="portrait" layout="fullscreen" appearance="dark"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
@@ -62,41 +62,71 @@
                         <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="DT1-Dw-kgC">
-                                <rect key="frame" x="10" y="60" width="814" height="1104"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="IY9-FZ-8gU">
+                                <rect key="frame" x="0.0" y="50" width="834" height="1124"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="17" translatesAutoresizingMaskIntoConstraints="NO" id="cY7-Hh-fuh">
-                                        <rect key="frame" x="301" y="0.0" width="212" height="747"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="WZq-VM-Ejq">
+                                        <rect key="frame" x="25" y="0.0" width="784" height="458"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xal-pg-wWX">
-                                                <rect key="frame" x="0.0" y="276" width="195" height="195"/>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yuY-k7-3M3">
+                                                <rect key="frame" x="0.0" y="193.5" width="75" height="71"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="Xal-pg-wWX" secondAttribute="height" multiplier="1:1" id="9mS-86-LVP"/>
+                                                    <constraint firstAttribute="width" secondItem="yuY-k7-3M3" secondAttribute="height" multiplier="1:1" id="QLv-G5-769"/>
                                                 </constraints>
-                                                <state key="normal" image="LyricallyLogo"/>
+                                                <state key="normal" backgroundImage="backward.end.fill" catalog="system"/>
                                                 <connections>
-                                                    <action selector="getArtistInfo:" destination="0Dk-oK-vUy" eventType="touchUpInside" id="USm-HX-Zdx"/>
+                                                    <action selector="previousSongPressed:" destination="0Dk-oK-vUy" eventType="touchUpInside" id="iqE-BG-F1n"/>
                                                 </connections>
                                             </button>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="tPD-Iy-VGe">
-                                                <rect key="frame" x="212" y="373.5" width="0.0" height="0.0"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="QOw-Nq-HWA">
+                                                <rect key="frame" x="300.5" y="129" width="183" height="200"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7kU-sw-sLz">
-                                                        <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="23"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uje-YQ-zzC">
-                                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="22"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="17" translatesAutoresizingMaskIntoConstraints="NO" id="cY7-Hh-fuh">
+                                                        <rect key="frame" x="0.0" y="0.0" width="183" height="200"/>
+                                                        <subviews>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xal-pg-wWX">
+                                                                <rect key="frame" x="0.0" y="0.0" width="183" height="183"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" secondItem="Xal-pg-wWX" secondAttribute="height" multiplier="1:1" id="9mS-86-LVP"/>
+                                                                </constraints>
+                                                                <state key="normal" image="LyricallyLogo"/>
+                                                                <connections>
+                                                                    <action selector="getArtistInfo:" destination="0Dk-oK-vUy" eventType="touchUpInside" id="USm-HX-Zdx"/>
+                                                                </connections>
+                                                            </button>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="tPD-Iy-VGe">
+                                                                <rect key="frame" x="91.5" y="200" width="0.0" height="0.0"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7kU-sw-sLz">
+                                                                        <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="23"/>
+                                                                        <nil key="textColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uje-YQ-zzC">
+                                                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="22"/>
+                                                                        <nil key="textColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                </subviews>
+                                                            </stackView>
+                                                        </subviews>
+                                                    </stackView>
                                                 </subviews>
                                             </stackView>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qPC-Sz-1p8">
+                                                <rect key="frame" x="709" y="193.5" width="75" height="71"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="qPC-Sz-1p8" secondAttribute="height" multiplier="1:1" id="Kq0-4p-Urg"/>
+                                                </constraints>
+                                                <state key="normal" backgroundImage="forward.end.fill" catalog="system"/>
+                                                <connections>
+                                                    <action selector="nextSongPressed:" destination="0Dk-oK-vUy" eventType="touchUpInside" id="8RC-fx-xS3"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                     </stackView>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qYE-lw-Scg">
-                                        <rect key="frame" x="0.0" y="763" width="814" height="341"/>
+                                        <rect key="frame" x="15" y="483" width="804" height="641"/>
                                         <color key="backgroundColor" name="LyricBackground"/>
                                         <color key="textColor" name="Text"/>
                                         <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="18"/>
@@ -109,18 +139,25 @@
                                     </textView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="qYE-lw-Scg" secondAttribute="trailing" id="JT7-fX-X4w"/>
-                                    <constraint firstItem="qYE-lw-Scg" firstAttribute="leading" secondItem="DT1-Dw-kgC" secondAttribute="leading" id="Llc-QB-bMV"/>
-                                    <constraint firstItem="Xal-pg-wWX" firstAttribute="width" secondItem="DT1-Dw-kgC" secondAttribute="width" multiplier="0.24" id="smh-Dv-c9s"/>
+                                    <constraint firstItem="WZq-VM-Ejq" firstAttribute="top" secondItem="IY9-FZ-8gU" secondAttribute="top" id="0yH-bO-cWJ"/>
+                                    <constraint firstItem="yuY-k7-3M3" firstAttribute="width" secondItem="IY9-FZ-8gU" secondAttribute="width" multiplier="0.09" id="ANv-wN-zNQ"/>
+                                    <constraint firstItem="qPC-Sz-1p8" firstAttribute="width" secondItem="IY9-FZ-8gU" secondAttribute="width" multiplier="0.09" id="BsV-FK-9BV"/>
+                                    <constraint firstItem="WZq-VM-Ejq" firstAttribute="leading" secondItem="IY9-FZ-8gU" secondAttribute="leading" constant="25" id="CeC-CA-e4H"/>
+                                    <constraint firstItem="qYE-lw-Scg" firstAttribute="top" secondItem="WZq-VM-Ejq" secondAttribute="bottom" constant="25" id="It1-Sd-kdU"/>
+                                    <constraint firstItem="Xal-pg-wWX" firstAttribute="width" secondItem="IY9-FZ-8gU" secondAttribute="width" multiplier="0.22" id="Lzx-li-FqO"/>
+                                    <constraint firstAttribute="bottom" secondItem="qYE-lw-Scg" secondAttribute="bottom" id="dVw-ck-dD7"/>
+                                    <constraint firstAttribute="trailing" secondItem="qYE-lw-Scg" secondAttribute="trailing" constant="15" id="iFL-Q7-wy4"/>
+                                    <constraint firstItem="qYE-lw-Scg" firstAttribute="leading" secondItem="IY9-FZ-8gU" secondAttribute="leading" constant="15" id="kt8-CN-89J"/>
+                                    <constraint firstAttribute="trailing" secondItem="WZq-VM-Ejq" secondAttribute="trailing" constant="25" id="l2z-Vf-3pT"/>
                                 </constraints>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" name="AppBackground"/>
                         <constraints>
-                            <constraint firstItem="DT1-Dw-kgC" firstAttribute="leading" secondItem="qV0-cm-Gbz" secondAttribute="leading" constant="10" id="Jr6-tP-ORk"/>
-                            <constraint firstItem="DT1-Dw-kgC" firstAttribute="top" secondItem="qV0-cm-Gbz" secondAttribute="top" constant="10" id="QzD-H2-j8m"/>
-                            <constraint firstItem="qV0-cm-Gbz" firstAttribute="trailing" secondItem="DT1-Dw-kgC" secondAttribute="trailing" constant="10" id="mqg-iU-x6j"/>
-                            <constraint firstItem="qV0-cm-Gbz" firstAttribute="bottom" secondItem="DT1-Dw-kgC" secondAttribute="bottom" constant="10" id="ybr-hg-hbb"/>
+                            <constraint firstItem="IY9-FZ-8gU" firstAttribute="leading" secondItem="x2j-6Z-U8d" secondAttribute="leading" id="1zx-nK-Jb3"/>
+                            <constraint firstItem="IY9-FZ-8gU" firstAttribute="top" secondItem="qV0-cm-Gbz" secondAttribute="top" id="W2P-2m-hyt"/>
+                            <constraint firstItem="qV0-cm-Gbz" firstAttribute="trailing" secondItem="IY9-FZ-8gU" secondAttribute="trailing" id="ZWx-Sq-0S3"/>
+                            <constraint firstItem="qV0-cm-Gbz" firstAttribute="bottom" secondItem="IY9-FZ-8gU" secondAttribute="bottom" id="mp1-p8-54X"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="qV0-cm-Gbz"/>
                     </view>
@@ -128,6 +165,8 @@
                     <connections>
                         <outlet property="artistInfo" destination="Xal-pg-wWX" id="CrD-5p-Hte"/>
                         <outlet property="lyrics" destination="qYE-lw-Scg" id="OG0-ok-jiA"/>
+                        <outlet property="skipBackward" destination="yuY-k7-3M3" id="P0b-tZ-AwW"/>
+                        <outlet property="skipForward" destination="qPC-Sz-1p8" id="B8E-p9-hXb"/>
                         <outlet property="songArtist" destination="Uje-YQ-zzC" id="m2J-Zo-ZTD"/>
                         <outlet property="songTitle" destination="7kU-sw-sLz" id="syS-bY-cjO"/>
                     </connections>
@@ -182,6 +221,8 @@
     </scenes>
     <resources>
         <image name="LyricallyLogo" width="166.5" height="166.5"/>
+        <image name="backward.end.fill" catalog="system" width="128" height="102"/>
+        <image name="forward.end.fill" catalog="system" width="128" height="102"/>
         <namedColor name="AppBackground">
             <color red="0.75900000333786011" green="0.77999997138977051" blue="0.82200002670288086" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
