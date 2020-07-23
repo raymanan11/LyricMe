@@ -62,10 +62,10 @@ class MainViewController: UIViewController, HasLyrics {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.isNavigationBarHidden = true
+        artistInfo.isEnabled = false
+        self.lyrics.isHidden = true
         self.skipForward.isHidden = true
         self.skipBackward.isHidden = true
-        self.lyrics.isHidden = true
-        artistInfo.isEnabled = false
         // creates the circle image of the logo/currently playing album
         self.artistInfo.layer.cornerRadius = self.artistInfo.frame.height / 2
         self.artistInfo.clipsToBounds = true
@@ -264,9 +264,6 @@ extension MainViewController: UI {
 extension MainViewController: FirstSong {
     func updateFirstSongPicture(albumURL: String) {
         print("in here")
-//        if firstSong != nil {
-//            firstSong!.albumURL = albumURL
-//        }
         updateAlbumImage(albumURL: albumURL)
     }
 }
