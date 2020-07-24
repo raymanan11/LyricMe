@@ -143,7 +143,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     
     var mainVC: MainViewController {
         get {
-            print("problem")
             let mainVC = self.window?.rootViewController?.children[1] as! MainViewController
             return mainVC
         }
@@ -171,6 +170,7 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     
     func appRemoteDidEstablishConnection(_ appRemote: SPTAppRemote) {
         self.appRemote = appRemote
+        subscribeToCapabilityChanges()
         self.appRemote.playerAPI?.delegate = self
         self.appRemote.playerAPI?.subscribe(toPlayerState: { (result, error) in
           if let error = error {
@@ -191,16 +191,14 @@ extension SceneDelegate: SPTAppRemoteDelegate {
             
             lastSong = nil
 
-            NotificationCenter.default.post(name: NSNotification.Name("playButtonPressed"), object: nil)
-            NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
+            updateLogInUI()
             NotificationCenter.default.post(name: NSNotification.Name("returnToLogIn"), object: nil)
         }
         print("disconnected")
     }
 
     func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
-        NotificationCenter.default.post(name: NSNotification.Name("playButtonPressed"), object: nil)
-        NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
+        updateLogInUI()
         defaults.initiatedSession = false
         firstSignIn = true
         print("failed")
@@ -210,38 +208,74 @@ extension SceneDelegate: SPTAppRemoteDelegate {
         }
     }
     
-    private func returnToLogIn() {
-        let rootViewController = self.window!.rootViewController as! UINavigationController
-        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        let logInVC = mainStoryboard.instantiateViewController(withIdentifier: "logIn") as! LogInViewController
-        rootViewController.pushViewController(logInVC, animated: true)
+    func updateLogInUI() {
+           NotificationCenter.default.post(name: NSNotification.Name("playButtonPressed"), object: nil)
+           NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
+       }
+    
+    private func subscribeToCapabilityChanges() {
+        appRemote.userAPI?.delegate = self
+        appRemote.userAPI?.subscribe(toCapabilityChanges: { (success, error) in
+            guard error == nil else { return }
+        })
     }
+    
+    private func fetchUserCapabilities() {
+        appRemote.userAPI?.fetchCapabilities(callback: { (capabilities, error) in
+            guard error == nil else { return }
 
+            let capabilities = capabilities as! SPTAppRemoteUserCapabilities
+            self.updateViewWithCapabilities(capabilities)
+        })
+    }
+    
+    private func updateViewWithCapabilities(_ capabilities: SPTAppRemoteUserCapabilities) {
+        print("can play music on demand: \(capabilities.canPlayOnDemand)")
+        mainVC.playOnDemand = capabilities.canPlayOnDemand
+    }
 }
 
 extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
+    
     func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
+        fetchUserCapabilities()
         if playerState.track.name != lastSong {
             if openURL && firstSignIn {
-                let artistName = playerState.track.artist.name
-                let fullSongName = playerState.track.name
-                let apiSongName = currentlyPlaying.checkSongName(fullSongName)
-                let artistID = parseURI(artistURI: playerState.track.artist.uri)
-                firstCurrentSong = CurrentlyPlayingInfo(artistName: artistName, fullSongName: fullSongName, apiSongName: apiSongName, allArtists: artistName, albumURL: "", artistID: artistID)
-                if let safeFirstSong = firstCurrentSong {
-                    self.mainVC.getFirstSong(info: safeFirstSong)
-                }
-                firstSignIn = false
+                alternateGetCurrentlyPlayingSong(playerState)
                 openURL = false
+                firstSignIn = false
             }
             else {
                 firstAppEntry = false
-                DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
-                    NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
-                }
+                getCurrentlyPlayingSong()
             }
         }
         lastSong = playerState.track.name
+        mainVC.updateRestrictions(playerState.playbackRestrictions)
+        updateRestrictionOnSkipButtons()
+    }
+    
+    func alternateGetCurrentlyPlayingSong(_ playerState: SPTAppRemotePlayerState) {
+        let artistName = playerState.track.artist.name
+        let fullSongName = playerState.track.name
+        let apiSongName = currentlyPlaying.checkSongName(fullSongName)
+        let artistID = parseURI(artistURI: playerState.track.artist.uri)
+        firstCurrentSong = CurrentlyPlayingInfo(artistName: artistName, fullSongName: fullSongName, apiSongName: apiSongName, allArtists: artistName, albumURL: "", artistID: artistID)
+        if let safeFirstSong = firstCurrentSong {
+            self.mainVC.getFirstSong(info: safeFirstSong)
+        }
+    }
+    
+    func getCurrentlyPlayingSong() {
+        DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
+            NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
+        }
+    }
+    
+    func updateRestrictionOnSkipButtons() {
+        DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
+            NotificationCenter.default.post(name: NSNotification.Name("updateRestrictions"), object: nil)
+        }
     }
 
     func parseURI(artistURI: String) -> String? {
@@ -251,6 +285,10 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
         let parts = artistURI.components(separatedBy: ":")
         return parts[2]
     }
+}
+
+extension SceneDelegate: SPTAppRemoteUserAPIDelegate {
+    func userAPI(_ userAPI: SPTAppRemoteUserAPI, didReceive capabilities: SPTAppRemoteUserCapabilities) { }
 }
 
 

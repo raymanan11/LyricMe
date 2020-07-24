@@ -497,7 +497,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.raymondan.Lyrically;
 				PRODUCT_NAME = Lyrically;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/raymanan11/Desktop/Swift/Lyrically-IOS13/Lyrically-IOS13/LyricallyHeader.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/raymanan11/Desktop/Swift/Lyrically/Lyrically-IOS13/LyricallyHeader.h";
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -533,7 +533,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.raymondan.Lyrically;
 				PRODUCT_NAME = Lyrically;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/raymanan11/Desktop/Swift/Lyrically-IOS13/Lyrically-IOS13/LyricallyHeader.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/raymanan11/Desktop/Swift/Lyrically/Lyrically-IOS13/LyricallyHeader.h";
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

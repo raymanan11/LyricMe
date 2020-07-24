@@ -18,6 +18,7 @@ class ArtistInfoViewController: UIViewController {
     var albumPhotosURL: [String]?
     var popularSongs: [String]?
     var songURI: [String]?
+    var canPlayOnDemand: Bool?
     
     let cellId = "ArtistSong"
     let tableView = UITableView()
@@ -171,7 +172,15 @@ extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
         setArtistImage(artistImageURL: albumPhotosURL![indexPath.row], imageView: cell.albumImage, artist: false)
         cell.songName.text = popularSongs![indexPath.row]
         // set the song URI for the song that the cell has
-        cell.songURI = songURI![indexPath.row]
+        if let safePlayOnDemand = canPlayOnDemand {
+            if safePlayOnDemand {
+                print("can play on demand!")
+                cell.songURI = songURI![indexPath.row]
+            }
+            else {
+                cell.buttonPlay.isHidden = true
+            }
+        }
         return cell
     }
 

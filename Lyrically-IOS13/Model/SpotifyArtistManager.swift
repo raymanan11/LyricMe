@@ -50,6 +50,7 @@ struct SpotifyArtistManager {
                     if artists.name == artistName {
                         correctArtistName = artists.name
                         songs.append(track.name)
+                        // pass in can playOnDemand from getSpotifyArtist in main VC. If canPlayOnDemand is true then do this but if not don't and also hide the play button
                         songURI.append(track.uri)
                         songAlbumImage.append(track.album.images[0].url)
                         break

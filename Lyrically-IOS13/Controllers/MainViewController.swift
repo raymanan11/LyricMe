@@ -21,10 +21,12 @@ class MainViewController: UIViewController, HasLyrics {
     var spotifyArtistManager = SpotifyArtistManager()
     var spotifyArtistImageManager = SpotifyArtistImageManager()
     
+    var playOnDemand: Bool?
     var updateFirstSongPic: Bool = false
     var artistID: String?
     var artistName: String?
     
+    var restrictions: SPTAppRemotePlaybackRestrictions?
     var firstSong: CurrentlyPlayingInfo?
     var spotifyArtist: ArtistInfo?
     var spotifyArtist2: ArtistInfo2?
@@ -81,6 +83,8 @@ class MainViewController: UIViewController, HasLyrics {
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateStatus), name: NSNotification.Name(rawValue: "updateStatus"), object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateViewWithRestrictions), name: NSNotification.Name(rawValue: "updateRestrictions"), object: nil)
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -91,6 +95,8 @@ class MainViewController: UIViewController, HasLyrics {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "returnToLogIn"), object: nil)
         
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "updateStatus"), object: nil)
+        
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "updateRestrictions"), object: nil)
     }
     
     @IBAction func getArtistInfo(_ sender: UIButton) {
@@ -102,6 +108,9 @@ class MainViewController: UIViewController, HasLyrics {
         artistInfo.songURI = self.spotifyArtist?.songURI
         artistInfo.artistImageURL = self.spotifyArtist2?.artistImageURL
         artistInfo.numberOfFollowers = self.spotifyArtist2?.numFollowers
+        if let safePlayOnDemand = playOnDemand {
+            artistInfo.canPlayOnDemand = safePlayOnDemand
+        }
         
         self.present(artistInfo, animated: true, completion: nil)
         
@@ -149,6 +158,19 @@ class MainViewController: UIViewController, HasLyrics {
     
     @objc func updateStatus() {
         updateSpotifyStatus(isPlaying: true)
+    }
+    
+    func updateRestrictions(_ restrictions: SPTAppRemotePlaybackRestrictions) {
+        self.restrictions = restrictions
+    }
+    
+    @objc func updateViewWithRestrictions() {
+        print("Restrictions trying to update")
+        if self.restrictions != nil {
+            skipForward.isEnabled = restrictions!.canSkipNext
+            skipBackward.isEnabled = restrictions!.canSkipPrevious
+            print("buttons are enabled: \(skipForward.isEnabled)")
+        }
     }
     
 }
@@ -263,7 +285,6 @@ extension MainViewController: UI {
 
 extension MainViewController: FirstSong {
     func updateFirstSongPicture(albumURL: String) {
-        print("in here")
         updateAlbumImage(albumURL: albumURL)
     }
 }
