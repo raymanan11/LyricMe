@@ -20,6 +20,7 @@
 		7D3FA2A5246632E700EF389E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D3FA2A3246632E700EF389E /* LaunchScreen.storyboard */; };
 		7D3FA2AD2466332500EF389E /* LyricManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3FA2AC2466332500EF389E /* LyricManager.swift */; };
 		7D3FA2AF2466333F00EF389E /* CanaradoSongInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3FA2AE2466333F00EF389E /* CanaradoSongInfo.swift */; };
+		7D6C4C2C24CE8DC9003D2322 /* UILabelPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6C4C2B24CE8DC9003D2322 /* UILabelPadding.swift */; };
 		7D802F792468D1110048CE94 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D802F782468D1110048CE94 /* AuthService.swift */; };
 		7D802F7B2468D11E0048CE94 /* Ext-UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D802F7A2468D11E0048CE94 /* Ext-UserDefaults.swift */; };
 		7D843199248B1AA300F8B063 /* ArtistInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D843198248B1AA300F8B063 /* ArtistInfo.swift */; };
@@ -57,6 +58,7 @@
 		7D3FA2AC2466332500EF389E /* LyricManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricManager.swift; sourceTree = "<group>"; };
 		7D3FA2AE2466333F00EF389E /* CanaradoSongInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanaradoSongInfo.swift; sourceTree = "<group>"; };
 		7D3FA2B724663EF300EF389E /* LyricallyHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LyricallyHeader.h; sourceTree = "<group>"; };
+		7D6C4C2B24CE8DC9003D2322 /* UILabelPadding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelPadding.swift; sourceTree = "<group>"; };
 		7D802F782468D1110048CE94 /* AuthService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		7D802F7A2468D11E0048CE94 /* Ext-UserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Ext-UserDefaults.swift"; sourceTree = "<group>"; };
 		7D843198248B1AA300F8B063 /* ArtistInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistInfo.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 				7D37D3042471EEA90022EA8E /* MainViewController.swift */,
 				7D84319C248B229800F8B063 /* ArtistInfoViewController.swift */,
 				7D8431A4248FE68100F8B063 /* ArtistSongCell.swift */,
+				7D6C4C2B24CE8DC9003D2322 /* UILabelPadding.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -310,6 +313,7 @@
 				7D84319F248C1C2C00F8B063 /* SpotifyArtistManager.swift in Sources */,
 				7D3FA29B246632E200EF389E /* SceneDelegate.swift in Sources */,
 				7D843199248B1AA300F8B063 /* ArtistInfo.swift in Sources */,
+				7D6C4C2C24CE8DC9003D2322 /* UILabelPadding.swift in Sources */,
 				7D8431A3248D53E800F8B063 /* ArtistInfo2.swift in Sources */,
 				7D3FA2AF2466333F00EF389E /* CanaradoSongInfo.swift in Sources */,
 				7D3FA2AD2466332500EF389E /* LyricManager.swift in Sources */,

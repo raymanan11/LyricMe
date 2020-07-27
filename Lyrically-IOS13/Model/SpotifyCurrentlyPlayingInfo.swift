@@ -17,6 +17,7 @@ struct Item: Decodable {
     var album: Album?
     // used to get artist names
     var artists: [Artist]
+    var uri: String
     var id: String
 }
 

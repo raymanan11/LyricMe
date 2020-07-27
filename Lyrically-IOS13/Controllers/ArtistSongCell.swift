@@ -57,12 +57,6 @@ class ArtistSongCell: UITableViewCell {
 
     let albumImage: UIImageView = {
         let imageView = UIImageView()
-//        if artistVC.traitCollection.userInterfaceStyle == .dark {
-//
-//        }
-//        else {
-//
-//        }
         imageView.backgroundColor = .quaternarySystemFill
         imageView.translatesAutoresizingMaskIntoConstraints  = false
         imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
@@ -81,7 +75,7 @@ class ArtistSongCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        backgroundColor = .quaternarySystemFill
+        backgroundColor = UIColor(named: "ArtistInfo")
         
         containerView.addSubview(buttonPlay)
         buttonPlay.heightAnchor.constraint(equalToConstant: 50).isActive = true

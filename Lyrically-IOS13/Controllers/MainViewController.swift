@@ -25,6 +25,7 @@ class MainViewController: UIViewController, HasLyrics {
     var updateFirstSongPic: Bool = false
     var artistID: String?
     var artistName: String?
+    var currentSongURI: String?
     
     var restrictions: SPTAppRemotePlaybackRestrictions?
     var firstSong: CurrentlyPlayingInfo?
@@ -102,6 +103,9 @@ class MainViewController: UIViewController, HasLyrics {
     @IBAction func getArtistInfo(_ sender: UIButton) {
         
         let artistInfo: ArtistInfoViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "artistInfo") as! ArtistInfoViewController
+        if let safeCurrentSongURI = currentSongURI {
+            artistInfo.currentSongURI = safeCurrentSongURI
+        }
         artistInfo.nameOfArtist = self.spotifyArtist?.artistName
         artistInfo.albumPhotosURL = self.spotifyArtist?.songAlbumImage
         artistInfo.popularSongs = self.spotifyArtist?.popularSongs
@@ -165,11 +169,9 @@ class MainViewController: UIViewController, HasLyrics {
     }
     
     @objc func updateViewWithRestrictions() {
-        print("Restrictions trying to update")
         if self.restrictions != nil {
             skipForward.isEnabled = restrictions!.canSkipNext
             skipBackward.isEnabled = restrictions!.canSkipPrevious
-            print("buttons are enabled: \(skipForward.isEnabled)")
         }
     }
     
@@ -191,14 +193,11 @@ extension MainViewController: ReceiveArtist {
             updateFirstSongPic = true
             for (index, trackName) in info.popularSongs.enumerated() {
                 if trackName.localizedStandardContains(firstSong!.apiSongName) {
-                    print("updated 1")
                     updateAlbumImage(albumURL: info.songAlbumImage[index])
                     return
                 }
             }
             if let safeArtistID = artistID {
-                print("updated 2")
-                print("not one of the top songs so getting artist image")
                 spotifyArtistImageManager.getArtistImageURL(id: safeArtistID)
             }
         }
@@ -246,6 +245,7 @@ extension MainViewController: UI {
     func updateSongInfoUI(_ songInfo: CurrentlyPlayingInfo) {
         DispatchQueue.main.async {
             self.artistName = songInfo.artistName
+            self.currentSongURI = songInfo.currentSongURI
             self.artistInfo.isEnabled = true
             self.skipForward.isHidden = false
             self.skipBackward.isHidden = false
@@ -254,11 +254,10 @@ extension MainViewController: UI {
             self.songTitle.text = songInfo.fullSongName
             self.songArtist.font = UIFont(name: "Futura-Medium", size: 22)
             self.songArtist.text = "by \(songInfo.allArtists)"
-            print("Main VC: \(songInfo.albumURL)")
+            self.artistInfo.layer.borderColor = UIColor(red: 14.0/255, green: 122.0/255, blue: 254.0/255, alpha: 1).cgColor
             self.updateAlbumImage(albumURL: songInfo.albumURL)
             self.lyrics.text = "Getting Lyrics..."
             if songInfo.artistID != nil {
-                print(songInfo.artistID)
                 self.artistID = songInfo.artistID
                 self.getSpotifyArtist()
             }

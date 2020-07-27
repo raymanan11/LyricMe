@@ -18,6 +18,7 @@ class ArtistInfoViewController: UIViewController {
     var albumPhotosURL: [String]?
     var popularSongs: [String]?
     var songURI: [String]?
+    var currentSongURI: String?
     var canPlayOnDemand: Bool?
     
     let cellId = "ArtistSong"
@@ -27,7 +28,7 @@ class ArtistInfoViewController: UIViewController {
     let artistImage = UIImageView()
     let artistLabel = UILabel()
 
-    var currentSongURI: String?
+    var clickedSongURI: String?
     
     private var playerState: SPTAppRemotePlayerState?
     private var subscribedToPlayerState: Bool = false
@@ -67,7 +68,8 @@ class ArtistInfoViewController: UIViewController {
         artistImage.contentMode = .scaleAspectFill
         artistImage.translatesAutoresizingMaskIntoConstraints = false
 
-        containerView.backgroundColor = .darkGray
+//        containerView.backgroundColor = .quaternarySystemFill
+        containerView.backgroundColor = UIColor(named: "AppBackground")
         containerView.translatesAutoresizingMaskIntoConstraints = false
         
         tableView.delegate = self
@@ -131,11 +133,12 @@ class ArtistInfoViewController: UIViewController {
     }
     
     func updateSongURI(songURI: String) {
-        currentSongURI = songURI
-        if let safeURI = currentSongURI {
+        // if user doesn't have premium, use the currentSongURI and use the .play and asRadio as true
+        clickedSongURI = songURI
+        if let safeURI = clickedSongURI {
             appRemote?.playerAPI?.play(safeURI, callback: defaultCallback)
         }
-        print("Current song uri: \(currentSongURI ?? "nothing")")
+        print("Current song uri: \(clickedSongURI ?? "nothing")")
     }
 
     @objc func returnToVC() {
@@ -169,19 +172,51 @@ extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistSong", for: indexPath) as! ArtistSongCell
+//        if indexPath.row == 0, let safePlayOnDemand = canPlayOnDemand {
+//            if !safePlayOnDemand {
+//                cell.albumImage.isHidden = true
+//                cell.songName.text = "Play Song Radio"
+//                if let safeCurrentSongURI = currentSongURI {
+//                    cell.songURI = safeCurrentSongURI
+//                }
+//            }
+//        }
+//        else {
+//            setArtistImage(artistImageURL: albumPhotosURL![indexPath.row], imageView: cell.albumImage, artist: false)
+//            cell.songName.text = popularSongs![indexPath.row]
+//            ableToPlayArtistSong(cell, indexPath)
+//        }
         setArtistImage(artistImageURL: albumPhotosURL![indexPath.row], imageView: cell.albumImage, artist: false)
         cell.songName.text = popularSongs![indexPath.row]
+        ableToPlayArtistSong(cell, indexPath)
+        return cell
+    }
+    
+    func ableToPlayArtistSong(_ cell: ArtistSongCell, _ indexPath: IndexPath) {
         // set the song URI for the song that the cell has
         if let safePlayOnDemand = canPlayOnDemand {
             if safePlayOnDemand {
-                print("can play on demand!")
                 cell.songURI = songURI![indexPath.row]
             }
             else {
                 cell.buttonPlay.isHidden = true
             }
         }
-        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 60
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let label = UILabelPadding()
+        label.text = "Popular Songs"
+        label.font = .systemFont(ofSize: 24, weight: .bold)
+        label.backgroundColor = UIColor(named: "ArtistInfo")
+        label.textColor = .label
+        label.textAlignment = .left
+        label.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 60)
+        return label
     }
 
 }

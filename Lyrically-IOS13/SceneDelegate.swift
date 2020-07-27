@@ -230,7 +230,6 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     }
     
     private func updateViewWithCapabilities(_ capabilities: SPTAppRemoteUserCapabilities) {
-        print("can play music on demand: \(capabilities.canPlayOnDemand)")
         mainVC.playOnDemand = capabilities.canPlayOnDemand
     }
 }
@@ -258,9 +257,10 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
     func alternateGetCurrentlyPlayingSong(_ playerState: SPTAppRemotePlayerState) {
         let artistName = playerState.track.artist.name
         let fullSongName = playerState.track.name
+        let currentSongURI = playerState.track.uri
         let apiSongName = currentlyPlaying.checkSongName(fullSongName)
         let artistID = parseURI(artistURI: playerState.track.artist.uri)
-        firstCurrentSong = CurrentlyPlayingInfo(artistName: artistName, fullSongName: fullSongName, apiSongName: apiSongName, allArtists: artistName, albumURL: "", artistID: artistID)
+        firstCurrentSong = CurrentlyPlayingInfo(artistName: artistName, fullSongName: fullSongName, apiSongName: apiSongName, allArtists: artistName, albumURL: "", artistID: artistID, currentSongURI: currentSongURI)
         if let safeFirstSong = firstCurrentSong {
             self.mainVC.getFirstSong(info: safeFirstSong)
         }

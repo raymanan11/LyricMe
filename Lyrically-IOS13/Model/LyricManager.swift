@@ -20,24 +20,16 @@ class LyricManager {
     var delegate: LyricManagerDelegate?
     
     static var triedOnce: Bool = false
+    var triedSingleArtist: Bool = false
     
     let headers = [
         "x-rapidapi-host": "canarado-lyrics.p.rapidapi.com",
         "x-rapidapi-key": Constants.rapidAPIKey
     ]
     
-    func getLyrics(_ URL: NSURL) {
-        let request = NSMutableURLRequest(url: URL as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
-        request.httpMethod = "GET"
-        request.allHTTPHeaderFields = headers
-
-        let session = URLSession.shared
-        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: handle(data:response:error:))
-
-        dataTask.resume()
-    }
-    // (' or ’)
     func fetchData(songAndArtist: String, songName: String, songArtist: String) {
+        print(songAndArtist)
+        triedSingleArtist = false
         self.songName = songName
         self.songArtist = songArtist
         let songURL = songAndArtist.replacingOccurrences(of: " ", with: "%2520").replacingOccurrences(of: "’", with: "'")
@@ -54,12 +46,23 @@ class LyricManager {
         }
     }
     
+    func getLyrics(_ URL: NSURL) {
+        let request = NSMutableURLRequest(url: URL as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
+        request.httpMethod = "GET"
+        request.allHTTPHeaderFields = headers
+
+        let session = URLSession.shared
+        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: handle(data:response:error:))
+
+        dataTask.resume()
+    }
+    
     func handle(data: Data?, response: URLResponse?, error: Error?) {
-        let songAndArtist = "\(songName) \(songArtist)"
+        let songAndSingleArtist = "\(songName) \(songArtist)"
         if (error != nil) {
             print(error!)
             print("Problem with Lyric API, calling again")
-            fetchData(songAndArtist: songAndArtist, songName: self.songName, songArtist: self.songArtist)
+            fetchData(songAndArtist: songAndSingleArtist, songName: self.songName, songArtist: self.songArtist)
             return
         }
         if let safeData = data {
@@ -68,8 +71,9 @@ class LyricManager {
                 if lyrics == Constants.noLyrics && LyricManager.triedOnce == false {
                     LyricManager.triedOnce = true
                     // another way of getting lyrics if not found is trying just one artist instead of all
-                    print("No lyrics found for singleArtist, trying again")
-                    fetchData(songAndArtist: songAndArtist, songName: self.songName, songArtist: self.songArtist)
+                    print("No lyrics found for multiple artists, trying again")
+                    triedSingleArtist = true
+                    fetchData(songAndArtist: songAndSingleArtist, songName: self.songName, songArtist: self.songArtist)
                 }
                 else {
                     delegate?.updateLyrics(lyrics)
@@ -78,7 +82,34 @@ class LyricManager {
         }
     }
     
-    fileprivate func getLyrics(_ songInfo: CanaradoSongInfo, _ spotifySongName: String, _ spotifySongArtist: String?) -> String? {
+    func parseJson(_ safeData: Data) -> String? {
+        let decoder = JSONDecoder()
+        do {
+            let songInfo = try decoder.decode(CanaradoSongInfo.self, from: safeData)
+            let spotifySongName = songName.lowercased().filter { !" /-.,'’".contains($0) }
+            let spotifySongArtist = songArtist.lowercased().replacingOccurrences(of: "&", with: "and").filter { !" /-.,'’".contains($0) }
+            print("Spotify song name: \(spotifySongName)")
+            print("Spotify song artist: \(spotifySongArtist)")
+            if let lyricsOptionOne = getLyrics(songInfo, spotifySongName, spotifySongArtist) {
+                print("Lyrics Option One")
+                return lyricsOptionOne
+            }
+            else if triedSingleArtist {
+                if let lyricsOptionTwo = getLyrics(songInfo, spotifySongName, nil) {
+                    print("Lyrics Option Two")
+                    return lyricsOptionTwo
+                }
+            }
+            // if it reaches this point then that means it is not able to find lyrics
+            return Constants.noLyrics
+        }
+        catch {
+            print(error)
+            return Constants.noLyrics
+        }
+    }
+    
+    func getLyrics(_ songInfo: CanaradoSongInfo, _ spotifySongName: String, _ spotifySongArtist: String?) -> String? {
         for(index, value) in songInfo.content.enumerated() {
             let potentialSongName = value.title.lowercased()
             let canaradoSongName = potentialSongName.replacingOccurrences(of: "&", with: "and").filter { !$0.isWhitespace && !"/-.,'".contains($0)}
@@ -96,42 +127,7 @@ class LyricManager {
         }
         return nil
     }
-    
-    func parseJson(_ safeData: Data) -> String? {
-        let decoder = JSONDecoder()
-        do {
-            let songInfo = try decoder.decode(CanaradoSongInfo.self, from: safeData)
-            let spotifySongName = songName.lowercased().filter { !" /-.,'".contains($0) }
-            let spotifySongArtist = songArtist.lowercased().replacingOccurrences(of: "&", with: "and").filter { !" /-.,'".contains($0) }
-            print("Spotify song name: \(spotifySongName)")
-            print("Spotify song artist: \(spotifySongArtist)")
-            if let lyricsOptionOne = getLyrics(songInfo, spotifySongName, spotifySongArtist) {
-                print("Lyrics Option One")
-                return lyricsOptionOne
-            }
-            else {
-                if let lyricsOptionTwo = getLyrics(songInfo, spotifySongName, nil) {
-                    print("Lyrics Option Two")
-                    return lyricsOptionTwo
-                }
-            }
-            // if it reaches this point then that means it is not able to find lyrics
-            return Constants.noLyrics
-        }
-        catch {
-            print(error)
-            return Constants.noLyrics
-        }
-    }
-    
-    func detectedLanguage(for string: String) -> String? {
-        let recognizer = NLLanguageRecognizer()
-        recognizer.processString(string)
-        guard let languageCode = recognizer.dominantLanguage?.rawValue else { return nil }
-        let detectedLanguage = Locale.current.localizedString(forIdentifier: languageCode)
-        return detectedLanguage
-    }
-    
+
 }
 
 
