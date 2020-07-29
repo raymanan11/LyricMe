@@ -28,7 +28,6 @@ class LyricManager {
     ]
     
     func fetchData(songAndArtist: String, songName: String, songArtist: String) {
-        print(songAndArtist)
         triedSingleArtist = false
         self.songName = songName
         self.songArtist = songArtist
@@ -62,7 +61,8 @@ class LyricManager {
         if (error != nil) {
             print(error!)
             print("Problem with Lyric API, calling again")
-            fetchData(songAndArtist: songAndSingleArtist, songName: self.songName, songArtist: self.songArtist)
+//            fetchData(songAndArtist: songAndSingleArtist, songName: self.songName, songArtist: self.songArtist)
+            delegate?.updateLyrics(Constants.noLyrics)
             return
         }
         if let safeData = data {

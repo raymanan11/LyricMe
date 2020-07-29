@@ -18,7 +18,6 @@ class ArtistInfoViewController: UIViewController {
     var albumPhotosURL: [String]?
     var popularSongs: [String]?
     var songURI: [String]?
-    var currentSongURI: String?
     var canPlayOnDemand: Bool?
     
     let cellId = "ArtistSong"
@@ -163,40 +162,32 @@ class ArtistInfoViewController: UIViewController {
 extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return popularSongs?.count ?? 0
+        let numRows = popularSongs?.count ?? 0
+        return numRows
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
     }
     
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        return nil
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistSong", for: indexPath) as! ArtistSongCell
-//        if indexPath.row == 0, let safePlayOnDemand = canPlayOnDemand {
-//            if !safePlayOnDemand {
-//                cell.albumImage.isHidden = true
-//                cell.songName.text = "Play Song Radio"
-//                if let safeCurrentSongURI = currentSongURI {
-//                    cell.songURI = safeCurrentSongURI
-//                }
-//            }
-//        }
-//        else {
-//            setArtistImage(artistImageURL: albumPhotosURL![indexPath.row], imageView: cell.albumImage, artist: false)
-//            cell.songName.text = popularSongs![indexPath.row]
-//            ableToPlayArtistSong(cell, indexPath)
-//        }
-        setArtistImage(artistImageURL: albumPhotosURL![indexPath.row], imageView: cell.albumImage, artist: false)
-        cell.songName.text = popularSongs![indexPath.row]
-        ableToPlayArtistSong(cell, indexPath)
+        if let safeAlbumPhotosURL = albumPhotosURL, let safePopularSongs = popularSongs, let safeSongURI = songURI {
+            setArtistImage(artistImageURL: safeAlbumPhotosURL[indexPath.row], imageView: cell.albumImage, artist: false)
+            cell.songName.text = safePopularSongs[indexPath.row]
+            ableToPlayArtistSong(cell, indexPath, safeSongURI)
+        }
         return cell
     }
     
-    func ableToPlayArtistSong(_ cell: ArtistSongCell, _ indexPath: IndexPath) {
-        // set the song URI for the song that the cell has
+    func ableToPlayArtistSong(_ cell: ArtistSongCell, _ indexPath: IndexPath, _ songURI: [String]) {
         if let safePlayOnDemand = canPlayOnDemand {
             if safePlayOnDemand {
-                cell.songURI = songURI![indexPath.row]
+                cell.songURI = songURI[indexPath.row]
             }
             else {
                 cell.buttonPlay.isHidden = true

@@ -26,6 +26,7 @@ class MainViewController: UIViewController, HasLyrics {
     var artistID: String?
     var artistName: String?
     var currentSongURI: String?
+    var currentSongAlbumURL: String?
     
     var restrictions: SPTAppRemotePlaybackRestrictions?
     var firstSong: CurrentlyPlayingInfo?
@@ -103,8 +104,8 @@ class MainViewController: UIViewController, HasLyrics {
     @IBAction func getArtistInfo(_ sender: UIButton) {
         
         let artistInfo: ArtistInfoViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "artistInfo") as! ArtistInfoViewController
-        if let safeCurrentSongURI = currentSongURI {
-            artistInfo.currentSongURI = safeCurrentSongURI
+        if let safePlayOnDemand = playOnDemand {
+            artistInfo.canPlayOnDemand = safePlayOnDemand
         }
         artistInfo.nameOfArtist = self.spotifyArtist?.artistName
         artistInfo.albumPhotosURL = self.spotifyArtist?.songAlbumImage
@@ -112,9 +113,6 @@ class MainViewController: UIViewController, HasLyrics {
         artistInfo.songURI = self.spotifyArtist?.songURI
         artistInfo.artistImageURL = self.spotifyArtist2?.artistImageURL
         artistInfo.numberOfFollowers = self.spotifyArtist2?.numFollowers
-        if let safePlayOnDemand = playOnDemand {
-            artistInfo.canPlayOnDemand = safePlayOnDemand
-        }
         
         self.present(artistInfo, animated: true, completion: nil)
         
@@ -225,7 +223,9 @@ extension MainViewController: UI {
             self.skipBackward.isHidden = true
             self.artistInfo.isEnabled = false
             self.artistInfo.setImage(UIImage(named: "LyricallyLogo"), for: .normal)
-            self.songArtist.font = UIFont(name: "Futura-Bold", size: 24)
+            let songTitleSize = self.songTitle.font.pointSize
+            self.songTitle.font = UIFont(name: "Futura-Bold", size: songTitleSize)
+            self.songArtist.font = UIFont(name: "Futura-Bold", size: songTitleSize)
             if isPlaying {
                 self.songTitle.text = "Getting Currently"
                 self.songArtist.text = "Playing Song..."
@@ -246,13 +246,19 @@ extension MainViewController: UI {
         DispatchQueue.main.async {
             self.artistName = songInfo.artistName
             self.currentSongURI = songInfo.currentSongURI
+            self.currentSongAlbumURL = songInfo.albumURL
             self.artistInfo.isEnabled = true
             self.skipForward.isHidden = false
             self.skipBackward.isHidden = false
             self.lyrics.isHidden = false
-            self.lyrics.textContainerInset = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
+            self.lyrics.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
             self.songTitle.text = songInfo.fullSongName
-            self.songArtist.font = UIFont(name: "Futura-Medium", size: 22)
+            let songTitleSize = self.songTitle.font.pointSize
+            let songArtistSize = self.songArtist.font.pointSize
+            print(songTitleSize)
+            print(songArtistSize)
+            self.songTitle.font = UIFont(name: "Futura-Bold", size: songTitleSize)
+            self.songArtist.font = UIFont(name: "Futura-Medium", size: songArtistSize)
             self.songArtist.text = "by \(songInfo.allArtists)"
             self.artistInfo.layer.borderColor = UIColor(red: 14.0/255, green: 122.0/255, blue: 254.0/255, alpha: 1).cgColor
             self.updateAlbumImage(albumURL: songInfo.albumURL)

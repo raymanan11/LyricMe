@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="mtG-dd-mkS">
-    <device id="ipad11_0rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
@@ -13,11 +13,11 @@
             <objects>
                 <viewController storyboardIdentifier="logIn" id="BYZ-38-t0r" customClass="LogInViewController" customModule="Lyrically" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JVw-FV-wHD">
-                                <rect key="frame" x="327" y="527" width="180" height="77"/>
+                                <rect key="frame" x="117" y="565" width="180" height="77"/>
                                 <color key="backgroundColor" name="SpotifyGreen"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="77" id="8Kt-dz-lDI"/>
@@ -59,17 +59,17 @@
             <objects>
                 <viewController storyboardIdentifier="main" id="0Dk-oK-vUy" customClass="MainViewController" customModule="Lyrically" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="x2j-6Z-U8d">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="IY9-FZ-8gU">
-                                <rect key="frame" x="0.0" y="50" width="834" height="1124"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="WZq-VM-Ejq">
-                                        <rect key="frame" x="25" y="0.0" width="784" height="473"/>
+                                        <rect key="frame" x="25" y="0.0" width="364" height="123"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yuY-k7-3M3">
-                                                <rect key="frame" x="0.0" y="201" width="75" height="71"/>
+                                                <rect key="frame" x="0.0" y="45.333333333333329" width="37.333333333333336" height="32.333333333333329"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="yuY-k7-3M3" secondAttribute="height" multiplier="1:1" id="QLv-G5-769"/>
                                                 </constraints>
@@ -78,11 +78,11 @@
                                                     <action selector="previousSongPressed:" destination="0Dk-oK-vUy" eventType="touchUpInside" id="iqE-BG-F1n"/>
                                                 </connections>
                                             </button>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="cY7-Hh-fuh">
-                                                <rect key="frame" x="306" y="145.5" width="172" height="182"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="cY7-Hh-fuh">
+                                                <rect key="frame" x="142" y="19" width="80" height="85"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xal-pg-wWX">
-                                                        <rect key="frame" x="0.0" y="0.0" width="172" height="172"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="Xal-pg-wWX" secondAttribute="height" multiplier="1:1" id="9mS-86-LVP"/>
                                                         </constraints>
@@ -92,24 +92,30 @@
                                                         </connections>
                                                     </button>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="tPD-Iy-VGe">
-                                                        <rect key="frame" x="86" y="182" width="0.0" height="0.0"/>
+                                                        <rect key="frame" x="40" y="85" width="0.0" height="0.0"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7kU-sw-sLz">
-                                                                <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="23"/>
+                                                                <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="20"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
+                                                                <variation key="heightClass=regular-widthClass=regular">
+                                                                    <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="23"/>
+                                                                </variation>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uje-YQ-zzC">
-                                                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="22"/>
+                                                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="18"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
+                                                                <variation key="heightClass=regular-widthClass=regular">
+                                                                    <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="21"/>
+                                                                </variation>
                                                             </label>
                                                         </subviews>
                                                     </stackView>
                                                 </subviews>
                                             </stackView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qPC-Sz-1p8">
-                                                <rect key="frame" x="709" y="201" width="75" height="71"/>
+                                                <rect key="frame" x="326.66666666666669" y="45.333333333333329" width="37.333333333333314" height="32.333333333333329"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="qPC-Sz-1p8" secondAttribute="height" multiplier="1:1" id="Kq0-4p-Urg"/>
                                                 </constraints>
@@ -124,7 +130,7 @@
                                         </constraints>
                                     </stackView>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qYE-lw-Scg">
-                                        <rect key="frame" x="15" y="483" width="804" height="641"/>
+                                        <rect key="frame" x="0.0" y="133" width="414" height="641"/>
                                         <color key="backgroundColor" name="LyricBackground"/>
                                         <color key="textColor" name="Text"/>
                                         <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="18"/>
@@ -142,8 +148,8 @@
                                     <constraint firstItem="qPC-Sz-1p8" firstAttribute="width" secondItem="IY9-FZ-8gU" secondAttribute="width" multiplier="0.09" id="BsV-FK-9BV"/>
                                     <constraint firstItem="WZq-VM-Ejq" firstAttribute="leading" secondItem="IY9-FZ-8gU" secondAttribute="leading" constant="25" id="CeC-CA-e4H"/>
                                     <constraint firstAttribute="bottom" secondItem="qYE-lw-Scg" secondAttribute="bottom" id="dVw-ck-dD7"/>
-                                    <constraint firstAttribute="trailing" secondItem="qYE-lw-Scg" secondAttribute="trailing" constant="15" id="iFL-Q7-wy4"/>
-                                    <constraint firstItem="qYE-lw-Scg" firstAttribute="leading" secondItem="IY9-FZ-8gU" secondAttribute="leading" constant="15" id="kt8-CN-89J"/>
+                                    <constraint firstAttribute="trailing" secondItem="qYE-lw-Scg" secondAttribute="trailing" id="iFL-Q7-wy4"/>
+                                    <constraint firstItem="qYE-lw-Scg" firstAttribute="leading" secondItem="IY9-FZ-8gU" secondAttribute="leading" id="kt8-CN-89J"/>
                                     <constraint firstAttribute="trailing" secondItem="WZq-VM-Ejq" secondAttribute="trailing" constant="25" id="l2z-Vf-3pT"/>
                                 </constraints>
                             </stackView>
@@ -176,7 +182,7 @@
             <objects>
                 <viewController storyboardIdentifier="artistInfo" id="u79-L4-qTp" customClass="ArtistInfoViewController" customModule="Lyrically" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1NT-Ub-Y4C">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" name="AppBackground"/>
                         <viewLayoutGuide key="safeArea" id="zAP-LQ-ZmZ"/>
@@ -202,7 +208,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="mtG-dd-mkS" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="xvI-Hs-tpa">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="50"/>
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -216,11 +222,11 @@
         </scene>
     </scenes>
     <resources>
-        <image name="LyricallyLogo" width="166.5" height="166.5"/>
+        <image name="LyricallyLogo" width="166.66667175292969" height="166.66667175292969"/>
         <image name="backward.end.fill" catalog="system" width="128" height="102"/>
         <image name="forward.end.fill" catalog="system" width="128" height="102"/>
         <namedColor name="AppBackground">
-            <color red="0.92548331425296193" green="0.92921266372159028" blue="0.94738618698981969" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.92500001192092896" green="0.92900002002716064" blue="0.94700002670288086" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="LyricBackground">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

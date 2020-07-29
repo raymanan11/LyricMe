@@ -57,7 +57,7 @@ class ArtistSongCell: UITableViewCell {
 
     let albumImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .quaternarySystemFill
+        imageView.backgroundColor = UIColor(named: "ArtistInfo")
         imageView.translatesAutoresizingMaskIntoConstraints  = false
         imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true

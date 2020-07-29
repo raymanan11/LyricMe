@@ -76,16 +76,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
             return
         }
         openURL = true
+        firstAppEntry = false
         NotificationCenter.default.post(name: NSNotification.Name("openSpotify"), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name("logInSuccessful"), object: nil)
-        firstAppEntry = false
         sessionManager.application(UIApplication.shared, open: url, options: [:])
-
     }
     
     func sessionManager(manager: SPTSessionManager, didInitiate session: SPTSession) {
         print("inititated session")
-        NotificationCenter.default.post(name: NSNotification.Name("updateStatus"), object: nil)
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: NSNotification.Name("updateStatus"), object: nil)
+        }
         defaults.initiatedSession = true
         appRemote.connectionParameters.accessToken = session.accessToken
         self.accessToken = session.accessToken
@@ -94,6 +95,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     }
     
     func sessionManager(manager: SPTSessionManager, didFailWith error: Error) {
+        NotificationCenter.default.post(name: NSNotification.Name("returnToLogIn"), object: nil)
         print("fail", error)
     }
     
@@ -110,6 +112,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
+        print(#function)
         // when first signing in, it will enter foreground (true) and appRemote.connect will connect which is why I did this so it won't call appRemote.connect() another time to stop any conflicts
         // but then will set didEnterForeground to false in order to call appRemote.connect() whenever user dismisses the pull down menu so that the app can track if user changed the song there
         didEnterBackground = false
@@ -169,6 +172,7 @@ extension UserDefaults {
 extension SceneDelegate: SPTAppRemoteDelegate {
     
     func appRemoteDidEstablishConnection(_ appRemote: SPTAppRemote) {
+        print("App Remote is connected")
         self.appRemote = appRemote
         subscribeToCapabilityChanges()
         self.appRemote.playerAPI?.delegate = self
@@ -238,6 +242,8 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
     
     func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
         fetchUserCapabilities()
+        print(playerState.track.name)
+        print(lastSong)
         if playerState.track.name != lastSong {
             if openURL && firstSignIn {
                 alternateGetCurrentlyPlayingSong(playerState)
