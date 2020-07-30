@@ -75,11 +75,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         guard let url = URLContexts.first?.url else {
             return
         }
+        sessionManager.application(UIApplication.shared, open: url, options: [:])
         openURL = true
         firstAppEntry = false
         NotificationCenter.default.post(name: NSNotification.Name("openSpotify"), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name("logInSuccessful"), object: nil)
-        sessionManager.application(UIApplication.shared, open: url, options: [:])
     }
     
     func sessionManager(manager: SPTSessionManager, didInitiate session: SPTSession) {
