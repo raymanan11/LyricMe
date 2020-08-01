@@ -213,9 +213,9 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     }
     
     func updateLogInUI() {
-           NotificationCenter.default.post(name: NSNotification.Name("playButtonPressed"), object: nil)
-           NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
-       }
+       NotificationCenter.default.post(name: NSNotification.Name("playButtonPressed"), object: nil)
+       NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
+   }
     
     private func subscribeToCapabilityChanges() {
         appRemote.userAPI?.delegate = self
@@ -241,23 +241,23 @@ extension SceneDelegate: SPTAppRemoteDelegate {
 extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
     
     func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
-        fetchUserCapabilities()
-        print(playerState.track.name)
-        print(lastSong)
-        if playerState.track.name != lastSong {
-            if openURL && firstSignIn {
-                alternateGetCurrentlyPlayingSong(playerState)
-                openURL = false
-                firstSignIn = false
+        if defaults.initiatedSession {
+            fetchUserCapabilities()
+            if playerState.track.name != lastSong {
+                if openURL && firstSignIn {
+                    alternateGetCurrentlyPlayingSong(playerState)
+                    openURL = false
+                    firstSignIn = false
+                }
+                else {
+                    firstAppEntry = false
+                    getCurrentlyPlayingSong()
+                }
             }
-            else {
-                firstAppEntry = false
-                getCurrentlyPlayingSong()
-            }
+            lastSong = playerState.track.name
+            mainVC.updateRestrictions(playerState.playbackRestrictions)
+            updateRestrictionOnSkipButtons()
         }
-        lastSong = playerState.track.name
-        mainVC.updateRestrictions(playerState.playbackRestrictions)
-        updateRestrictionOnSkipButtons()
     }
     
     func alternateGetCurrentlyPlayingSong(_ playerState: SPTAppRemotePlayerState) {

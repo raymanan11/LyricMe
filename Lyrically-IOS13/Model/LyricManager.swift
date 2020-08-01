@@ -28,7 +28,7 @@ class LyricManager {
     ]
     
     func fetchData(songAndArtist: String, songName: String, songArtist: String) {
-        triedSingleArtist = false
+        print("Getting lyrics!")
         self.songName = songName
         self.songArtist = songArtist
         let songURL = songAndArtist.replacingOccurrences(of: " ", with: "%2520").replacingOccurrences(of: "’", with: "'")
@@ -77,6 +77,7 @@ class LyricManager {
                 }
                 else {
                     delegate?.updateLyrics(lyrics)
+                    triedSingleArtist = false
                 }
             }
         }
@@ -86,8 +87,8 @@ class LyricManager {
         let decoder = JSONDecoder()
         do {
             let songInfo = try decoder.decode(CanaradoSongInfo.self, from: safeData)
-            let spotifySongName = songName.lowercased().filter { !" /-.,'’".contains($0) }
-            let spotifySongArtist = songArtist.lowercased().replacingOccurrences(of: "&", with: "and").filter { !" /-.,'’".contains($0) }
+            let spotifySongName = parseWord(songName.lowercased())
+            let spotifySongArtist = parseWord(songArtist.lowercased().replacingOccurrences(of: "&", with: "and"))
             print("Spotify song name: \(spotifySongName)")
             print("Spotify song artist: \(spotifySongArtist)")
             if let lyricsOptionOne = getLyrics(songInfo, spotifySongName, spotifySongArtist) {
@@ -95,6 +96,7 @@ class LyricManager {
                 return lyricsOptionOne
             }
             else if triedSingleArtist {
+                print("hello")
                 if let lyricsOptionTwo = getLyrics(songInfo, spotifySongName, nil) {
                     print("Lyrics Option Two")
                     return lyricsOptionTwo
@@ -112,7 +114,7 @@ class LyricManager {
     func getLyrics(_ songInfo: CanaradoSongInfo, _ spotifySongName: String, _ spotifySongArtist: String?) -> String? {
         for(index, value) in songInfo.content.enumerated() {
             let potentialSongName = value.title.lowercased()
-            let canaradoSongName = potentialSongName.replacingOccurrences(of: "&", with: "and").filter { !$0.isWhitespace && !"/-.,'".contains($0)}
+            let canaradoSongName = parseWord(potentialSongName.replacingOccurrences(of: "&", with: "and"))
             print("Potential song name: \(canaradoSongName)")
             if let safeSongArtist = spotifySongArtist {
                 if canaradoSongName.contains(spotifySongName) && canaradoSongName.contains(safeSongArtist) {
@@ -126,6 +128,10 @@ class LyricManager {
             }
         }
         return nil
+    }
+    
+    func parseWord(_ word: String) -> String {
+        return word.filter { !$0.isWhitespace && !"/-.,'’".contains($0) }
     }
 
 }

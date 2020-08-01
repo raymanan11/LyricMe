@@ -20,6 +20,7 @@ class MainViewController: UIViewController, HasLyrics {
     var lyricManager = LyricManager()
     var spotifyArtistManager = SpotifyArtistManager()
     var spotifyArtistImageManager = SpotifyArtistImageManager()
+    var logInVC = LogInViewController()
     
     var playOnDemand: Bool?
     var updateFirstSongPic: Bool = false
@@ -173,6 +174,12 @@ class MainViewController: UIViewController, HasLyrics {
         }
     }
     
+    private func presentAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
 }
 
 extension MainViewController: ReceiveArtist {
@@ -223,16 +230,11 @@ extension MainViewController: UI {
             self.skipBackward.isHidden = true
             self.artistInfo.isEnabled = false
             self.artistInfo.setImage(UIImage(named: "LyricallyLogo"), for: .normal)
-            let songTitleSize = self.songTitle.font.pointSize
-            self.songTitle.font = UIFont(name: "Futura-Bold", size: songTitleSize)
-            self.songArtist.font = UIFont(name: "Futura-Bold", size: songTitleSize)
-            if isPlaying {
-                self.songTitle.text = "Getting Currently"
-                self.songArtist.text = "Playing Song..."
-            }
-            else {
-                self.songTitle.text = "Please Play"
-                self.songArtist.text = "A Song"
+            self.artistInfo.layer.borderColor = UIColor.white.cgColor
+            self.songTitle.text = ""
+            self.songArtist.text = ""
+            if !isPlaying {
+                self.presentAlert(title: "Please Play A Song", message: "Navigate back to Spotify and play a song to continue")
             }
         }
     }
