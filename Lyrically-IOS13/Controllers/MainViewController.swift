@@ -21,8 +21,9 @@ class MainViewController: UIViewController, HasLyrics {
     var spotifyArtistManager = SpotifyArtistManager()
     var spotifyArtistImageManager = SpotifyArtistImageManager()
     var logInVC = LogInViewController()
+    var alertManager = AlertManager()
     
-    var playOnDemand: Bool?
+    static var playOnDemand: Bool?
     var updateFirstSongPic: Bool = false
     var artistID: String?
     var artistName: String?
@@ -105,9 +106,6 @@ class MainViewController: UIViewController, HasLyrics {
     @IBAction func getArtistInfo(_ sender: UIButton) {
         
         let artistInfo: ArtistInfoViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "artistInfo") as! ArtistInfoViewController
-        if let safePlayOnDemand = playOnDemand {
-            artistInfo.canPlayOnDemand = safePlayOnDemand
-        }
         artistInfo.nameOfArtist = self.spotifyArtist?.artistName
         artistInfo.albumPhotosURL = self.spotifyArtist?.songAlbumImage
         artistInfo.popularSongs = self.spotifyArtist?.popularSongs
@@ -174,12 +172,6 @@ class MainViewController: UIViewController, HasLyrics {
         }
     }
     
-    private func presentAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
 }
 
 extension MainViewController: ReceiveArtist {
@@ -234,7 +226,7 @@ extension MainViewController: UI {
             self.songTitle.text = ""
             self.songArtist.text = ""
             if !isPlaying {
-                self.presentAlert(title: "Please Play A Song", message: "Navigate back to Spotify and play a song to continue")
+                self.alertManager.presentAlert(title: "Please Play A Song", message: "Play a song to continue", vc: self)
             }
         }
     }
@@ -257,8 +249,6 @@ extension MainViewController: UI {
             self.songTitle.text = songInfo.fullSongName
             let songTitleSize = self.songTitle.font.pointSize
             let songArtistSize = self.songArtist.font.pointSize
-            print(songTitleSize)
-            print(songArtistSize)
             self.songTitle.font = UIFont(name: "Futura-Bold", size: songTitleSize)
             self.songArtist.font = UIFont(name: "Futura-Medium", size: songArtistSize)
             self.songArtist.text = "by \(songInfo.allArtists)"

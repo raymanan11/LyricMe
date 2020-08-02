@@ -234,7 +234,7 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     }
     
     private func updateViewWithCapabilities(_ capabilities: SPTAppRemoteUserCapabilities) {
-        mainVC.playOnDemand = capabilities.canPlayOnDemand
+        MainViewController.playOnDemand = capabilities.canPlayOnDemand
     }
 }
 

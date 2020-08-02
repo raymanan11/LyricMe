@@ -5,12 +5,13 @@ import StoreKit
 class LogInViewController: UIViewController, SKStoreProductViewControllerDelegate {
     
     var sceneDelegate = SceneDelegate()
+    var alertManager = AlertManager()
     
     var oneMainVC: UIViewController!
     
     @IBOutlet weak var logInButton: UIButton!
     
-    private let playURI = "spotify:album:1htHMnxonxmyHdKE2uDFMR"
+    private let playURI = "spotify:track:1mea3bSkSGXuIRvnydlB5b"
     
     var defaultCallback: SPTAppRemoteCallback {
         get {
@@ -78,39 +79,11 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
         if appRemote?.isConnected == false {
             if appRemote?.authorizeAndPlayURI(playURI) == false {
                 print("Spotify is not installed, showing app store to download spotify")
-                showAppStoreInstall()
+                alertManager.showAppStoreInstall(view: view, vc: self)
             }
         }
     }
-    
-    private func showAppStoreInstall() {
-        if TARGET_OS_SIMULATOR != 0 {
-            presentAlert(title: "Simulator In Use", message: "The App Store is not available in the iOS simulator, please test this feature on a physical device.")
-        } else {
-            let loadingView = UIActivityIndicatorView(frame: view.bounds)
-            view.addSubview(loadingView)
-            loadingView.startAnimating()
-            loadingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
-            let storeProductViewController = SKStoreProductViewController()
-            storeProductViewController.delegate = self
-            storeProductViewController.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier: SPTAppRemote.spotifyItunesItemIdentifier()], completionBlock: { (success, error) in
-                loadingView.removeFromSuperview()
-                if let error = error {
-                    self.presentAlert(
-                        title: "Error accessing App Store",
-                        message: error.localizedDescription)
-                } else {
-                    self.present(storeProductViewController, animated: true, completion: nil)
-                }
-            })
-        }
-    }
-    
-    private func presentAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
+
 }
 
 

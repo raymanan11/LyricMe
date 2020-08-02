@@ -94,7 +94,7 @@ class ArtistInfoViewController: UIViewController {
         // affects artist image size
         stackView.heightAnchor.constraint(equalToConstant: 120).isActive = true
         stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10).isActive = true
-        stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 15).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20).isActive = true
         stackView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
 
         view.addSubview(tableView)
@@ -176,24 +176,34 @@ extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistSong", for: indexPath) as! ArtistSongCell
+        print("here")
         if let safeAlbumPhotosURL = albumPhotosURL, let safePopularSongs = popularSongs, let safeSongURI = songURI {
+            ableToPlayArtistSong(cell, indexPath, safeSongURI)
             setArtistImage(artistImageURL: safeAlbumPhotosURL[indexPath.row], imageView: cell.albumImage, artist: false)
             cell.songName.text = safePopularSongs[indexPath.row]
-            ableToPlayArtistSong(cell, indexPath, safeSongURI)
+//            ableToPlayArtistSong(cell, indexPath, safeSongURI)
         }
         return cell
     }
     
     func ableToPlayArtistSong(_ cell: ArtistSongCell, _ indexPath: IndexPath, _ songURI: [String]) {
-        if let safePlayOnDemand = canPlayOnDemand {
+        if let safePlayOnDemand = MainViewController.playOnDemand {
             if safePlayOnDemand {
                 cell.songURI = songURI[indexPath.row]
             }
-            else {
-                cell.buttonPlay.isHidden = true
-            }
         }
     }
+    
+//    func ableToPlayArtistSong(_ cell: ArtistSongCell, _ indexPath: IndexPath, _ songURI: [String]) {
+//        if let safePlayOnDemand = canPlayOnDemand {
+//            if safePlayOnDemand {
+//                cell.songURI = songURI[indexPath.row]
+//            }
+//            else {
+//                cell.buttonPlay.isHidden = true
+//            }
+//        }
+//    }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 60

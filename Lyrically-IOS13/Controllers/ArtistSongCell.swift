@@ -72,9 +72,15 @@ class ArtistSongCell: UITableViewCell {
         NotificationCenter.default.post(name: NSNotification.Name("playButtonPressed"), object: nil)
     }
     
+    var mainVC: MainViewController {
+        get {
+            let mainVC = self.window?.rootViewController?.children[1] as! MainViewController
+            return mainVC
+        }
+    }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
         backgroundColor = UIColor(named: "ArtistInfo")
         
         containerView.addSubview(buttonPlay)
@@ -83,15 +89,23 @@ class ArtistSongCell: UITableViewCell {
         buttonPlay.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
         buttonPlay.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
 
-        let stackView = UIStackView(arrangedSubviews: [albumImage, songName, containerView])
+        let stackView: UIStackView
+        if let canPlayOnDemand = MainViewController.playOnDemand {
+            print("User has premium and can change songs")
+            stackView = UIStackView(arrangedSubviews: [albumImage, songName, containerView])
+        }
+        else {
+            print("User doesn't hahve premium and can't change songs")
+            stackView = UIStackView(arrangedSubviews: [albumImage, songName])
+        }
         stackView.distribution = .fillProportionally
         stackView.spacing = 25
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(stackView)
         stackView.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
-        stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20).isActive = true
         stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
     }
 

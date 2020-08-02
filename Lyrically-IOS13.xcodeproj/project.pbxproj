@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6BBE86DB817FFFA10082309E /* Pods_Lyrically_IOS13.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FFAEA1116F41CB8AB2B20BD /* Pods_Lyrically_IOS13.framework */; };
+		7D0D4AD524D6023200F0AA6C /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0D4AD424D6023200F0AA6C /* AlertManager.swift */; };
 		7D37D3052471EEA90022EA8E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D37D3042471EEA90022EA8E /* MainViewController.swift */; };
 		7D37D307247203FB0022EA8E /* CurrentlyPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D37D306247203FB0022EA8E /* CurrentlyPlayingManager.swift */; };
 		7D37D30924720BA30022EA8E /* SpotifyCurrentlyPlayingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D37D30824720BA30022EA8E /* SpotifyCurrentlyPlayingInfo.swift */; };
@@ -43,6 +44,7 @@
 		1FFAEA1116F41CB8AB2B20BD /* Pods_Lyrically_IOS13.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lyrically_IOS13.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		23539EE62AE6B5FCECD7FA0A /* Pods-Lyrically-IOS13.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lyrically-IOS13.release.xcconfig"; path = "Target Support Files/Pods-Lyrically-IOS13/Pods-Lyrically-IOS13.release.xcconfig"; sourceTree = "<group>"; };
 		2B921FBA6690388DF5FF347E /* Pods-Lyrically-IOS13.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lyrically-IOS13.debug.xcconfig"; path = "Target Support Files/Pods-Lyrically-IOS13/Pods-Lyrically-IOS13.debug.xcconfig"; sourceTree = "<group>"; };
+		7D0D4AD424D6023200F0AA6C /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		7D37D3042471EEA90022EA8E /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		7D37D306247203FB0022EA8E /* CurrentlyPlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentlyPlayingManager.swift; sourceTree = "<group>"; };
 		7D37D30824720BA30022EA8E /* SpotifyCurrentlyPlayingInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyCurrentlyPlayingInfo.swift; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 				7DC0BD6C24B6DE4000C1339A /* SpotifyArtistImageManager.swift */,
 				7DC0BD6E24B6E06100C1339A /* SpotifyArtistImageInfo.swift */,
 				7DC0BD7024B6E09E00C1339A /* ArtistImageInfo.swift */,
+				7D0D4AD424D6023200F0AA6C /* AlertManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -320,6 +323,7 @@
 				7D37D3052471EEA90022EA8E /* MainViewController.swift in Sources */,
 				7D9B36A4247B717900E4B7C7 /* Constants.swift in Sources */,
 				7D37D30924720BA30022EA8E /* SpotifyCurrentlyPlayingInfo.swift in Sources */,
+				7D0D4AD524D6023200F0AA6C /* AlertManager.swift in Sources */,
 				7D802F7B2468D11E0048CE94 /* Ext-UserDefaults.swift in Sources */,
 				7DC0BD6D24B6DE4000C1339A /* SpotifyArtistImageManager.swift in Sources */,
 				7D37D30B247349800022EA8E /* CurrentlyPlayingInfo.swift in Sources */,

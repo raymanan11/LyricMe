@@ -114,7 +114,7 @@ class LyricManager {
     func getLyrics(_ songInfo: CanaradoSongInfo, _ spotifySongName: String, _ spotifySongArtist: String?) -> String? {
         for(index, value) in songInfo.content.enumerated() {
             let potentialSongName = value.title.lowercased()
-            let canaradoSongName = parseWord(potentialSongName.replacingOccurrences(of: "&", with: "and"))
+            let canaradoSongName = parseWord(potentialSongName.replacingOccurrences(of: "&", with: "and").folding(options: .diacriticInsensitive, locale: .current))
             print("Potential song name: \(canaradoSongName)")
             if let safeSongArtist = spotifySongArtist {
                 if canaradoSongName.contains(spotifySongName) && canaradoSongName.contains(safeSongArtist) {

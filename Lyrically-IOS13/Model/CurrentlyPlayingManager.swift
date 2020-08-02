@@ -74,6 +74,7 @@ class CurrentlyPlayingManager {
                 // checks of the song title has any - or () which could get the wrong info from lyric API
                 let correctSongName = checkSongName(songName)
                 let currentlyPlayingInfo = CurrentlyPlayingInfo(artistName: singleArtist, fullSongName: songName, apiSongName: correctSongName, allArtists: artists, albumURL: albumURL, artistID: artistID, currentSongURI: currentSongURI)
+                print("Current song URI: \(info.item?.uri)")
                 return currentlyPlayingInfo
             }
             return nil
