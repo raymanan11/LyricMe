@@ -106,7 +106,7 @@ class MainViewController: UIViewController, HasLyrics {
     @IBAction func getArtistInfo(_ sender: UIButton) {
         
         let artistInfo: ArtistInfoViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "artistInfo") as! ArtistInfoViewController
-        artistInfo.nameOfArtist = self.spotifyArtist?.artistName
+        artistInfo.nameOfArtist = self.spotifyArtist2?.name
         artistInfo.albumPhotosURL = self.spotifyArtist?.songAlbumImage
         artistInfo.popularSongs = self.spotifyArtist?.popularSongs
         artistInfo.songURI = self.spotifyArtist?.songURI
@@ -225,6 +225,7 @@ extension MainViewController: UI {
             self.artistInfo.layer.borderColor = UIColor.white.cgColor
             self.songTitle.text = ""
             self.songArtist.text = ""
+            NotificationCenter.default.post(name: NSNotification.Name("dismissArtistVC"), object: nil)
             if !isPlaying {
                 self.alertManager.presentAlert(title: "Please Play A Song", message: "Play a song to continue", vc: self)
             }

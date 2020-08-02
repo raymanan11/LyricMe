@@ -9,6 +9,7 @@
 import Foundation
 
 struct ArtistInfo2 {
+    var name: String
     var numFollowers: Int
-    var artistImageURL: String
+    var artistImageURL: String?
 }

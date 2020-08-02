@@ -22,6 +22,7 @@ struct SpotifyArtistManager {
     var artistName: String?
     
     func getArtistInfo(id: String, artistName: String) {
+        print(id)
         if let accessToken = KeychainWrapper.standard.string(forKey: Constants.accessToken) {
             let headers: HTTPHeaders = ["Authorization": "Bearer \(accessToken)"]
             let parameters = ["country": "US"]
@@ -57,7 +58,13 @@ struct SpotifyArtistManager {
                     }
                 }
             }
-            let artistInfo = ArtistInfo(artistName: correctArtistName!, songAlbumImage: songAlbumImage, popularSongs: songs, songURI: songURI)
+            let artistInfo = ArtistInfo(songAlbumImage: songAlbumImage, popularSongs: songs, songURI: songURI)
+//            if let safeCorrectArtistname = correctArtistName {
+//                artistInfo = ArtistInfo(songAlbumImage: songAlbumImage, popularSongs: songs, songURI: songURI)
+//            }
+//            else {
+//                artistInfo = ArtistInfo(artistName: nil, songAlbumImage: songAlbumImage, popularSongs: songs, songURI: songURI)
+//            }
             return artistInfo
         }
         catch {
@@ -84,7 +91,13 @@ struct SpotifyArtistManager {
         let decoder = JSONDecoder()
         do {
             let info = try decoder.decode(SpotifyArtistInfo2.self, from: artistData)
-            let artistInfo2 = ArtistInfo2(numFollowers: info.followers.total, artistImageURL: info.images[0].url)
+            let artistInfo2: ArtistInfo2
+            if info.images.count > 0 {
+                artistInfo2 = ArtistInfo2(name: info.name, numFollowers: info.followers.total, artistImageURL: info.images[0].url)
+            }
+            else {
+                artistInfo2 = ArtistInfo2(name: info.name, numFollowers: info.followers.total, artistImageURL: nil)
+            }
             return artistInfo2
         }
         catch {

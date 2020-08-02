@@ -9,7 +9,6 @@
 import Foundation
 
 struct ArtistInfo {
-    var artistName: String
     var songAlbumImage: [String]
     var popularSongs: [String]
     var songURI: [String]

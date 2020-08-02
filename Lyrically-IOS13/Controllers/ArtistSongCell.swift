@@ -69,14 +69,7 @@ class ArtistSongCell: UITableViewCell {
         if let safeSongURI = songURI {
             artistVC.updateSongURI(songURI: safeSongURI)
         }
-        NotificationCenter.default.post(name: NSNotification.Name("playButtonPressed"), object: nil)
-    }
-    
-    var mainVC: MainViewController {
-        get {
-            let mainVC = self.window?.rootViewController?.children[1] as! MainViewController
-            return mainVC
-        }
+        NotificationCenter.default.post(name: NSNotification.Name("dismissArtistVC"), object: nil)
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -90,12 +83,10 @@ class ArtistSongCell: UITableViewCell {
         buttonPlay.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
 
         let stackView: UIStackView
-        if let canPlayOnDemand = MainViewController.playOnDemand {
-            print("User has premium and can change songs")
+        if let canPlayOnDemand = MainViewController.playOnDemand, canPlayOnDemand {
             stackView = UIStackView(arrangedSubviews: [albumImage, songName, containerView])
         }
         else {
-            print("User doesn't hahve premium and can't change songs")
             stackView = UIStackView(arrangedSubviews: [albumImage, songName])
         }
         stackView.distribution = .fillProportionally

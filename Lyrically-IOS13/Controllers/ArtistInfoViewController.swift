@@ -51,16 +51,26 @@ class ArtistInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(returnToVC), name: NSNotification.Name("playButtonPressed"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(returnToVC), name: NSNotification.Name("dismissArtistVC"), object: nil)
         if let safeNumFollowers = numberOfFollowers {
             let followers = addCommas(safeNumFollowers)
-            artistLabel.text = "\(nameOfArtist!)\n\nFollowers: \(followers)"
+            if let safeNameOfArtist = nameOfArtist {
+                artistLabel.text = "\(safeNameOfArtist)\n\nFollowers: \(followers)"
+            }
+            else {
+                artistLabel.text = "None\n\nFollowers:\(followers)"
+            }
         }
         artistLabel.font = .systemFont(ofSize: 23, weight: .semibold)
         artistLabel.numberOfLines = 0
         artistLabel.textColor = .label
         
-        setArtistImage(artistImageURL: artistImageURL!, imageView: artistImage, artist: true)
+        if let safeArtistImageURL = artistImageURL {
+            setArtistImage(artistImageURL: safeArtistImageURL, imageView: artistImage, artist: true)
+        }
+        else {
+            setArtistImage(artistImageURL: nil, imageView: artistImage, artist: true)
+        }
         // affects artist image size
         artistImage.widthAnchor.constraint(equalToConstant: 120).isActive = true
         artistImage.heightAnchor.constraint(equalToConstant: 120).isActive = true
@@ -109,8 +119,8 @@ class ArtistInfoViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("playButtonPressed"), object: nil)
     }
     
-    func setArtistImage(artistImageURL: String, imageView: UIImageView, artist: Bool) {
-        if let url = URL(string: artistImageURL) {
+    func setArtistImage(artistImageURL: String?, imageView: UIImageView, artist: Bool) {
+        if let safeArtistImageURL = artistImageURL, let url = URL(string: safeArtistImageURL) {
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                 if let data = data {
                     DispatchQueue.main.async {
@@ -129,6 +139,9 @@ class ArtistInfoViewController: UIViewController {
             }
             task.resume()
         }
+        else {
+            imageView.image = UIImage(named: "LyricallyLogo")
+        }
     }
     
     func updateSongURI(songURI: String) {
@@ -137,7 +150,6 @@ class ArtistInfoViewController: UIViewController {
         if let safeURI = clickedSongURI {
             appRemote?.playerAPI?.play(safeURI, callback: defaultCallback)
         }
-        print("Current song uri: \(clickedSongURI ?? "nothing")")
     }
 
     @objc func returnToVC() {
@@ -176,12 +188,10 @@ extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistSong", for: indexPath) as! ArtistSongCell
-        print("here")
         if let safeAlbumPhotosURL = albumPhotosURL, let safePopularSongs = popularSongs, let safeSongURI = songURI {
             ableToPlayArtistSong(cell, indexPath, safeSongURI)
             setArtistImage(artistImageURL: safeAlbumPhotosURL[indexPath.row], imageView: cell.albumImage, artist: false)
             cell.songName.text = safePopularSongs[indexPath.row]
-//            ableToPlayArtistSong(cell, indexPath, safeSongURI)
         }
         return cell
     }
@@ -193,17 +203,6 @@ extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
             }
         }
     }
-    
-//    func ableToPlayArtistSong(_ cell: ArtistSongCell, _ indexPath: IndexPath, _ songURI: [String]) {
-//        if let safePlayOnDemand = canPlayOnDemand {
-//            if safePlayOnDemand {
-//                cell.songURI = songURI[indexPath.row]
-//            }
-//            else {
-//                cell.buttonPlay.isHidden = true
-//            }
-//        }
-//    }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 60

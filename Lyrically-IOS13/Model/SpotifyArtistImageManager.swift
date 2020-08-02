@@ -35,7 +35,13 @@ struct SpotifyArtistImageManager {
         let decoder = JSONDecoder()
         do {
             let info = try decoder.decode(SpotifyArtistImageInfo.self, from: artistData)
-            let artistImageURL = info.images[0].url
+            let artistImageURL: String?
+            if info.images.count > 0 {
+                artistImageURL = info.images[0].url
+            }
+            else {
+                artistImageURL = nil
+            }
             return artistImageURL
         }
         catch {

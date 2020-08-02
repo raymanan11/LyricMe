@@ -11,6 +11,7 @@ import Foundation
 struct SpotifyArtistInfo2: Decodable {
     var followers: Followers
     var images: [ArtistImage]
+    var name: String
 }
 
 struct Followers: Decodable {
