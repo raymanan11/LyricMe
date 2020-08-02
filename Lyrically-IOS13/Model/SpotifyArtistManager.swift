@@ -41,7 +41,6 @@ struct SpotifyArtistManager {
         var songs = [String]()
         var songURI = [String]()
         var songAlbumImage = [String]()
-        var correctArtistName: String?
         do {
             let info = try decoder.decode(SpotifyArtistInfo.self, from: songData)
             // check whether info from currently playing song matches info from here (loop through array to see which one matches
@@ -49,7 +48,6 @@ struct SpotifyArtistManager {
             for track in info.tracks {
                 for artists in track.artists {
                     if artists.name == artistName {
-                        correctArtistName = artists.name
                         songs.append(track.name)
                         // pass in can playOnDemand from getSpotifyArtist in main VC. If canPlayOnDemand is true then do this but if not don't and also hide the play button
                         songURI.append(track.uri)
@@ -59,12 +57,6 @@ struct SpotifyArtistManager {
                 }
             }
             let artistInfo = ArtistInfo(songAlbumImage: songAlbumImage, popularSongs: songs, songURI: songURI)
-//            if let safeCorrectArtistname = correctArtistName {
-//                artistInfo = ArtistInfo(songAlbumImage: songAlbumImage, popularSongs: songs, songURI: songURI)
-//            }
-//            else {
-//                artistInfo = ArtistInfo(artistName: nil, songAlbumImage: songAlbumImage, popularSongs: songs, songURI: songURI)
-//            }
             return artistInfo
         }
         catch {
@@ -105,7 +97,5 @@ struct SpotifyArtistManager {
             return nil
         }
     }
-    
-    
     
 }

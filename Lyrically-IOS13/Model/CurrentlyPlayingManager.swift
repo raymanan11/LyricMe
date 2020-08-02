@@ -61,20 +61,10 @@ class CurrentlyPlayingManager {
             
             if let singleArtist = info.item?.artists[0].name, let songName = info.item?.name, let albumURL = info.item?.album?.images[0].url, let artistID = info.item?.artists[0].id, let currentSongURI = info.item?.uri {
                 var artists = ""
-                let artistInfo = info.item?.artists
-                // gets all of the artists in the song
-                for(index, value) in (artistInfo?.enumerated())! {
-                    if index == artistInfo!.endIndex - 1 {
-                        artists = artists + "\(value.name!)"
-                    }
-                    else {
-                        artists = artists + "\(value.name!), "
-                    }
-                }
+                getArtists(info, &artists)
                 // checks of the song title has any - or () which could get the wrong info from lyric API
                 let correctSongName = checkSongName(songName)
                 let currentlyPlayingInfo = CurrentlyPlayingInfo(artistName: singleArtist, fullSongName: songName, apiSongName: correctSongName, allArtists: artists, albumURL: albumURL, artistID: artistID, currentSongURI: currentSongURI)
-                print("Current song URI: \(info.item?.uri)")
                 return currentlyPlayingInfo
             }
             return nil
@@ -83,6 +73,20 @@ class CurrentlyPlayingManager {
             print(error)
             NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
             return nil
+        }
+    }
+    
+    func getArtists(_ info: SpotifyCurrentlyPlayingInfo, _ artists: inout String) {
+        // gets all of the artists in the song
+        if let artistInfo = info.item?.artists {
+            for(index, value) in (artistInfo.enumerated()) {
+                if index == artistInfo.endIndex - 1 {
+                    artists = artists + "\(value.name!)"
+                }
+                else {
+                    artists = artists + "\(value.name!), "
+                }
+            }
         }
     }
     

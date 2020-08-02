@@ -28,7 +28,6 @@ class LyricManager {
     ]
     
     func fetchData(songAndArtist: String, songName: String, songArtist: String) {
-        print("Getting lyrics!")
         self.songName = songName
         self.songArtist = songArtist
         let songURL = songAndArtist.replacingOccurrences(of: " ", with: "%2520").replacingOccurrences(of: "’", with: "'")
@@ -96,7 +95,6 @@ class LyricManager {
                 return lyricsOptionOne
             }
             else if triedSingleArtist {
-                print("hello")
                 if let lyricsOptionTwo = getLyrics(songInfo, spotifySongName, nil) {
                     print("Lyrics Option Two")
                     return lyricsOptionTwo
