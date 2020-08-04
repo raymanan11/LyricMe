@@ -51,7 +51,7 @@ class ArtistInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(returnToVC), name: NSNotification.Name("dismissArtistVC"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(returnToVC), name: NSNotification.Name(Constants.ArtistVC.dismissArtistVC), object: nil)
         if let safeNumFollowers = numberOfFollowers {
             let followers = addCommas(safeNumFollowers)
             if let safeNameOfArtist = nameOfArtist {
@@ -78,14 +78,14 @@ class ArtistInfoViewController: UIViewController {
         artistImage.translatesAutoresizingMaskIntoConstraints = false
 
 //        containerView.backgroundColor = .quaternarySystemFill
-        containerView.backgroundColor = UIColor(named: "AppBackground")
+        containerView.backgroundColor = UIColor(named: Constants.Assets.appBackground)
         containerView.translatesAutoresizingMaskIntoConstraints = false
         
         tableView.delegate = self
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
 
-        tableView.register(ArtistSongCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(ArtistSongCell.self, forCellReuseIdentifier: Constants.ArtistVC.cellID)
         
         view.addSubview(containerView)
         containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
@@ -116,7 +116,7 @@ class ArtistInfoViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("playButtonPressed"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(Constants.ArtistVC.dismissArtistVC), object: nil)
     }
     
     func setArtistImage(artistImageURL: String?, imageView: UIImageView, artist: Bool) {
@@ -140,7 +140,7 @@ class ArtistInfoViewController: UIViewController {
             task.resume()
         }
         else {
-            imageView.image = UIImage(named: "LyricallyLogo")
+            imageView.image = UIImage(named: Constants.Assets.logo)
         }
     }
     
@@ -187,7 +187,7 @@ extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistSong", for: indexPath) as! ArtistSongCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.ArtistVC.cellID, for: indexPath) as! ArtistSongCell
         if let safeAlbumPhotosURL = albumPhotosURL, let safePopularSongs = popularSongs, let safeSongURI = songURI {
             ableToPlayArtistSong(cell, indexPath, safeSongURI)
             setArtistImage(artistImageURL: safeAlbumPhotosURL[indexPath.row], imageView: cell.albumImage, artist: false)
@@ -212,7 +212,7 @@ extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
         let label = UILabelPadding()
         label.text = "Popular Songs"
         label.font = .systemFont(ofSize: 24, weight: .bold)
-        label.backgroundColor = UIColor(named: "ArtistInfo")
+        label.backgroundColor = UIColor(named: Constants.Assets.artistInfo)
         label.textColor = .label
         label.textAlignment = .left
         label.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 60)

@@ -23,7 +23,7 @@ struct SpotifyArtistManager {
     
     func getArtistInfo(id: String, artistName: String) {
         print(id)
-        if let accessToken = KeychainWrapper.standard.string(forKey: Constants.accessToken) {
+        if let accessToken = KeychainWrapper.standard.string(forKey: Constants.Tokens.accessToken) {
             let headers: HTTPHeaders = ["Authorization": "Bearer \(accessToken)"]
             let parameters = ["country": "US"]
             AF.request("https://api.spotify.com/v1/artists/\(id)/top-tracks?", method: .get, parameters: parameters, headers: headers).responseJSON { response in
@@ -66,7 +66,7 @@ struct SpotifyArtistManager {
     }
     
     func getArtistPicture(id: String) {
-        if let accesstoken = KeychainWrapper.standard.string(forKey: Constants.accessToken) {
+        if let accesstoken = KeychainWrapper.standard.string(forKey: Constants.Tokens.accessToken) {
             let headers: HTTPHeaders = ["Authorization": "Bearer \(accesstoken)"]
             AF.request("https://api.spotify.com/v1/artists/\(id)", method: .get, headers: headers).responseJSON { response in
 //                if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {

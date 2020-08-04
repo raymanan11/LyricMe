@@ -44,15 +44,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         return manager
     }()
     
-    var accessToken = KeychainWrapper.standard.string(forKey: Constants.accessToken) {
+    var accessToken = KeychainWrapper.standard.string(forKey: Constants.Tokens.accessToken) {
         didSet {
-            let _: Bool = KeychainWrapper.standard.set(accessToken!, forKey: Constants.accessToken)
+            let _: Bool = KeychainWrapper.standard.set(accessToken!, forKey: Constants.Tokens.accessToken)
         }
     }
     
-    var refreshToken = KeychainWrapper.standard.string(forKey: Constants.refreshToken) {
+    var refreshToken = KeychainWrapper.standard.string(forKey: Constants.Tokens.refreshToken) {
         didSet {
-            let _: Bool = KeychainWrapper.standard.set(refreshToken!, forKey: Constants.refreshToken)
+            let _: Bool = KeychainWrapper.standard.set(refreshToken!, forKey: Constants.Tokens.refreshToken)
         }
     }
     
@@ -78,14 +78,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         sessionManager.application(UIApplication.shared, open: url, options: [:])
         openURL = true
         firstAppEntry = false
-        NotificationCenter.default.post(name: NSNotification.Name("openSpotify"), object: nil)
-        NotificationCenter.default.post(name: NSNotification.Name("logInSuccessful"), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.hideLogIn), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(Constants.Segues.successfulLogIn), object: nil)
     }
     
     func sessionManager(manager: SPTSessionManager, didInitiate session: SPTSession) {
         print("inititated session")
         DispatchQueue.main.async {
-            NotificationCenter.default.post(name: NSNotification.Name("updateStatus"), object: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.updateStatus), object: nil)
         }
         defaults.initiatedSession = true
         appRemote.connectionParameters.accessToken = session.accessToken
@@ -95,8 +95,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     }
     
     func sessionManager(manager: SPTSessionManager, didFailWith error: Error) {
-        NotificationCenter.default.post(name: NSNotification.Name("returnToLogIn"), object: nil)
+        DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
+            NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.returnToLogInVC), object: nil)
+            self.updateLogInUI()
+        }
         print("fail", error)
+        print("hello")
     }
     
     func sessionManager(manager: SPTSessionManager, didRenew session: SPTSession) {
@@ -183,7 +187,7 @@ extension SceneDelegate: SPTAppRemoteDelegate {
         })
         // only goes to mainVC if first entering app so that it won't keep showing transition screen every time user switches back and forth between spotify screen
         if firstAppEntry {
-            NotificationCenter.default.post(name: NSNotification.Name("logInSuccessful"), object: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(Constants.Segues.successfulLogIn), object: nil)
         }
     }
     
@@ -196,7 +200,7 @@ extension SceneDelegate: SPTAppRemoteDelegate {
             lastSong = nil
 
             updateLogInUI()
-            NotificationCenter.default.post(name: NSNotification.Name("returnToLogIn"), object: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.returnToLogInVC), object: nil)
         }
         print("disconnected")
     }
@@ -208,13 +212,13 @@ extension SceneDelegate: SPTAppRemoteDelegate {
         print("failed")
         if !firstAppEntry {
             lastSong = nil
-            NotificationCenter.default.post(name: NSNotification.Name("returnToLogIn"), object: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.returnToLogInVC), object: nil)
         }
     }
     
     func updateLogInUI() {
-       NotificationCenter.default.post(name: NSNotification.Name("playButtonPressed"), object: nil)
-       NotificationCenter.default.post(name: NSNotification.Name("closedSpotify"), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(Constants.ArtistVC.dismissArtistVC), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.showLogIn), object: nil)
    }
     
     private func subscribeToCapabilityChanges() {
@@ -245,13 +249,17 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
             fetchUserCapabilities()
             if playerState.track.name != lastSong {
                 if openURL && firstSignIn {
-                    alternateGetCurrentlyPlayingSong(playerState)
+                    DispatchQueue.main.async {
+                        self.alternateGetCurrentlyPlayingSong(playerState)
+                    }
                     openURL = false
                     firstSignIn = false
                 }
                 else {
                     firstAppEntry = false
-                    getCurrentlyPlayingSong()
+                    DispatchQueue.main.async {
+                        self.getCurrentlyPlayingSong()
+                    }
                 }
             }
             lastSong = playerState.track.name
@@ -280,7 +288,7 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
     
     func updateRestrictionOnSkipButtons() {
         DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
-            NotificationCenter.default.post(name: NSNotification.Name("updateRestrictions"), object: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.updateRestrictions), object: nil)
         }
     }
 

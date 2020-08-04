@@ -19,7 +19,7 @@ struct SpotifyArtistImageManager {
     var delegate: FirstSong?
     
     func getArtistImageURL(id: String) {
-        if let accessToken = KeychainWrapper.standard.string(forKey: Constants.accessToken) {
+        if let accessToken = KeychainWrapper.standard.string(forKey: Constants.Tokens.accessToken) {
             let headers: HTTPHeaders = ["Authorization": "Bearer \(accessToken)"]
             AF.request("https://api.spotify.com/v1/artists/\(id)", method: .get, headers: headers).responseJSON { response in
                 if let safeData = response.data {

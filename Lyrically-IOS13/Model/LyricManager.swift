@@ -22,32 +22,26 @@ class LyricManager {
     static var triedOnce: Bool = false
     var triedSingleArtist: Bool = false
     
-    let headers = [
-        "x-rapidapi-host": "canarado-lyrics.p.rapidapi.com",
-        "x-rapidapi-key": Constants.rapidAPIKey
-    ]
+    let canarado = "https://api.canarado.xyz/lyrics/"
     
     func fetchData(songAndArtist: String, songName: String, songArtist: String) {
         self.songName = songName
         self.songArtist = songArtist
-        let songURL = songAndArtist.replacingOccurrences(of: " ", with: "%2520").replacingOccurrences(of: "’", with: "'")
-        let urlOptionOne = songURL.folding(options: .diacriticInsensitive, locale: .current)
-        let urlOptionTwo = songURL.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)
-        if let urlOne = NSURL(string: "https://canarado-lyrics.p.rapidapi.com/lyrics/\(urlOptionOne)") {
-            getLyrics(urlOne)
-        }
-        else if let safeStringURL = urlOptionTwo, let urlTwo = NSURL(string: "https://canarado-lyrics.p.rapidapi.com/lyrics/\(safeStringURL)") {
-            getLyrics(urlTwo)
+
+        let songURL = songAndArtist.replacingOccurrences(of: "’", with: "'").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        
+        if let safeStringURL = songURL, let url = NSURL(string: "\(canarado)\(safeStringURL)") {
+            print("Getting lyrics for URL")
+            getLyrics(url)
         }
         else {
-            print("unable to get")
+            delegate?.updateLyrics(Constants.noLyrics)
         }
     }
     
     func getLyrics(_ URL: NSURL) {
         let request = NSMutableURLRequest(url: URL as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
         request.httpMethod = "GET"
-        request.allHTTPHeaderFields = headers
 
         let session = URLSession.shared
         let dataTask = session.dataTask(with: request as URLRequest, completionHandler: handle(data:response:error:))
@@ -60,7 +54,6 @@ class LyricManager {
         if (error != nil) {
             print(error!)
             print("Problem with Lyric API, calling again")
-//            fetchData(songAndArtist: songAndSingleArtist, songName: self.songName, songArtist: self.songArtist)
             delegate?.updateLyrics(Constants.noLyrics)
             return
         }
@@ -87,7 +80,7 @@ class LyricManager {
         do {
             let songInfo = try decoder.decode(CanaradoSongInfo.self, from: safeData)
             let spotifySongName = parseWord(songName.lowercased())
-            let spotifySongArtist = parseWord(songArtist.lowercased().replacingOccurrences(of: "&", with: "and"))
+            let spotifySongArtist = parseWord(songArtist.lowercased())
             print("Spotify song name: \(spotifySongName)")
             print("Spotify song artist: \(spotifySongArtist)")
             if let lyricsOptionOne = getLyrics(songInfo, spotifySongName, spotifySongArtist) {
@@ -110,17 +103,23 @@ class LyricManager {
     }
     
     func getLyrics(_ songInfo: CanaradoSongInfo, _ spotifySongName: String, _ spotifySongArtist: String?) -> String? {
-        for(index, value) in songInfo.content.enumerated() {
+        for(_, value) in songInfo.content.enumerated() {
             let potentialSongName = value.title.lowercased()
-            let canaradoSongName = parseWord(potentialSongName.replacingOccurrences(of: "&", with: "and").folding(options: .diacriticInsensitive, locale: .current))
-            print("Potential song name: \(canaradoSongName)")
+            let canaradoSongName = parseWord(potentialSongName)
+            print("potential songs: \(canaradoSongName)")
+        }
+        for(_, value) in songInfo.content.enumerated() {
+            let potentialSongName = value.title.lowercased()
+            let canaradoSongName = parseWord(potentialSongName)
             if let safeSongArtist = spotifySongArtist {
                 if canaradoSongName.contains(spotifySongName) && canaradoSongName.contains(safeSongArtist) {
+                    print("Correct song name using song name and artist name: \(canaradoSongName)")
                     return value.lyrics
                 }
             }
             else {
                 if canaradoSongName.contains(spotifySongName) {
+                    print("Correct song name not using artist name: \(canaradoSongName)")
                     return value.lyrics
                 }
             }
@@ -129,7 +128,7 @@ class LyricManager {
     }
     
     func parseWord(_ word: String) -> String {
-        return word.filter { !$0.isWhitespace && !"/-.,'’".contains($0) }
+        return word.replacingOccurrences(of: "&", with: "and").folding(options: .diacriticInsensitive, locale: .current).filter { !$0.isWhitespace && !"/-.,'’".contains($0) }
     }
 
 }

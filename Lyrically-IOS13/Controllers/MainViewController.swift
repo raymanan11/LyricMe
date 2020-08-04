@@ -68,6 +68,22 @@ class MainViewController: UIViewController, HasLyrics {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.isNavigationBarHidden = true
+        
+        defaultMainVCUI()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.Tokens.newAccessToken), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.returnToLogIn), name: NSNotification.Name(rawValue: Constants.MainVC.returnToLogInVC), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateStatus), name: NSNotification.Name(rawValue: Constants.MainVC.updateStatus), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateViewWithRestrictions), name: NSNotification.Name(rawValue: Constants.MainVC.updateRestrictions), object: nil)
+        
+    }
+    
+    private func defaultMainVCUI() {
         artistInfo.isEnabled = false
         self.lyrics.isHidden = true
         self.skipForward.isHidden = true
@@ -78,34 +94,23 @@ class MainViewController: UIViewController, HasLyrics {
         self.artistInfo.layer.borderWidth = 4
         // change the color to match the occasion (whether a button or dark/light mode)
         self.artistInfo.layer.borderColor = UIColor.white.cgColor
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.newAccessToken), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.returnToLogIn), name: NSNotification.Name(rawValue: "returnToLogIn"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.updateStatus), name: NSNotification.Name(rawValue: "updateStatus"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.updateViewWithRestrictions), name: NSNotification.Name(rawValue: "updateRestrictions"), object: nil)
-        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.newAccessToken), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.Tokens.newAccessToken), object: nil)
         
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
         
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "returnToLogIn"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.MainVC.returnToLogInVC), object: nil)
         
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "updateStatus"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.MainVC.updateStatus), object: nil)
         
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "updateRestrictions"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.MainVC.updateRestrictions), object: nil)
     }
     
     @IBAction func getArtistInfo(_ sender: UIButton) {
         
-        let artistInfo: ArtistInfoViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "artistInfo") as! ArtistInfoViewController
+        let artistInfo: ArtistInfoViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: Constants.StoryboardID.artistVC) as! ArtistInfoViewController
         artistInfo.nameOfArtist = self.spotifyArtist2?.name
         artistInfo.albumPhotosURL = self.spotifyArtist?.songAlbumImage
         artistInfo.popularSongs = self.spotifyArtist?.popularSongs
@@ -221,11 +226,11 @@ extension MainViewController: UI {
             self.skipForward.isHidden = true
             self.skipBackward.isHidden = true
             self.artistInfo.isEnabled = false
-            self.artistInfo.setImage(UIImage(named: "LyricallyLogo"), for: .normal)
+            self.artistInfo.setImage(UIImage(named: Constants.Assets.logo), for: .normal)
             self.artistInfo.layer.borderColor = UIColor.white.cgColor
             self.songTitle.text = ""
             self.songArtist.text = ""
-            NotificationCenter.default.post(name: NSNotification.Name("dismissArtistVC"), object: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(Constants.ArtistVC.dismissArtistVC), object: nil)
             if !isPlaying {
                 self.alertManager.presentAlert(title: "Please Play A Song", message: "Play a song to continue", vc: self)
             }

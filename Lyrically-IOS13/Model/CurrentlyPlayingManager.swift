@@ -26,7 +26,7 @@ class CurrentlyPlayingManager {
     var triedOnce = false
     
     @objc func fetchData() {
-        if let accessToken = KeychainWrapper.standard.string(forKey: Constants.accessToken) {
+        if let accessToken = KeychainWrapper.standard.string(forKey: Constants.Tokens.accessToken) {
             let headers: HTTPHeaders = ["Authorization": "Bearer \(accessToken)"]
             AF.request("https://api.spotify.com/v1/me/player/currently-playing", method: .get, headers: headers).responseJSON { response in
                 if let safeData = response.data {

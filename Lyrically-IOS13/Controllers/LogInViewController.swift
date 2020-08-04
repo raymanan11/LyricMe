@@ -39,15 +39,12 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
             hideLogInButton()
         }
 
-        NotificationCenter.default.addObserver(self, selector: #selector(self.moveToNextVC), name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.moveToNextVC), name: NSNotification.Name(rawValue: Constants.Segues.successfulLogIn), object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.hideLogInButton), name: NSNotification.Name(rawValue: "openSpotify"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.hideLogInButton), name: NSNotification.Name(rawValue: Constants.LogInVC.hideLogIn), object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.showLogInButton), name: NSNotification.Name(rawValue: "closedSpotify"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.enableLogInButton), name: NSNotification.Name(rawValue: "enableLogIn"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.disableLogInButton), name: NSNotification.Name(rawValue: "disableLogIn"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.showLogInButton), name: NSNotification.Name(rawValue: Constants.LogInVC.showLogIn), object: nil)
+
     }
     
     @IBAction func logIn(_ sender: Any) {
@@ -56,7 +53,7 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
     }
     
     @objc func moveToNextVC() {
-        performSegue(withIdentifier: Constants.goToMainVC, sender: self)
+        performSegue(withIdentifier: Constants.Segues.goToMainVC, sender: self)
     }
     
     @objc func hideLogInButton() {
@@ -67,18 +64,9 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
         logInButton.isHidden = false
     }
     
-    @objc func disableLogInButton() {
-        logInButton.isEnabled = false
-    }
-    
-    @objc func enableLogInButton() {
-        logInButton.isEnabled = true
-    }
-    
     func checkIfSpotifyIsInstalled() {
         if appRemote?.isConnected == false {
             if appRemote?.authorizeAndPlayURI(playURI) == false {
-                print("Spotify is not installed, showing app store to download spotify")
                 alertManager.showAppStoreInstall(view: view, vc: self)
             }
         }

@@ -38,7 +38,7 @@ class ArtistSongCell: UITableViewCell {
 
     lazy var buttonPlay: UIButton = {
         let button = UIButton(type: .system)
-        let image = UIImage(systemName: "play.circle")
+        let image = UIImage(systemName: Constants.Assets.playButton)
         button.setBackgroundImage(image, for: .normal)
         button.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -57,7 +57,7 @@ class ArtistSongCell: UITableViewCell {
 
     let albumImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = UIColor(named: "ArtistInfo")
+        imageView.backgroundColor = UIColor(named: Constants.Assets.artistInfo)
         imageView.translatesAutoresizingMaskIntoConstraints  = false
         imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
@@ -69,12 +69,12 @@ class ArtistSongCell: UITableViewCell {
         if let safeSongURI = songURI {
             artistVC.updateSongURI(songURI: safeSongURI)
         }
-        NotificationCenter.default.post(name: NSNotification.Name("dismissArtistVC"), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(Constants.ArtistVC.dismissArtistVC), object: nil)
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = UIColor(named: "ArtistInfo")
+        backgroundColor = UIColor(named: Constants.Assets.artistInfo)
         
         containerView.addSubview(buttonPlay)
         buttonPlay.heightAnchor.constraint(equalToConstant: 50).isActive = true

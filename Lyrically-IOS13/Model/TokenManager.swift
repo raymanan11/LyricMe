@@ -41,7 +41,7 @@ struct TokenManager {
     }
     
     func refreshToken() {
-        let refreshToken: String? = KeychainWrapper.standard.string(forKey: Constants.refreshToken)
+        let refreshToken: String? = KeychainWrapper.standard.string(forKey: Constants.Tokens.refreshToken)
         let parameters = ["refresh_token" : refreshToken]
         print("trying to get refresh token")
         dispatchGroup.enter()
@@ -53,12 +53,12 @@ struct TokenManager {
                 let jsonData = result as! NSDictionary
                 let accessToken = jsonData.value(forKey: "access_token") as? String
 
-                let _: Bool = KeychainWrapper.standard.set(accessToken ?? "", forKey: Constants.accessToken)
+                let _: Bool = KeychainWrapper.standard.set(accessToken ?? "", forKey: Constants.Tokens.accessToken)
                 self.dispatchGroup.leave()
             }
         })
         dispatchGroup.notify(queue: .main) {
-            NotificationCenter.default.post(name: NSNotification.Name(Constants.newAccessToken), object: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(Constants.Tokens.newAccessToken), object: nil)
         }
     }
 }

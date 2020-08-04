@@ -11,7 +11,7 @@
         <!--Log In View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="logIn" id="BYZ-38-t0r" customClass="LogInViewController" customModule="Lyrically" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="logIn" id="BYZ-38-t0r" customClass="LogInViewController" customModule="LyricMe" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -57,22 +57,22 @@
         <!--Main View Controller-->
         <scene sceneID="31E-Io-LKB">
             <objects>
-                <viewController storyboardIdentifier="main" id="0Dk-oK-vUy" customClass="MainViewController" customModule="Lyrically" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="main" id="0Dk-oK-vUy" customClass="MainViewController" customModule="LyricMe" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="x2j-6Z-U8d">
                         <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="IY9-FZ-8gU">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="IY9-FZ-8gU">
                                 <rect key="frame" x="0.0" y="50" width="834" height="1144"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="gdR-uB-rc5">
-                                        <rect key="frame" x="170" y="0.0" width="494" height="453.5"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="gdR-uB-rc5">
+                                        <rect key="frame" x="170" y="0.0" width="494" height="448.5"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="80" translatesAutoresizingMaskIntoConstraints="NO" id="WZq-VM-Ejq">
-                                                <rect key="frame" x="0.0" y="0.0" width="494" height="443.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="494" height="433.5"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yuY-k7-3M3">
-                                                        <rect key="frame" x="0.0" y="194.5" width="58.5" height="54.5"/>
+                                                        <rect key="frame" x="0.0" y="189.5" width="58.5" height="54.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="yuY-k7-3M3" secondAttribute="height" multiplier="1:1" id="QLv-G5-769"/>
                                                         </constraints>
@@ -82,7 +82,7 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xal-pg-wWX">
-                                                        <rect key="frame" x="138.5" y="113.5" width="217" height="216.5"/>
+                                                        <rect key="frame" x="138.5" y="108.5" width="217" height="216.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="Xal-pg-wWX" secondAttribute="height" multiplier="1:1" id="9mS-86-LVP"/>
                                                         </constraints>
@@ -92,7 +92,7 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qPC-Sz-1p8">
-                                                        <rect key="frame" x="435.5" y="194.5" width="58.5" height="54.5"/>
+                                                        <rect key="frame" x="435.5" y="189.5" width="58.5" height="54.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="qPC-Sz-1p8" secondAttribute="height" multiplier="1:1" id="Kq0-4p-Urg"/>
                                                         </constraints>
@@ -104,7 +104,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="tPD-Iy-VGe">
-                                                <rect key="frame" x="247" y="453.5" width="0.0" height="0.0"/>
+                                                <rect key="frame" x="247" y="448.5" width="0.0" height="0.0"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7kU-sw-sLz">
                                                         <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="20"/>
@@ -140,7 +140,6 @@
                                     </textView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="qYE-lw-Scg" firstAttribute="top" secondItem="gdR-uB-rc5" secondAttribute="bottom" constant="10" id="3Lw-fh-1Uu"/>
                                     <constraint firstItem="qYE-lw-Scg" firstAttribute="leading" secondItem="IY9-FZ-8gU" secondAttribute="leading" id="6YO-Hd-rU7"/>
                                     <constraint firstAttribute="bottom" secondItem="qYE-lw-Scg" secondAttribute="bottom" id="ACo-Vu-bVR"/>
                                     <constraint firstItem="Xal-pg-wWX" firstAttribute="width" secondItem="IY9-FZ-8gU" secondAttribute="width" multiplier="0.26" id="fSK-pW-I5m"/>
@@ -176,7 +175,7 @@
         <!--Artist Info View Controller-->
         <scene sceneID="bl8-hW-DRq">
             <objects>
-                <viewController storyboardIdentifier="artistInfo" id="u79-L4-qTp" customClass="ArtistInfoViewController" customModule="Lyrically" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="artistInfo" id="u79-L4-qTp" customClass="ArtistInfoViewController" customModule="LyricMe" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1NT-Ub-Y4C">
                         <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

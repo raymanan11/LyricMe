@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1150"
+   LastUpgradeVersion = "1160"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "7D3FA294246632E200EF389E"
-               BuildableName = "Lyrically.app"
+               BuildableName = "LyricMe.app"
                BlueprintName = "Lyrically-IOS13"
                ReferencedContainer = "container:Lyrically-IOS13.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "7D3FA294246632E200EF389E"
-            BuildableName = "Lyrically.app"
+            BuildableName = "LyricMe.app"
             BlueprintName = "Lyrically-IOS13"
             ReferencedContainer = "container:Lyrically-IOS13.xcodeproj">
          </BuildableReference>
@@ -69,7 +69,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "7D3FA294246632E200EF389E"
-            BuildableName = "Lyrically.app"
+            BuildableName = "LyricMe.app"
             BlueprintName = "Lyrically-IOS13"
             ReferencedContainer = "container:Lyrically-IOS13.xcodeproj">
          </BuildableReference>
