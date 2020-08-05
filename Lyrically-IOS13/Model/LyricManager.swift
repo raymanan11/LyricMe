@@ -29,12 +29,14 @@ class LyricManager {
     var previousSong: String?
     
     func fetchData(songAndArtist: String, songName: String, songArtist: String) {
+        print("in fetchData")
         self.songName = songName
         self.songArtist = songArtist
 
         let songURL = songAndArtist.replacingOccurrences(of: "’", with: "'").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         
         if songName != previousSong {
+            print("In here")
             previousSong = songName
             if let safeStringURL = songURL, let url = NSURL(string: "\(canarado)\(safeStringURL)") {
                 print("Getting lyrics for URL")
@@ -45,13 +47,17 @@ class LyricManager {
             }
         }
         
-//        if let safeStringURL = songURL, let url = NSURL(string: "\(canarado)") {
-//            print("Getting lyrics for URL")
-//            getLyrics(url, safeStringURL)
+//        if songName != previousSong {
+//            previousSong = songName
+//            if let safeStringURL = songURL, let url = NSURL(string: "\(canarado)") {
+//                print("Getting lyrics for URL")
+//                getLyrics(url, safeStringURL)
+//            }
+//            else {
+//                delegate?.updateLyrics(Constants.noLyrics)
+//            }
 //        }
-//        else {
-//            delegate?.updateLyrics(Constants.noLyrics)
-//        }
+        
     }
     
     func getLyrics(_ URL: NSURL) {
@@ -93,6 +99,7 @@ class LyricManager {
                     LyricManager.triedOnce = true
                     // another way of getting lyrics if not found is trying just one artist instead of all
                     print("No lyrics found for multiple artists, trying again")
+                    previousSong = nil
                     triedSingleArtist = true
                     fetchData(songAndArtist: songAndSingleArtist, songName: self.songName, songArtist: self.songArtist)
                 }
@@ -107,7 +114,8 @@ class LyricManager {
     func parseJson(_ safeData: Data) -> String? {
         let decoder = JSONDecoder()
         do {
-//
+            let str = String(decoding: safeData, as: UTF8.self)
+            print(str)
             let songInfo = try decoder.decode(CanaradoSongInfo.self, from: safeData)
             let spotifySongName = parseWord(songName.lowercased())
             let spotifySongArtist = parseWord(songArtist.lowercased())
