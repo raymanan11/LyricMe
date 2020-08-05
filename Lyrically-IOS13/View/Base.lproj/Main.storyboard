@@ -66,13 +66,13 @@
                                 <rect key="frame" x="0.0" y="50" width="834" height="1144"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="gdR-uB-rc5">
-                                        <rect key="frame" x="170" y="0.0" width="494" height="448.5"/>
+                                        <rect key="frame" x="170" y="0.0" width="494" height="458.5"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="80" translatesAutoresizingMaskIntoConstraints="NO" id="WZq-VM-Ejq">
-                                                <rect key="frame" x="0.0" y="0.0" width="494" height="433.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="494" height="443.5"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yuY-k7-3M3">
-                                                        <rect key="frame" x="0.0" y="189.5" width="58.5" height="54.5"/>
+                                                        <rect key="frame" x="0.0" y="194.5" width="58.5" height="54.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="yuY-k7-3M3" secondAttribute="height" multiplier="1:1" id="QLv-G5-769"/>
                                                         </constraints>
@@ -82,7 +82,7 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xal-pg-wWX">
-                                                        <rect key="frame" x="138.5" y="108.5" width="217" height="216.5"/>
+                                                        <rect key="frame" x="138.5" y="113.5" width="217" height="216.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="Xal-pg-wWX" secondAttribute="height" multiplier="1:1" id="9mS-86-LVP"/>
                                                         </constraints>
@@ -92,7 +92,7 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qPC-Sz-1p8">
-                                                        <rect key="frame" x="435.5" y="189.5" width="58.5" height="54.5"/>
+                                                        <rect key="frame" x="435.5" y="194.5" width="58.5" height="54.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="qPC-Sz-1p8" secondAttribute="height" multiplier="1:1" id="Kq0-4p-Urg"/>
                                                         </constraints>
@@ -104,7 +104,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="tPD-Iy-VGe">
-                                                <rect key="frame" x="247" y="448.5" width="0.0" height="0.0"/>
+                                                <rect key="frame" x="247" y="458.5" width="0.0" height="0.0"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7kU-sw-sLz">
                                                         <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="20"/>
@@ -127,7 +127,7 @@
                                         </subviews>
                                     </stackView>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qYE-lw-Scg">
-                                        <rect key="frame" x="0.0" y="463.5" width="834" height="680.5"/>
+                                        <rect key="frame" x="0.0" y="473.5" width="834" height="670.5"/>
                                         <color key="backgroundColor" name="LyricBackground"/>
                                         <color key="textColor" name="Text"/>
                                         <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="18"/>
@@ -217,7 +217,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="LyricallyLogo" width="166.5" height="166.5"/>
+        <image name="LyricallyLogo" width="341" height="341"/>
         <image name="backward.end.fill" catalog="system" width="128" height="102"/>
         <image name="forward.end.fill" catalog="system" width="128" height="102"/>
         <namedColor name="AppBackground">

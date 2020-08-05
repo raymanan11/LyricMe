@@ -75,7 +75,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         guard let url = URLContexts.first?.url else {
             return
         }
-        sessionManager.application(UIApplication.shared, open: url, options: [:])
+        DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
+            self.sessionManager.application(UIApplication.shared, open: url, options: [:])
+        }
         openURL = true
         firstAppEntry = false
         NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.hideLogIn), object: nil)
@@ -95,7 +97,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     }
     
     func sessionManager(manager: SPTSessionManager, didFailWith error: Error) {
-        DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
+        DispatchQueue.main.asyncAfter(deadline: 2.second.fromNow) {
             NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.returnToLogInVC), object: nil)
             self.updateLogInUI()
         }
@@ -217,6 +219,7 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     }
     
     func updateLogInUI() {
+        print("updating log in info")
         NotificationCenter.default.post(name: NSNotification.Name(Constants.ArtistVC.dismissArtistVC), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.showLogIn), object: nil)
    }
@@ -246,8 +249,11 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
     
     func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
         if defaults.initiatedSession {
+            print(playerState.track.name)
+            print(lastSong)
             fetchUserCapabilities()
             if playerState.track.name != lastSong {
+                print("Current song does not equal last song!")
                 if openURL && firstSignIn {
                     DispatchQueue.main.async {
                         self.alternateGetCurrentlyPlayingSong(playerState)

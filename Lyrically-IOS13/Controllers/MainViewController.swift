@@ -159,6 +159,7 @@ class MainViewController: UIViewController, HasLyrics {
     }
     
     @objc func returnToLogIn() {
+        print("Returning to Log In!")
         _ = navigationController?.popToRootViewController(animated: true)
     }
     
@@ -176,7 +177,7 @@ class MainViewController: UIViewController, HasLyrics {
             skipBackward.isEnabled = restrictions!.canSkipPrevious
         }
     }
-    
+
 }
 
 extension MainViewController: ReceiveArtist {

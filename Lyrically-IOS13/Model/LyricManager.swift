@@ -24,19 +24,34 @@ class LyricManager {
     
     let canarado = "https://api.canarado.xyz/lyrics/"
     
+    var dataTask: URLSessionDataTask?
+    
+    var previousSong: String?
+    
     func fetchData(songAndArtist: String, songName: String, songArtist: String) {
         self.songName = songName
         self.songArtist = songArtist
 
         let songURL = songAndArtist.replacingOccurrences(of: "’", with: "'").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         
-        if let safeStringURL = songURL, let url = NSURL(string: "\(canarado)\(safeStringURL)") {
-            print("Getting lyrics for URL")
-            getLyrics(url)
+        if songName != previousSong {
+            previousSong = songName
+            if let safeStringURL = songURL, let url = NSURL(string: "\(canarado)\(safeStringURL)") {
+                print("Getting lyrics for URL")
+                getLyrics(url)
+            }
+            else {
+                delegate?.updateLyrics(Constants.noLyrics)
+            }
         }
-        else {
-            delegate?.updateLyrics(Constants.noLyrics)
-        }
+        
+//        if let safeStringURL = songURL, let url = NSURL(string: "\(canarado)") {
+//            print("Getting lyrics for URL")
+//            getLyrics(url, safeStringURL)
+//        }
+//        else {
+//            delegate?.updateLyrics(Constants.noLyrics)
+//        }
     }
     
     func getLyrics(_ URL: NSURL) {
@@ -44,10 +59,24 @@ class LyricManager {
         request.httpMethod = "GET"
 
         let session = URLSession.shared
-        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: handle(data:response:error:))
-
-        dataTask.resume()
+        dataTask = session.dataTask(with: request as URLRequest, completionHandler: handle(data:response:error:))
+        dataTask?.resume()
     }
+
+    
+//    func getLyrics(_ URL: NSURL, _ songAndArtistURL: String) {
+//        let json: [String: Any] = ["songName": songAndArtistURL]
+//        let jsonData = try? JSONSerialization.data(withJSONObject: json)
+//
+//        let request = NSMutableURLRequest(url: URL as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
+//        request.httpMethod = "POST"
+//        request.httpBody = jsonData
+//
+//        let session = URLSession.shared
+//        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: handle(data:response:error:))
+//
+//        dataTask.resume()
+//    }
     
     func handle(data: Data?, response: URLResponse?, error: Error?) {
         let songAndSingleArtist = "\(songName) \(songArtist)"
@@ -78,6 +107,7 @@ class LyricManager {
     func parseJson(_ safeData: Data) -> String? {
         let decoder = JSONDecoder()
         do {
+//
             let songInfo = try decoder.decode(CanaradoSongInfo.self, from: safeData)
             let spotifySongName = parseWord(songName.lowercased())
             let spotifySongArtist = parseWord(songArtist.lowercased())

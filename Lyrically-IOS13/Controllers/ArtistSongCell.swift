@@ -69,6 +69,7 @@ class ArtistSongCell: UITableViewCell {
         if let safeSongURI = songURI {
             artistVC.updateSongURI(songURI: safeSongURI)
         }
+        NotificationCenter.default.post(name: NSNotification.Name("cancelLyricCall"), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name(Constants.ArtistVC.dismissArtistVC), object: nil)
     }
     
