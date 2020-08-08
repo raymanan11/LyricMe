@@ -69,9 +69,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         // gets the requuested scopes of the user
         let requestedScopes: SPTScope = [.appRemoteControl, .userReadCurrentlyPlaying, .userReadPlaybackState]
         self.sessionManager.initiateSession(with: requestedScopes, options: .clientOnly)
+        NotificationCenter.default.post(name: NSNotification.Name("hideLogo"), object: nil)
     }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.hideLogIn), object: nil)
+//        NotificationCenter.default.post(name: NSNotification.Name("hideLogo"), object: nil)
         guard let url = URLContexts.first?.url else {
             return
         }
@@ -80,7 +83,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         }
         openURL = true
         firstAppEntry = false
-        NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.hideLogIn), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name(Constants.Segues.successfulLogIn), object: nil)
     }
     
@@ -221,6 +223,7 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     func updateLogInUI() {
         print("updating log in info")
         NotificationCenter.default.post(name: NSNotification.Name(Constants.ArtistVC.dismissArtistVC), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name("showLogo"), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.showLogIn), object: nil)
    }
     
@@ -254,18 +257,24 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
             fetchUserCapabilities()
             if playerState.track.name != lastSong {
                 print("Current song does not equal last song!")
-                if openURL && firstSignIn {
-                    DispatchQueue.main.async {
-                        self.alternateGetCurrentlyPlayingSong(playerState)
-                    }
-                    openURL = false
-                    firstSignIn = false
-                }
-                else {
-                    firstAppEntry = false
-                    DispatchQueue.main.async {
-                        self.getCurrentlyPlayingSong()
-                    }
+//                if openURL && firstSignIn {
+//                    print("First time logging in")
+//                    DispatchQueue.main.async {
+//                        self.alternateGetCurrentlyPlayingSong(playerState)
+//                    }
+//                    openURL = false
+//                    firstSignIn = false
+//                }
+//                else {
+//                    print("Not first time logging in")
+//                    firstAppEntry = false
+//                    DispatchQueue.main.async {
+//                        self.getCurrentlyPlayingSong()
+//                    }
+//                }
+                firstAppEntry = false
+                DispatchQueue.main.async {
+                    self.getCurrentlyPlayingSong()
                 }
             }
             lastSong = playerState.track.name

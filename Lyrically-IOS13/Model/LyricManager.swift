@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import NaturalLanguage
+import Alamofire
 
 protocol LyricManagerDelegate : class {
     func updateLyrics(_ fullLyrics: String)
@@ -19,7 +19,8 @@ class LyricManager {
     
     var delegate: LyricManagerDelegate?
     
-    static var triedOnce: Bool = false
+    var triedOnce: Bool = false
+    static var triedMultipleArtists: Bool = false
     var triedSingleArtist: Bool = false
     
     let canarado = "https://api.canarado.xyz/lyrics/"
@@ -36,76 +37,39 @@ class LyricManager {
         let songURL = songAndArtist.replacingOccurrences(of: "’", with: "'").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         
         if songName != previousSong {
-            print("In here")
             previousSong = songName
-            if let safeStringURL = songURL, let url = NSURL(string: "\(canarado)\(safeStringURL)") {
+            if let safeStringURL = songURL {
                 print("Getting lyrics for URL")
-                getLyrics(url)
+                getLyrics(URL: "\(canarado)\(safeStringURL)")
             }
             else {
                 delegate?.updateLyrics(Constants.noLyrics)
             }
         }
         
-//        if songName != previousSong {
-//            previousSong = songName
-//            if let safeStringURL = songURL, let url = NSURL(string: "\(canarado)") {
-//                print("Getting lyrics for URL")
-//                getLyrics(url, safeStringURL)
-//            }
-//            else {
-//                delegate?.updateLyrics(Constants.noLyrics)
-//            }
-//        }
-        
     }
     
-    func getLyrics(_ URL: NSURL) {
-        let request = NSMutableURLRequest(url: URL as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
-        request.httpMethod = "GET"
-
-        let session = URLSession.shared
-        dataTask = session.dataTask(with: request as URLRequest, completionHandler: handle(data:response:error:))
-        dataTask?.resume()
-    }
-
-    
-//    func getLyrics(_ URL: NSURL, _ songAndArtistURL: String) {
-//        let json: [String: Any] = ["songName": songAndArtistURL]
-//        let jsonData = try? JSONSerialization.data(withJSONObject: json)
-//
-//        let request = NSMutableURLRequest(url: URL as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
-//        request.httpMethod = "POST"
-//        request.httpBody = jsonData
-//
-//        let session = URLSession.shared
-//        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: handle(data:response:error:))
-//
-//        dataTask.resume()
-//    }
-    
-    func handle(data: Data?, response: URLResponse?, error: Error?) {
+    func getLyrics(URL: String) {
         let songAndSingleArtist = "\(songName) \(songArtist)"
-        if (error != nil) {
-            print(error!)
-            print("Problem with Lyric API, calling again")
-            delegate?.updateLyrics(Constants.noLyrics)
-            return
-        }
-        if let safeData = data {
-            if let lyrics = self.parseJson(safeData) {
-                // the triedOnce variable ensures that "no lyrics found" is showed after trying an alternate method of looking for lyrics from lyric API
-                if lyrics == Constants.noLyrics && LyricManager.triedOnce == false {
-                    LyricManager.triedOnce = true
-                    // another way of getting lyrics if not found is trying just one artist instead of all
-                    print("No lyrics found for multiple artists, trying again")
-                    previousSong = nil
-                    triedSingleArtist = true
-                    fetchData(songAndArtist: songAndSingleArtist, songName: self.songName, songArtist: self.songArtist)
-                }
-                else {
-                    delegate?.updateLyrics(lyrics)
-                    triedSingleArtist = false
+        AF.request(URL, method: .get).responseJSON { response in
+            if let safeData = response.data {
+//                    let str = String(decoding: safeData, as: UTF8.self)
+//                    print(str)
+                if let lyrics = self.parseJson(safeData) {
+                    // the triedOnce variable ensures that "no lyrics found" is showed after trying an alternate method of looking for lyrics from lyric API
+                    if lyrics == Constants.noLyrics && !LyricManager.triedMultipleArtists {
+                        LyricManager.triedMultipleArtists = true
+                        // another way of getting lyrics if not found is trying just one artist instead of all
+                        print("No lyrics found for multiple artists, trying again")
+                        self.previousSong = nil
+                        self.triedSingleArtist = true
+                        self.fetchData(songAndArtist: songAndSingleArtist, songName: self.songName, songArtist: self.songArtist)
+                    }
+                    else {
+                        self.delegate?.updateLyrics(lyrics)
+                        self.triedSingleArtist = false
+                        self.triedOnce = false
+                    }
                 }
             }
         }
@@ -114,8 +78,6 @@ class LyricManager {
     func parseJson(_ safeData: Data) -> String? {
         let decoder = JSONDecoder()
         do {
-            let str = String(decoding: safeData, as: UTF8.self)
-            print(str)
             let songInfo = try decoder.decode(CanaradoSongInfo.self, from: safeData)
             let spotifySongName = parseWord(songName.lowercased())
             let spotifySongArtist = parseWord(songArtist.lowercased())
@@ -130,6 +92,9 @@ class LyricManager {
                     print("Lyrics Option Two")
                     return lyricsOptionTwo
                 }
+            }
+            else {
+                print("unable to find lyrics")
             }
             // if it reaches this point then that means it is not able to find lyrics
             return Constants.noLyrics

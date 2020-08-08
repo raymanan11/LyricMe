@@ -65,19 +65,13 @@ class ArtistInfoViewController: UIViewController {
         artistLabel.numberOfLines = 0
         artistLabel.textColor = .label
         
-        if let safeArtistImageURL = artistImageURL {
-            setArtistImage(artistImageURL: safeArtistImageURL, imageView: artistImage, artist: true)
-        }
-        else {
-            setArtistImage(artistImageURL: nil, imageView: artistImage, artist: true)
-        }
+        setArtistPicture()
         // affects artist image size
         artistImage.widthAnchor.constraint(equalToConstant: 120).isActive = true
         artistImage.heightAnchor.constraint(equalToConstant: 120).isActive = true
         artistImage.contentMode = .scaleAspectFill
         artistImage.translatesAutoresizingMaskIntoConstraints = false
 
-//        containerView.backgroundColor = .quaternarySystemFill
         containerView.backgroundColor = UIColor(named: Constants.Assets.appBackground)
         containerView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -96,7 +90,7 @@ class ArtistInfoViewController: UIViewController {
 
         let stackView = UIStackView(arrangedSubviews: [artistImage, artistLabel])
         stackView.axis = .horizontal
-        stackView.spacing = 15
+        stackView.spacing = 25
         stackView.distribution = .fillProportionally
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -115,22 +109,25 @@ class ArtistInfoViewController: UIViewController {
 
     }
     
+    private func setArtistPicture() {
+        if let safeArtistImageURL = artistImageURL {
+            setArtistImage(artistImageURL: safeArtistImageURL, imageView: artistImage)
+        }
+        else {
+            setArtistImage(artistImageURL: nil, imageView: artistImage)
+        }
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(Constants.ArtistVC.dismissArtistVC), object: nil)
     }
     
-    func setArtistImage(artistImageURL: String?, imageView: UIImageView, artist: Bool) {
+    func setArtistImage(artistImageURL: String?, imageView: UIImageView) {
         if let safeArtistImageURL = artistImageURL, let url = URL(string: safeArtistImageURL) {
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                 if let data = data {
                     DispatchQueue.main.async {
                         imageView.image = UIImage(data: data)
-                        if artist {
-                            imageView.layer.cornerRadius = 60
-                        }
-                        else {
-                            imageView.layer.cornerRadius = imageView.frame.height / 2
-                        }
                         imageView.clipsToBounds = true
                         // change the color to match the occasion (whether a button or dark/light mode)
                         imageView.layer.borderColor = UIColor.white.cgColor
@@ -190,7 +187,7 @@ extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.ArtistVC.cellID, for: indexPath) as! ArtistSongCell
         if let safeAlbumPhotosURL = albumPhotosURL, let safePopularSongs = popularSongs, let safeSongURI = songURI {
             ableToPlayArtistSong(cell, indexPath, safeSongURI)
-            setArtistImage(artistImageURL: safeAlbumPhotosURL[indexPath.row], imageView: cell.albumImage, artist: false)
+            setArtistImage(artistImageURL: safeAlbumPhotosURL[indexPath.row], imageView: cell.albumImage)
             cell.songName.text = safePopularSongs[indexPath.row]
         }
         return cell

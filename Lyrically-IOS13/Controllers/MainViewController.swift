@@ -89,8 +89,8 @@ class MainViewController: UIViewController, HasLyrics {
         self.skipForward.isHidden = true
         self.skipBackward.isHidden = true
         // creates the circle image of the logo/currently playing album
-        self.artistInfo.layer.cornerRadius = self.artistInfo.frame.height / 2
-        self.artistInfo.clipsToBounds = true
+//        self.artistInfo.layer.cornerRadius = self.artistInfo.frame.height / 2
+//        self.artistInfo.clipsToBounds = true
         self.artistInfo.layer.borderWidth = 4
         // change the color to match the occasion (whether a button or dark/light mode)
         self.artistInfo.layer.borderColor = UIColor.white.cgColor
@@ -131,6 +131,7 @@ class MainViewController: UIViewController, HasLyrics {
     }
     
     @objc func getInfo() {
+        print("fetching data")
         currentlyPlaying.fetchData()
     }
     
@@ -214,7 +215,7 @@ extension MainViewController: LyricManagerDelegate {
         DispatchQueue.main.async {
             self.lyrics.text = fullLyrics
             self.lyrics.scrollRangeToVisible(NSMakeRange(0, 0))
-            LyricManager.triedOnce = false
+            LyricManager.triedMultipleArtists = false
         }
     }
 }

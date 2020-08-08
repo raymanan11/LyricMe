@@ -10,6 +10,7 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
     var oneMainVC: UIViewController!
     
     @IBOutlet weak var logInButton: UIButton!
+    @IBOutlet weak var lyricMeLogo: UIImageView!
     
     private let playURI = "spotify:track:1mea3bSkSGXuIRvnydlB5b"
     
@@ -37,6 +38,7 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
         let defaults = UserDefaults.standard
         if defaults.initiatedSession {
             hideLogInButton()
+            hideLogo()
         }
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.moveToNextVC), name: NSNotification.Name(rawValue: Constants.Segues.successfulLogIn), object: nil)
@@ -44,6 +46,10 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
         NotificationCenter.default.addObserver(self, selector: #selector(self.hideLogInButton), name: NSNotification.Name(rawValue: Constants.LogInVC.hideLogIn), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.showLogInButton), name: NSNotification.Name(rawValue: Constants.LogInVC.showLogIn), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.showLogo), name: NSNotification.Name(rawValue: "showLogo"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.hideLogo), name: NSNotification.Name(rawValue: "hideLogo"), object: nil)
 
     }
     
@@ -62,6 +68,16 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
     
     @objc func showLogInButton() {
         logInButton.isHidden = false
+    }
+    
+    @objc func hideLogo() {
+        print("hiding logo")
+        lyricMeLogo.isHidden = true
+    }
+    
+    @objc func showLogo() {
+        print("showing logo")
+        lyricMeLogo.isHidden = false
     }
     
     func checkIfSpotifyIsInstalled() {
