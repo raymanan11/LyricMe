@@ -55,7 +55,7 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
     
     @IBAction func logIn(_ sender: Any) {
         sceneDelegate.login()
-        checkIfSpotifyIsInstalled()
+        findApp(appName: "spotify")
     }
     
     @objc func moveToNextVC() {
@@ -71,13 +71,28 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
     }
     
     @objc func hideLogo() {
-        print("hiding logo")
         lyricMeLogo.isHidden = true
     }
     
     @objc func showLogo() {
-        print("showing logo")
         lyricMeLogo.isHidden = false
+    }
+    
+    func findApp(appName:String) {
+
+        let appName = "spotify"
+        let appScheme = "\(appName)://app"
+        let appUrl = URL(string: appScheme)
+
+        if UIApplication.shared.canOpenURL(appUrl! as URL)
+        {
+            hideLogo()
+
+
+        } else {
+            alertManager.showAppStoreInstall(view: view, vc: self)
+        }
+
     }
     
     func checkIfSpotifyIsInstalled() {

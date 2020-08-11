@@ -90,7 +90,7 @@ class ArtistInfoViewController: UIViewController {
 
         let stackView = UIStackView(arrangedSubviews: [artistImage, artistLabel])
         stackView.axis = .horizontal
-        stackView.spacing = 25
+        stackView.spacing = 20
         stackView.distribution = .fillProportionally
         stackView.translatesAutoresizingMaskIntoConstraints = false
 

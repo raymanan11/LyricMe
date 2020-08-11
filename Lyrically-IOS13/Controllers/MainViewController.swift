@@ -19,9 +19,10 @@ class MainViewController: UIViewController, HasLyrics {
     var currentlyPlaying = CurrentlyPlayingManager()
     var lyricManager = LyricManager()
     var spotifyArtistManager = SpotifyArtistManager()
-    var spotifyArtistImageManager = SpotifyArtistImageManager()
+    var spotifyTrackManager = SpotifyTrackManager()
     var logInVC = LogInViewController()
     var alertManager = AlertManager()
+    var idParser = IDParser()
     
     static var playOnDemand: Bool?
     var updateFirstSongPic: Bool = false
@@ -62,7 +63,7 @@ class MainViewController: UIViewController, HasLyrics {
         currentlyPlaying.UIDelegate = self
         lyricManager.delegate = self
         spotifyArtistManager.delegate = self
-        spotifyArtistImageManager.delegate = self
+        spotifyTrackManager.delegate = self
     }
     
     override func viewDidLoad() {
@@ -88,11 +89,7 @@ class MainViewController: UIViewController, HasLyrics {
         self.lyrics.isHidden = true
         self.skipForward.isHidden = true
         self.skipBackward.isHidden = true
-        // creates the circle image of the logo/currently playing album
-//        self.artistInfo.layer.cornerRadius = self.artistInfo.frame.height / 2
-//        self.artistInfo.clipsToBounds = true
         self.artistInfo.layer.borderWidth = 4
-        // change the color to match the occasion (whether a button or dark/light mode)
         self.artistInfo.layer.borderColor = UIColor.white.cgColor
     }
     
@@ -131,7 +128,6 @@ class MainViewController: UIViewController, HasLyrics {
     }
     
     @objc func getInfo() {
-        print("fetching data")
         currentlyPlaying.fetchData()
     }
     
@@ -145,10 +141,10 @@ class MainViewController: UIViewController, HasLyrics {
     
     func getFirstSong(info: CurrentlyPlayingInfo) {
         self.firstSong = info
-        getFirstSongAlbumURL()
+        updateFirstSongToMainVC()
     }
 
-    func getFirstSongAlbumURL() {
+    func updateFirstSongToMainVC() {
         if let _ = firstSong, let _ = firstSong?.artistID {
             DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
                 self.currentlyPlaying.updateSongInfo(info: self.firstSong!)
@@ -160,7 +156,6 @@ class MainViewController: UIViewController, HasLyrics {
     }
     
     @objc func returnToLogIn() {
-        print("Returning to Log In!")
         _ = navigationController?.popToRootViewController(animated: true)
     }
     
@@ -185,24 +180,19 @@ extension MainViewController: ReceiveArtist {
     
     func getArtist(info: ArtistInfo) {
         self.spotifyArtist = info
-        updateFirstSongPicture(info)
+        getFirstSongPicture(info)
     }
     
     func getArtistPicture(info: ArtistInfo2) {
         self.spotifyArtist2 = info
     }
     
-    func updateFirstSongPicture(_ info: ArtistInfo) {
+    func getFirstSongPicture(_ info: ArtistInfo) {
         if firstSong != nil && updateFirstSongPic == false {
             updateFirstSongPic = true
-            for (index, trackName) in info.popularSongs.enumerated() {
-                if trackName.localizedStandardContains(firstSong!.apiSongName) {
-                    updateAlbumImage(albumURL: info.songAlbumImage[index])
-                    return
-                }
-            }
-            if let safeArtistID = artistID {
-                spotifyArtistImageManager.getArtistImageURL(id: safeArtistID)
+            if let trackURI = firstSong?.currentSongURI {
+                let trackID = idParser.parseURI(uri: trackURI)
+                spotifyTrackManager.getTrackAlbumImage(trackID: trackID!)
             }
         }
     }

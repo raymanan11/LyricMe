@@ -21,6 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     let defaults = UserDefaults.standard
     var currentlyPlaying = CurrentlyPlayingManager()
     var spotifyArtistImageManager = SpotifyArtistImageManager()
+    var idParser = IDParser()
     
     var firstCurrentSong: CurrentlyPlayingInfo?
 
@@ -65,16 +66,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     
     func login() {
         // check if spotify app is installed
-        
         // gets the requuested scopes of the user
         let requestedScopes: SPTScope = [.appRemoteControl, .userReadCurrentlyPlaying, .userReadPlaybackState]
         self.sessionManager.initiateSession(with: requestedScopes, options: .clientOnly)
-        NotificationCenter.default.post(name: NSNotification.Name("hideLogo"), object: nil)
     }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.hideLogIn), object: nil)
-//        NotificationCenter.default.post(name: NSNotification.Name("hideLogo"), object: nil)
         guard let url = URLContexts.first?.url else {
             return
         }
@@ -104,7 +102,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
             self.updateLogInUI()
         }
         print("fail", error)
-        print("hello")
     }
     
     func sessionManager(manager: SPTSessionManager, didRenew session: SPTSession) {
@@ -180,7 +177,6 @@ extension UserDefaults {
 extension SceneDelegate: SPTAppRemoteDelegate {
     
     func appRemoteDidEstablishConnection(_ appRemote: SPTAppRemote) {
-        print("App Remote is connected")
         self.appRemote = appRemote
         subscribeToCapabilityChanges()
         self.appRemote.playerAPI?.delegate = self
@@ -221,7 +217,6 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     }
     
     func updateLogInUI() {
-        print("updating log in info")
         NotificationCenter.default.post(name: NSNotification.Name(Constants.ArtistVC.dismissArtistVC), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name("showLogo"), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.showLogIn), object: nil)
@@ -246,35 +241,27 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     private func updateViewWithCapabilities(_ capabilities: SPTAppRemoteUserCapabilities) {
         MainViewController.playOnDemand = capabilities.canPlayOnDemand
     }
+    
 }
 
 extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
     
     func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
         if defaults.initiatedSession {
-            print(playerState.track.name)
-            print(lastSong)
             fetchUserCapabilities()
             if playerState.track.name != lastSong {
-                print("Current song does not equal last song!")
-//                if openURL && firstSignIn {
-//                    print("First time logging in")
-//                    DispatchQueue.main.async {
-//                        self.alternateGetCurrentlyPlayingSong(playerState)
-//                    }
-//                    openURL = false
-//                    firstSignIn = false
-//                }
-//                else {
-//                    print("Not first time logging in")
-//                    firstAppEntry = false
-//                    DispatchQueue.main.async {
-//                        self.getCurrentlyPlayingSong()
-//                    }
-//                }
-                firstAppEntry = false
-                DispatchQueue.main.async {
-                    self.getCurrentlyPlayingSong()
+                if openURL && firstSignIn {
+                    DispatchQueue.main.async {
+                        self.alternateGetCurrentlyPlayingSong(playerState)
+                    }
+                    openURL = false
+                    firstSignIn = false
+                }
+                else {
+                    firstAppEntry = false
+                    DispatchQueue.main.async {
+                        self.getCurrentlyPlayingSong()
+                    }
                 }
             }
             lastSong = playerState.track.name
@@ -288,7 +275,7 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
         let fullSongName = playerState.track.name
         let currentSongURI = playerState.track.uri
         let apiSongName = currentlyPlaying.checkSongName(fullSongName)
-        let artistID = parseURI(artistURI: playerState.track.artist.uri)
+        let artistID = idParser.parseURI(uri: playerState.track.artist.uri)
         firstCurrentSong = CurrentlyPlayingInfo(artistName: artistName, fullSongName: fullSongName, apiSongName: apiSongName, allArtists: artistName, albumURL: "", artistID: artistID, currentSongURI: currentSongURI)
         if let safeFirstSong = firstCurrentSong {
             self.mainVC.getFirstSong(info: safeFirstSong)
@@ -306,19 +293,12 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
             NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.updateRestrictions), object: nil)
         }
     }
-
-    func parseURI(artistURI: String) -> String? {
-        if artistURI == "" {
-            return nil
-        }
-        let parts = artistURI.components(separatedBy: ":")
-        return parts[2]
-    }
 }
 
 extension SceneDelegate: SPTAppRemoteUserAPIDelegate {
     func userAPI(_ userAPI: SPTAppRemoteUserAPI, didReceive capabilities: SPTAppRemoteUserCapabilities) { }
 }
+
 
 
 

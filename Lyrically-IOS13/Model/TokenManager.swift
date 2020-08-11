@@ -22,9 +22,6 @@ struct TokenManager {
         dispatchGroup.enter()
         AF.request(tokenSwap, method: .post, parameters: parameters).responseJSON(completionHandler: {
             response in
-//            if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-//                print("Data: \(utf8Text)")
-//            }
             if let result = response.value {
                 let jsonData = result as! NSDictionary
                 let accessToken = jsonData.value(forKey: "access_token") as? String
@@ -43,7 +40,6 @@ struct TokenManager {
     func refreshToken() {
         let refreshToken: String? = KeychainWrapper.standard.string(forKey: Constants.Tokens.refreshToken)
         let parameters = ["refresh_token" : refreshToken]
-        print("trying to get refresh token")
         dispatchGroup.enter()
         AF.request(refresh, method: .post, parameters: parameters).responseJSON(completionHandler: {
             response in

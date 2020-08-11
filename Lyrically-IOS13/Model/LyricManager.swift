@@ -30,17 +30,26 @@ class LyricManager {
     var previousSong: String?
     
     func fetchData(songAndArtist: String, songName: String, songArtist: String) {
-        print("in fetchData")
         self.songName = songName
         self.songArtist = songArtist
 
         let songURL = songAndArtist.replacingOccurrences(of: "’", with: "'").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         
+//        if songName != previousSong {
+//            previousSong = songName
+//            if let safeStringURL = songURL {
+//                print("Getting lyrics for URL")
+//                getLyrics(URL: "\(canarado)\(safeStringURL)")
+//            }
+//            else {
+//                delegate?.updateLyrics(Constants.noLyrics)
+//            }
+//        }
+        
         if songName != previousSong {
             previousSong = songName
-            if let safeStringURL = songURL {
-                print("Getting lyrics for URL")
-                getLyrics(URL: "\(canarado)\(safeStringURL)")
+            if let safeStringURL = songURL, let url = NSURL(string: "\(canarado)\(safeStringURL)") {
+                getLyrics(url)
             }
             else {
                 delegate?.updateLyrics(Constants.noLyrics)
@@ -49,27 +58,65 @@ class LyricManager {
         
     }
     
-    func getLyrics(URL: String) {
+//    // Alamofire (Correct but slow)
+//    func getLyrics(URL: String) {
+//        let songAndSingleArtist = "\(songName) \(songArtist)"
+//        AF.request(URL, method: .get).responseJSON { response in
+//            if let safeData = response.data {
+//                print("got json data")
+//                if let lyrics = self.parseJson(safeData) {
+//                    print("got some lyric data")
+//                    // the triedOnce variable ensures that "no lyrics found" is showed after trying an alternate method of looking for lyrics from lyric API
+//                    if lyrics == Constants.noLyrics && !LyricManager.triedMultipleArtists {
+//                        LyricManager.triedMultipleArtists = true
+//                        // another way of getting lyrics if not found is trying just one artist instead of all
+//                        print("No lyrics found for multiple artists, trying again")
+//                        self.previousSong = nil
+//                        self.triedSingleArtist = true
+//                        self.fetchData(songAndArtist: songAndSingleArtist, songName: self.songName, songArtist: self.songArtist)
+//                    }
+//                    else {
+//                        self.delegate?.updateLyrics(lyrics)
+//                        self.triedSingleArtist = false
+//                        self.triedOnce = false
+//                    }
+//                }
+//                else {
+//                    self.delegate?.updateLyrics(Constants.noLyrics)
+//                }
+//            }
+//        }
+//    }
+    
+    func getLyrics(_ url: NSURL) {
+        let request = NSMutableURLRequest(url: url as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 20)
+        request.httpMethod = "GET"
+        
+        let session = URLSession.shared
+        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: handle(data:response:error:))
+        dataTask.resume()
+    }
+    
+    func handle(data: Data?, response: URLResponse?, error: Error?) {
         let songAndSingleArtist = "\(songName) \(songArtist)"
-        AF.request(URL, method: .get).responseJSON { response in
-            if let safeData = response.data {
-//                    let str = String(decoding: safeData, as: UTF8.self)
-//                    print(str)
-                if let lyrics = self.parseJson(safeData) {
-                    // the triedOnce variable ensures that "no lyrics found" is showed after trying an alternate method of looking for lyrics from lyric API
-                    if lyrics == Constants.noLyrics && !LyricManager.triedMultipleArtists {
-                        LyricManager.triedMultipleArtists = true
-                        // another way of getting lyrics if not found is trying just one artist instead of all
-                        print("No lyrics found for multiple artists, trying again")
-                        self.previousSong = nil
-                        self.triedSingleArtist = true
-                        self.fetchData(songAndArtist: songAndSingleArtist, songName: self.songName, songArtist: self.songArtist)
-                    }
-                    else {
-                        self.delegate?.updateLyrics(lyrics)
-                        self.triedSingleArtist = false
-                        self.triedOnce = false
-                    }
+        if error != nil {
+            print("Problem with Lyric API, calling again")
+            fetchData(songAndArtist: songAndSingleArtist, songName: songName, songArtist: songArtist)
+        }
+        if let safeData = data {
+            if let lyrics = self.parseJson(safeData) {
+                if lyrics == Constants.noLyrics && !LyricManager.triedMultipleArtists {
+                    LyricManager.triedMultipleArtists = true
+                    // another way of getting lyrics if not found is trying just one artist instead of all
+                    self.previousSong = nil
+                    self.triedSingleArtist = true
+                    self.fetchData(songAndArtist: songAndSingleArtist, songName: self.songName, songArtist: self.songArtist)
+                }
+                else {
+                    self.delegate?.updateLyrics(lyrics)
+                    self.triedSingleArtist = false
+                    self.triedOnce = false
+                    previousSong = nil
                 }
             }
         }
@@ -81,15 +128,11 @@ class LyricManager {
             let songInfo = try decoder.decode(CanaradoSongInfo.self, from: safeData)
             let spotifySongName = parseWord(songName.lowercased())
             let spotifySongArtist = parseWord(songArtist.lowercased())
-            print("Spotify song name: \(spotifySongName)")
-            print("Spotify song artist: \(spotifySongArtist)")
             if let lyricsOptionOne = getLyrics(songInfo, spotifySongName, spotifySongArtist) {
-                print("Lyrics Option One")
                 return lyricsOptionOne
             }
             else if triedSingleArtist {
                 if let lyricsOptionTwo = getLyrics(songInfo, spotifySongName, nil) {
-                    print("Lyrics Option Two")
                     return lyricsOptionTwo
                 }
             }
@@ -109,20 +152,13 @@ class LyricManager {
         for(_, value) in songInfo.content.enumerated() {
             let potentialSongName = value.title.lowercased()
             let canaradoSongName = parseWord(potentialSongName)
-            print("potential songs: \(canaradoSongName)")
-        }
-        for(_, value) in songInfo.content.enumerated() {
-            let potentialSongName = value.title.lowercased()
-            let canaradoSongName = parseWord(potentialSongName)
             if let safeSongArtist = spotifySongArtist {
                 if canaradoSongName.contains(spotifySongName) && canaradoSongName.contains(safeSongArtist) {
-                    print("Correct song name using song name and artist name: \(canaradoSongName)")
                     return value.lyrics
                 }
             }
             else {
                 if canaradoSongName.contains(spotifySongName) {
-                    print("Correct song name not using artist name: \(canaradoSongName)")
                     return value.lyrics
                 }
             }

@@ -43,6 +43,9 @@ class CurrentlyPlayingManager {
                 }
             }
         }
+        else {
+            print("not valid access token")
+        }
     }
     
     func updateSongInfo(info: CurrentlyPlayingInfo) {
@@ -105,13 +108,17 @@ class CurrentlyPlayingManager {
         }
     }
     
-    // this method is used to make sure song titles with characters like - and () don't affect the API call used to get lyrics
     func checkSongName(_ songName: String) -> String {
-        if songName.contains("(") || songName.contains("-") || songName.contains("/"){
-            var arr = songName.components(separatedBy: " ")
+        var usedSongName = songName
+        let word = songName.components(separatedBy: "(")
+        let numOfParen = word.count - 1
+        var sansParens = ""
+        let songWithNoParen = removeParenthesis(numOfParen, &usedSongName, &sansParens)
+        if songWithNoParen.contains("[") || songWithNoParen.contains("-") || songWithNoParen.contains("/"){
+            var arr = songWithNoParen.components(separatedBy: " ")
             var correctSongName = ""
             for(index, value) in arr.enumerated() {
-                if value.contains("(") || value.contains("-") || value.contains("/"){
+                if value.contains("[") || value.contains("-") || value.contains("/"){
                     if value.contains("-") && value.count > 1 {
                         correctSongName += value.replacingOccurrences(of: "-", with: "") + " "
                     }
@@ -128,7 +135,24 @@ class CurrentlyPlayingManager {
             }
             return correctSongName
         }
-        return songName
+        return songWithNoParen
+    }
+    
+    // this method is used to make sure song titles with characters like - and () don't affect the API call used to get lyrics
+    private func removeParenthesis(_ numOfParen: Int, _ usedSongName: inout String, _ sansParens: inout String) -> String {
+        if numOfParen > 0 {
+            for _ in 0..<numOfParen {
+                if let leftIdx = usedSongName.firstIndex(of: "("), let rightIdx = usedSongName.firstIndex(of: ")") {
+                    sansParens = String(usedSongName.prefix(upTo: leftIdx) + usedSongName.suffix(from: usedSongName.index(after: rightIdx)))
+                    usedSongName = sansParens
+                }
+            }
+            sansParens = sansParens.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        else {
+            sansParens = usedSongName
+        }
+        return sansParens
     }
 
 }

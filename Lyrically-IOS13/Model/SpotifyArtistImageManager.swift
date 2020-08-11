@@ -10,10 +10,6 @@ import Foundation
 import Alamofire
 import SwiftKeychainWrapper
 
-protocol FirstSong {
-    func updateFirstSongPicture(albumURL: String)
-}
-
 struct SpotifyArtistImageManager {
     
     var delegate: FirstSong?
