@@ -127,6 +127,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         else {
             appRemote.connect()
         }
+        
     }
 
     func sceneWillResignActive(_ scene: UIScene) {

@@ -33,7 +33,7 @@ class LyricManager {
         self.songName = songName
         self.songArtist = songArtist
 
-        let songURL = songAndArtist.replacingOccurrences(of: "’", with: "'").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        let songURL = songAndArtist.replacingOccurrences(of: "’", with: "'").replacingOccurrences(of: "/", with: "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         
 //        if songName != previousSong {
 //            previousSong = songName
@@ -125,9 +125,12 @@ class LyricManager {
     func parseJson(_ safeData: Data) -> String? {
         let decoder = JSONDecoder()
         do {
+            let str = String(decoding: safeData, as: UTF8.self)
             let songInfo = try decoder.decode(CanaradoSongInfo.self, from: safeData)
             let spotifySongName = parseWord(songName.lowercased())
             let spotifySongArtist = parseWord(songArtist.lowercased())
+            print("Spotify song name: \(spotifySongName)")
+            print("Spotify song artist: \(spotifySongArtist)")
             if let lyricsOptionOne = getLyrics(songInfo, spotifySongName, spotifySongArtist) {
                 return lyricsOptionOne
             }
@@ -149,6 +152,11 @@ class LyricManager {
     }
     
     func getLyrics(_ songInfo: CanaradoSongInfo, _ spotifySongName: String, _ spotifySongArtist: String?) -> String? {
+        for(_, value) in songInfo.content.enumerated() {
+            let potentialSongName = value.title.lowercased()
+            let canaradoSongName = parseWord(potentialSongName)
+            print("Potential song name: \(canaradoSongName)")
+        }
         for(_, value) in songInfo.content.enumerated() {
             let potentialSongName = value.title.lowercased()
             let canaradoSongName = parseWord(potentialSongName)

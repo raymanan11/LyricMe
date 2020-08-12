@@ -7,8 +7,6 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
     var sceneDelegate = SceneDelegate()
     var alertManager = AlertManager()
     
-    var oneMainVC: UIViewController!
-    
     @IBOutlet weak var logInButton: UIButton!
     @IBOutlet weak var lyricMeLogo: UIImageView!
     

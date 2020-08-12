@@ -60,10 +60,12 @@ class MainViewController: UIViewController, HasLyrics {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
         currentlyPlaying.UIDelegate = self
         lyricManager.delegate = self
         spotifyArtistManager.delegate = self
         spotifyTrackManager.delegate = self
+        
     }
     
     override func viewDidLoad() {
@@ -94,6 +96,7 @@ class MainViewController: UIViewController, HasLyrics {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.Tokens.newAccessToken), object: nil)
         
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
