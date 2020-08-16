@@ -49,7 +49,7 @@ class ArtistSongCell: UITableViewCell {
     let songName: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 16, weight: .regular)
+        label.font = .systemFont(ofSize: 18, weight: .regular)
         label.textColor = .label
 
         return label
