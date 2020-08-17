@@ -210,12 +210,14 @@ class LyricManager {
                 let songInfo = try decoder.decode(KSoftInfo.self, from: safeData)
                 if songInfo.data.count > 0 {
                     for songs in songInfo.data {
-                        let strippedAPISongName = songs.name.folding(options: .diacriticInsensitive, locale: nil)
-                        let strippedSongName = self.songName.folding(options: .diacriticInsensitive, locale: nil)
+                        let strippedAPISongName = songs.name.folding(options: .diacriticInsensitive, locale: nil).lowercased()
+                        let strippedSongName = self.songName.folding(options: .diacriticInsensitive, locale: nil).lowercased()
+                        print("API song name: \(strippedAPISongName)")
+                        print("Spotify song name: \(strippedSongName)")
                         if strippedAPISongName.contains(strippedSongName) {
-                            print("API song name: \(strippedAPISongName)")
-                            print("Spotify song name: \(songs.name)")
-                            return songs.lyrics
+                            print("Correct API song name: \(strippedAPISongName)")
+                            print("Correct Spotify song name: \(strippedSongName)")
+                            return addKSoftCredit(lyrics: songs.lyrics)
                         }
                         self.triedKSoft = true
                     }
@@ -225,9 +227,9 @@ class LyricManager {
                 print("Already tried KSoft")
                 let songInfo = try decoder.decode(LyricsOVHInfo.self, from: safeData)
                 if let lyrics = songInfo.lyrics {
-                    return lyrics
+                    let parsedLyrics = parseLyrics(lyrics)
+                    return parsedLyrics
                 }
-                print(songInfo.error)
             }
             // if it reaches this point then that means it is not able to find lyrics
             return Constants.noLyrics
@@ -236,6 +238,11 @@ class LyricManager {
             print(error)
             return Constants.noLyrics
         }
+    }
+    
+    func addKSoftCredit(lyrics: String) -> String {
+        let ksoftLyrics = "\(lyrics)\n\nLYRICS FROM api.ksoft.si"
+        return ksoftLyrics
     }
     
     func parseLyrics(_ lyrics: String) -> String {
