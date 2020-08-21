@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import GoogleMobileAds
 
 protocol ArtistData {
     func passData(artistData: ArtistInfo)
@@ -35,6 +36,8 @@ class MainViewController: UIViewController, HasLyrics {
     var firstSong: CurrentlyPlayingInfo?
     var spotifyArtist: ArtistInfo?
     var spotifyArtist2: ArtistInfo2?
+    
+    var fullScreenAd: GADInterstitial!
 
     @IBOutlet var lyrics: UITextView!
     @IBOutlet var songTitle: UILabel!
@@ -69,20 +72,17 @@ class MainViewController: UIViewController, HasLyrics {
     }
     
     override func viewDidLoad() {
+        print("viewDidLoad")
+        
         super.viewDidLoad()
+        
+        fullScreenAd = createAndLoadInterstitial()
+        
         navigationController?.isNavigationBarHidden = true
         
         defaultMainVCUI()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.Tokens.newAccessToken), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.returnToLogIn), name: NSNotification.Name(rawValue: Constants.MainVC.returnToLogInVC), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.updateStatus), name: NSNotification.Name(rawValue: Constants.MainVC.updateStatus), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.updateViewWithRestrictions), name: NSNotification.Name(rawValue: Constants.MainVC.updateRestrictions), object: nil)
+        addObservers()
         
     }
     
@@ -95,8 +95,25 @@ class MainViewController: UIViewController, HasLyrics {
         self.artistInfo.layer.borderColor = UIColor.white.cgColor
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
+    private func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.Tokens.newAccessToken), object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(self.getInfo), name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.returnToLogIn), name: NSNotification.Name(rawValue: Constants.MainVC.returnToLogInVC), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateStatus), name: NSNotification.Name(rawValue: Constants.MainVC.updateStatus), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateViewWithRestrictions), name: NSNotification.Name(rawValue: Constants.MainVC.updateRestrictions), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.showAd), name: NSNotification.Name(rawValue: "showAd"), object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        removeObservers()
+    }
+    
+    private func removeObservers() {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.Tokens.newAccessToken), object: nil)
         
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.returnToApp), object: nil)
@@ -106,6 +123,8 @@ class MainViewController: UIViewController, HasLyrics {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.MainVC.updateStatus), object: nil)
         
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.MainVC.updateRestrictions), object: nil)
+        
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "showAd"), object: nil)
     }
     
     @IBAction func getArtistInfo(_ sender: UIButton) {
@@ -199,6 +218,50 @@ extension MainViewController: ReceiveArtist {
             }
         }
     }
+}
+
+extension MainViewController: GADInterstitialDelegate {
+    
+    @objc func showAd() {
+        NotificationCenter.default.post(name: NSNotification.Name(Constants.ArtistVC.dismissArtistVC), object: nil)
+        DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
+            if self.fullScreenAd.isReady {
+                self.fullScreenAd.present(fromRootViewController: self)
+            }
+            else {
+              print("Ad wasn't ready")
+            }
+        }
+    }
+    
+    func createAndLoadInterstitial() -> GADInterstitial {
+        let fullScreenAd = GADInterstitial(adUnitID: "ca-app-pub-3940256099942544/4411468910")
+        fullScreenAd.delegate = self
+        fullScreenAd.load(GADRequest())
+        return fullScreenAd
+    }
+    
+    func interstitialWillPresentScreen(_ ad: GADInterstitial) {
+        appRemote?.playerAPI?.pause(defaultCallback)
+        print("interstitialWillPresentScreen")
+    }
+    
+    func interstitialWillDismissScreen(_ ad: GADInterstitial) {
+        print("about to dismiss screen and reload ad")
+        fullScreenAd = createAndLoadInterstitial()
+        addObservers()
+        DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
+            if let safeAppRemote = self.appRemote {
+                if !safeAppRemote.isConnected {
+                    self.returnToLogIn()
+                }
+                else {
+                    self.appRemote?.playerAPI?.resume(self.defaultCallback)
+                }
+            }
+        }
+    }
+    
 }
 
 extension MainViewController: LyricManagerDelegate {

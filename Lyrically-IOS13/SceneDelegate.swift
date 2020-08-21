@@ -25,6 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
     
     var firstCurrentSong: CurrentlyPlayingInfo?
 
+    var numberOfSongsPassed = 0
     var lastSong: String?
     private var firstAppEntry: Bool = true
     private var firstSignIn: Bool = true
@@ -88,6 +89,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         print("inititated session")
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.updateStatus), object: nil)
+        }
+        print(isKeyPresentInUserDefaults(key: "numSongsPassed"))
+        if !isKeyPresentInUserDefaults(key: "numSongsPassed") {
+            defaults.set(0, forKey: "numSongsPassed")
         }
         defaults.initiatedSession = true
         appRemote.connectionParameters.accessToken = session.accessToken
@@ -155,6 +160,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
             let mainVC = self.window?.rootViewController?.children[1] as! MainViewController
             return mainVC
         }
+    }
+    
+    func isKeyPresentInUserDefaults(key: String) -> Bool {
+        return UserDefaults.standard.object(forKey: key) != nil
     }
 
 }
@@ -251,7 +260,12 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
         if defaults.initiatedSession {
             fetchUserCapabilities()
             if playerState.track.name != lastSong {
+                if lastSong != nil {
+                    defaults.set(defaults.integer(forKey: Constants.MainVC.numSongsPassed) + 1, forKey: Constants.MainVC.numSongsPassed)
+                }
+                print(defaults.integer(forKey: Constants.MainVC.numSongsPassed))
                 if openURL && firstSignIn {
+                    print("alt")
                     DispatchQueue.main.async {
                         self.alternateGetCurrentlyPlayingSong(playerState)
                     }
@@ -259,15 +273,26 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
                     firstSignIn = false
                 }
                 else {
+                    print("main")
                     firstAppEntry = false
                     DispatchQueue.main.async {
                         self.getCurrentlyPlayingSong()
                     }
                 }
+                showAds()
             }
             lastSong = playerState.track.name
             mainVC.updateRestrictions(playerState.playbackRestrictions)
             updateRestrictionOnSkipButtons()
+        }
+    }
+    
+    private func showAds() {
+        if defaults.integer(forKey: Constants.MainVC.numSongsPassed) == 7 {
+            defaults.set(0, forKey: Constants.MainVC.numSongsPassed)
+            DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
+                NotificationCenter.default.post(name: NSNotification.Name("showAd"), object: nil)
+            }
         }
     }
     

@@ -82,12 +82,7 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
         let appScheme = "\(appName)://app"
         let appUrl = URL(string: appScheme)
 
-        if UIApplication.shared.canOpenURL(appUrl! as URL)
-        {
-            hideLogo()
-
-
-        } else {
+        if !UIApplication.shared.canOpenURL(appUrl! as URL) {
             alertManager.showAppStoreInstall(view: view, vc: self)
         }
 

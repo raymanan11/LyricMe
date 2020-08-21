@@ -14,5 +14,6 @@ struct KSoftInfo: Decodable {
 
 struct KSoft: Decodable {
     var name: String
+    var artist: String
     var lyrics: String
 }

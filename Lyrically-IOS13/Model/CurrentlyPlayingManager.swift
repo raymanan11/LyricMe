@@ -51,7 +51,8 @@ class CurrentlyPlayingManager {
     func updateSongInfo(info: CurrentlyPlayingInfo) {
         UIDelegate?.updateSongInfoUI(info)
         let songAndArtist = "\(info.apiSongName) \(info.allArtists)"
-        UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
+//        UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
+        UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.allArtists)
     }
     
     func parseJSON(data: Data) -> CurrentlyPlayingInfo? {
@@ -66,7 +67,6 @@ class CurrentlyPlayingManager {
                 var artists = ""
                 getArtists(info, &artists)
                 // checks of the song title has any - or () which could get the wrong info from lyric API
-                print(albumURL)
                 let correctSongName = checkSongName(songName)
                 let currentlyPlayingInfo = CurrentlyPlayingInfo(artistName: singleArtist, fullSongName: songName, apiSongName: correctSongName, allArtists: artists, albumURL: albumURL, artistID: artistID, currentSongURI: currentSongURI)
                 return currentlyPlayingInfo

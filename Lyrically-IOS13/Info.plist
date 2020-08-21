@@ -35,6 +35,8 @@
 	<array>
 		<string>spotify</string>
 	</array>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-7019128000727670~7112377766</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
