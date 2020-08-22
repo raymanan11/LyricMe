@@ -296,8 +296,8 @@ extension MainViewController: UI {
     }
     
     // goes to Lyric API to get info for lyrics
-    func passData(_ songInfo: String, songName: String, songArtist: String) {
-        lyricManager.fetchData(songAndArtist: songInfo, songName: songName, songArtist: songArtist)
+    func passData(_ songInfo: String, songName: String, singleSongArtist: String, multipleSongArtists: String) {
+        lyricManager.fetchData(songAndArtist: songInfo, songName: songName, singleSongArtist: singleSongArtist, multipleSongArtists: multipleSongArtists)
     }
     
     func updateSongInfoUI(_ songInfo: CurrentlyPlayingInfo) {

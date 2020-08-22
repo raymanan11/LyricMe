@@ -15,7 +15,8 @@ protocol LyricManagerDelegate : class {
 
 class LyricManager {
     var songName = ""
-    var songArtist = ""
+    var singleSongArtist = ""
+    var multipleSongArtists = ""
 
     var delegate: LyricManagerDelegate?
 
@@ -30,12 +31,13 @@ class LyricManager {
 
     var previousSong: String?
     
-    func fetchData(songAndArtist: String, songName: String, songArtist: String) {
+    func fetchData(songAndArtist: String, songName: String, singleSongArtist: String, multipleSongArtists: String) {
         self.songName = songName
-        self.songArtist = songArtist
+        self.singleSongArtist = singleSongArtist
+        self.multipleSongArtists = multipleSongArtists
 
         let songNames = songName.replacingOccurrences(of: "’", with: "'").replacingOccurrences(of: "/", with: "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-        let songArtists = songArtist.replacingOccurrences(of: "’", with: "'").replacingOccurrences(of: "/", with: "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        let songArtists = multipleSongArtists.replacingOccurrences(of: "’", with: "'").replacingOccurrences(of: "/", with: "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         
         if songName != previousSong {
             previousSong = songName
@@ -65,14 +67,14 @@ class LyricManager {
     }
     
     func getLyrics(_ request: URLRequest, triedKSoft: Bool) {
-        let songAndSingleArtist = "\(songName) \(songArtist)"
+        let songAndSingleArtist = "\(songName) \(singleSongArtist)"
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let safeData = data {
                 if let lyrics = self.parseJson(safeData, triedKSoft: triedKSoft) {
                     if lyrics == Constants.noLyrics && !LyricManager.triedMultipleArtists {
                         LyricManager.triedMultipleArtists = true
                         self.previousSong = nil
-                        self.fetchData(songAndArtist: songAndSingleArtist, songName: self.songName, songArtist: self.songArtist)
+                        self.fetchData(songAndArtist: songAndSingleArtist, songName: self.songName, singleSongArtist: self.singleSongArtist, multipleSongArtists: self.multipleSongArtists)
                     }
                     else {
                         self.delegate?.updateLyrics(lyrics)
@@ -101,10 +103,12 @@ class LyricManager {
                         let strippedAPISongName = songs.name.folding(options: .diacriticInsensitive, locale: nil).lowercased()
                         let strippedSongName = self.songName.folding(options: .diacriticInsensitive, locale: nil).lowercased()
                         let strippedAPISongArtist = songs.artist.replacingOccurrences(of: "&", with: "and").folding(options: .diacriticInsensitive, locale: nil).lowercased()
-                        let strippedSongArtist = self.songArtist.replacingOccurrences(of: "&", with: "and").folding(options: .diacriticInsensitive, locale: nil).lowercased()
+                        let strippedSingleSongArtist = self.singleSongArtist.replacingOccurrences(of: "&", with: "and").folding(options: .diacriticInsensitive, locale: nil).lowercased()
                         print("API song name: b\(strippedAPISongName)b")
                         print("Spotify song name: b\(strippedSongName)b")
-                        if strippedSongName.contains(strippedAPISongName) && strippedSongArtist.contains(strippedAPISongArtist) {
+                        print("API song artist: \(strippedAPISongArtist)")
+                        print("Spotify song artist: \(strippedSingleSongArtist)")
+                        if strippedSongName.contains(strippedAPISongName) && strippedAPISongArtist.contains(strippedSingleSongArtist) {
                             print("Correct API song name: \(strippedAPISongName)")
                             print("Correct Spotify song name: \(strippedSongName)")
                             return addKSoftCredit(lyrics: songs.lyrics)

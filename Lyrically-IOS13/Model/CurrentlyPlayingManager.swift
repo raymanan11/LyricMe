@@ -12,7 +12,7 @@ import Alamofire
 
 protocol UI {
     func updateSpotifyStatus(isPlaying: Bool)
-    func passData(_ songInfo: String, songName: String, songArtist: String)
+    func passData(_ songInfo: String, songName: String, singleSongArtist: String, multipleSongArtists: String)
     func updateSongInfoUI(_ songInfo: CurrentlyPlayingInfo)
 }
 
@@ -51,8 +51,7 @@ class CurrentlyPlayingManager {
     func updateSongInfo(info: CurrentlyPlayingInfo) {
         UIDelegate?.updateSongInfoUI(info)
         let songAndArtist = "\(info.apiSongName) \(info.allArtists)"
-//        UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.artistName)
-        UIDelegate?.passData(songAndArtist, songName: info.apiSongName, songArtist: info.allArtists)
+        UIDelegate?.passData(songAndArtist, songName: info.apiSongName, singleSongArtist: info.artistName, multipleSongArtists: info.allArtists)
     }
     
     func parseJSON(data: Data) -> CurrentlyPlayingInfo? {
