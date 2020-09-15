@@ -26,14 +26,15 @@ struct TokenManager {
                 let jsonData = result as! NSDictionary
                 let accessToken = jsonData.value(forKey: "access_token") as? String
                 let refreshToken = jsonData.value(forKey: "refresh_token") as? String
+                let scopes = jsonData.value(forKey: "scope") as? String
 
-                let _: Bool = KeychainWrapper.standard.set(accessToken!, forKey: "accessToken")
-                let _: Bool = KeychainWrapper.standard.set(refreshToken!, forKey: "refreshToken")
+                let _: Bool = KeychainWrapper.standard.set(accessToken!, forKey: Constants.Tokens.accessToken)
+                let _: Bool = KeychainWrapper.standard.set(refreshToken!, forKey: Constants.Tokens.refreshToken)
                 self.dispatchGroup.leave()
             }
         })
         dispatchGroup.notify(queue: .main) {
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "logInSuccessful"), object: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "webLogInSetup"), object: nil)
         }
     }
     

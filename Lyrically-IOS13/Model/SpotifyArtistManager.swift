@@ -22,7 +22,6 @@ struct SpotifyArtistManager {
     var artistName: String?
     
     func getArtistInfo(id: String, artistName: String) {
-        print(id)
         if let accessToken = KeychainWrapper.standard.string(forKey: Constants.Tokens.accessToken) {
             let headers: HTTPHeaders = ["Authorization": "Bearer \(accessToken)"]
             let parameters = ["country": "US"]
@@ -49,7 +48,6 @@ struct SpotifyArtistManager {
                 for artists in track.artists {
                     if artists.name == artistName {
                         songs.append(track.name)
-                        // pass in can playOnDemand from getSpotifyArtist in main VC. If canPlayOnDemand is true then do this but if not don't and also hide the play button
                         songURI.append(track.uri)
                         songAlbumImage.append(track.album.images[0].url)
                         break

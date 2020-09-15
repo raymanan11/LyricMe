@@ -1,11 +1,16 @@
 
 import UIKit
 import StoreKit
+import SafariServices
 
 class LogInViewController: UIViewController, SKStoreProductViewControllerDelegate {
     
+    let defaults = UserDefaults.standard
+    
     var sceneDelegate = SceneDelegate()
     var alertManager = AlertManager()
+    
+    var spotifyAuthWebView: SFSafariViewController?
     
     @IBOutlet weak var logInButton: UIButton!
     @IBOutlet weak var lyricMeLogo: UIImageView!
@@ -31,6 +36,8 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print("In Log In VC")
+        
         navigationController?.isNavigationBarHidden = true
         
         let defaults = UserDefaults.standard
@@ -40,6 +47,8 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
         }
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.moveToNextVC), name: NSNotification.Name(rawValue: Constants.Segues.successfulLogIn), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.dismissWebLogIn), name: NSNotification.Name(rawValue: "dismissWebLogin"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.hideLogInButton), name: NSNotification.Name(rawValue: Constants.LogInVC.hideLogIn), object: nil)
         
@@ -51,9 +60,63 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
 
     }
     
+//    override func viewWillDisappear(_ animated: Bool) {
+//
+//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.Segues.successfulLogIn), object: nil)
+//
+//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "dismissWebLogin"), object: nil)
+//
+//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.LogInVC.hideLogIn), object: nil)
+//
+//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.LogInVC.showLogIn), object: nil)
+//
+//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "showLogo"), object: nil)
+//
+//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideLogo"), object: nil)
+//
+//    }
+    
     @IBAction func logIn(_ sender: Any) {
-        sceneDelegate.login()
-        findApp(appName: "spotify")
+//        let appName = "spotify"
+//        let appScheme = "\(appName)://app"
+//        let appUrl = URL(string: appScheme)
+//
+//        if !UIApplication.shared.canOpenURL(appUrl! as URL) {
+//            defaults.spotifyInstalled = false
+//            print("defaults.spotifyInstalled = false")
+//            let scopes = "user-modify-playback-state%20user-read-currently-playing%20user-read-playback-state%20app-remote-control"
+//            let spotifyWebLogIn = "https://accounts.spotify.com/authorize?response_type=code&client_id=\(Constants.clientID)&redirect_uri=\(Constants.stringRedirectURI)&scope=\(scopes)"
+//            if let url = URL(string: spotifyWebLogIn) {
+//                spotifyAuthWebView = SFSafariViewController(url: url)
+//                present(spotifyAuthWebView!, animated: true, completion: nil)
+//            }
+//            else {
+//                print("Invalid spotify log in url")
+//            }
+//        }
+//        else {
+//            defaults.spotifyInstalled = true
+//            print("defaults.spotifyInstalled = true")
+//            sceneDelegate.login()
+//        }
+        
+        if defaults.spotifyInstalled {
+            defaults.spotifyInstalled = true
+            print("defaults.spotifyInstalled = true")
+            sceneDelegate.login()
+        }
+        else {
+            print("defaults.spotifyInstalled = false")
+            let scopes = "user-modify-playback-state%20user-read-currently-playing%20user-read-playback-state%20app-remote-control"
+            let spotifyWebLogIn = "https://accounts.spotify.com/authorize?response_type=code&client_id=\(Constants.clientID)&redirect_uri=\(Constants.stringRedirectURI)&scope=\(scopes)"
+            if let url = URL(string: spotifyWebLogIn) {
+                spotifyAuthWebView = SFSafariViewController(url: url)
+                present(spotifyAuthWebView!, animated: true, completion: nil)
+            }
+            else {
+                print("Invalid spotify log in url")
+            }
+        }
     }
     
     @objc func moveToNextVC() {
@@ -76,16 +139,12 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
         lyricMeLogo.isHidden = false
     }
     
-    func findApp(appName:String) {
-
-        let appName = "spotify"
-        let appScheme = "\(appName)://app"
-        let appUrl = URL(string: appScheme)
-
-        if !UIApplication.shared.canOpenURL(appUrl! as URL) {
-            alertManager.showAppStoreInstall(view: view, vc: self)
+    @objc func dismissWebLogIn() {
+        print("dismissWebLogIn")
+        if let safeWebLogin = spotifyAuthWebView {
+            print("Dismissing log in page")
+            safeWebLogin.dismiss(animated: true, completion: nil)
         }
-
     }
     
     func checkIfSpotifyIsInstalled() {

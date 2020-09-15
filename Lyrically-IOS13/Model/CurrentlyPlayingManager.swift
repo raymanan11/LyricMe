@@ -17,29 +17,53 @@ protocol UI {
 }
 
 class CurrentlyPlayingManager {
+    
+    let defaults = UserDefaults.standard
+    
     var previousSong: String?
     
     var tokenManager = TokenManager()
     
     var UIDelegate: UI?
     
+    var lastSong: String?
+    
     var triedOnce = false
     
     @objc func fetchData() {
+        print("getting data")
         if let accessToken = KeychainWrapper.standard.string(forKey: Constants.Tokens.accessToken) {
             let headers: HTTPHeaders = ["Authorization": "Bearer \(accessToken)"]
             AF.request("https://api.spotify.com/v1/me/player/currently-playing", method: .get, headers: headers).responseJSON { response in
+                print("About to get data")
                 if let safeData = response.data {
                     if self.expiredAccessToken(safeData) == true {
                         self.UIDelegate?.updateSpotifyStatus(isPlaying: true)
                         self.tokenManager.refreshToken()
                     }
                     else if let info = self.parseJSON(data: safeData) {
-                        self.updateSongInfo(info: info)
+                        print("self.parseJSON")
+                        if !self.defaults.spotifyInstalled && !self.triedOnce {
+                            print("baby")
+                            self.updateSongInfo(info: info)
+                            self.triedOnce = true
+                        }
+                        else if self.defaults.spotifyInstalled {
+                            print("son")
+                            self.updateSongInfo(info: info)
+                        }
+                        else {
+                            print("stuck in limbo")
+                        }
                     }
                     else {
+                        print("Not playing a song")
                         self.UIDelegate?.updateSpotifyStatus(isPlaying: false)
                     }
+                }
+                else {
+                    print("Not able to get data")
+                    print(response.data)
                 }
             }
         }
@@ -49,8 +73,10 @@ class CurrentlyPlayingManager {
     }
     
     func updateSongInfo(info: CurrentlyPlayingInfo) {
+        // pass to the Main VC to update the Main VC to get ready for lyrics as well as put the song name, song picture, and artist info
         UIDelegate?.updateSongInfoUI(info)
         let songAndArtist = "\(info.apiSongName) \(info.allArtists)"
+        // pass to main VC in order to call lyric manager to get lyrics and update the main VC with the lyrics
         UIDelegate?.passData(songAndArtist, songName: info.apiSongName, singleSongArtist: info.artistName, multipleSongArtists: info.allArtists)
     }
     
@@ -64,6 +90,10 @@ class CurrentlyPlayingManager {
             
             if let singleArtist = info.item?.artists[0].name, let songName = info.item?.name, let albumURL = info.item?.album?.images[0].url, let artistID = info.item?.artists[0].id, let currentSongURI = info.item?.uri {
                 var artists = ""
+                if songName != lastSong {
+                    lastSong = songName
+                    triedOnce = false
+                }
                 getArtists(info, &artists)
                 // checks of the song title has any - or () which could get the wrong info from lyric API
                 let correctSongName = checkSongName(songName)

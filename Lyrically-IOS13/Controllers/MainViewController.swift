@@ -16,6 +16,8 @@ protocol ArtistData {
 class MainViewController: UIViewController, HasLyrics {
     
     var delegate: ArtistData?
+    
+    var defaults = UserDefaults.standard
 
     var currentlyPlaying = CurrentlyPlayingManager()
     var lyricManager = LyricManager()
@@ -63,7 +65,9 @@ class MainViewController: UIViewController, HasLyrics {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
+        defaults.onMainVC = true
+        print("defaults.onMainVC = true")
+
         currentlyPlaying.UIDelegate = self
         lyricManager.delegate = self
         spotifyArtistManager.delegate = self
@@ -72,7 +76,8 @@ class MainViewController: UIViewController, HasLyrics {
     }
     
     override func viewDidLoad() {
-        print("viewDidLoad")
+        
+        print("In Main VC")
         
         super.viewDidLoad()
         
@@ -141,12 +146,23 @@ class MainViewController: UIViewController, HasLyrics {
         
     }
     
+    // if appRemote is conncted then use app remote but if not use the spotify web api
     @IBAction func previousSongPressed(_ sender: Any) {
-        appRemote?.playerAPI?.skip(toPrevious: defaultCallback)
+        if let appRemoteConnected = appRemote?.isConnected, appRemoteConnected {
+            appRemote?.playerAPI?.skip(toPrevious: defaultCallback)
+        }
+        else {
+            print("using spotify web api to skip to previous song")
+        }
     }
     
     @IBAction func nextSongPressed(_ sender: UIButton) {
-        appRemote?.playerAPI?.skip(toNext: defaultCallback)
+        if let appRemoteConnected = appRemote?.isConnected, appRemoteConnected {
+            appRemote?.playerAPI?.skip(toNext: defaultCallback)
+        }
+        else {
+            print("using spotify web api to skip to next song")
+        }
     }
     
     @objc func getInfo() {
@@ -235,7 +251,7 @@ extension MainViewController: GADInterstitialDelegate {
     }
     
     func createAndLoadInterstitial() -> GADInterstitial {
-        let fullScreenAd = GADInterstitial(adUnitID: "ca-app-pub-3940256099942544/4411468910")
+        let fullScreenAd = GADInterstitial(adUnitID: Constants.googleAdMobAppID)
         fullScreenAd.delegate = self
         fullScreenAd.load(GADRequest())
         return fullScreenAd

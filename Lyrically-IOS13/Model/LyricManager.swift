@@ -14,6 +14,9 @@ protocol LyricManagerDelegate : class {
 }
 
 class LyricManager {
+    
+    let defaults = UserDefaults.standard
+    
     var songName = ""
     var singleSongArtist = ""
     var multipleSongArtists = ""
@@ -36,24 +39,27 @@ class LyricManager {
         self.singleSongArtist = singleSongArtist
         self.multipleSongArtists = multipleSongArtists
 
-        let songNames = songName.replacingOccurrences(of: "’", with: "'").replacingOccurrences(of: "/", with: "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-        let songArtists = multipleSongArtists.replacingOccurrences(of: "’", with: "'").replacingOccurrences(of: "/", with: "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        let spotifySongName = songName.replacingOccurrences(of: "’", with: "'").replacingOccurrences(of: "/", with: "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        let singleSpotifySongArtist = singleSongArtist.replacingOccurrences(of: "’", with: "'").replacingOccurrences(of: "/", with: "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        let multSongArtists = multipleSongArtists.replacingOccurrences(of: "’", with: "'").replacingOccurrences(of: "/", with: "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         
+        print("Song name: \(songName)")
+        print("Previous Song name: \(previousSong)")
         if songName != previousSong {
+            print("hello")
             previousSong = songName
-            if let safeSongName = songNames, let safeSongArtist = songArtists {
+            if let safeSongName = spotifySongName, let safeMultSongArtist = multSongArtists, let safeSingleArtist = singleSpotifySongArtist {
                 var url: URL
                 var request: URLRequest
-                
+
                 if !triedKSoft {
-                    print("Song artist: \(safeSongArtist)")
-                    let fullURL = "\(ksoft)?q=\(safeSongName)%20\(safeSongArtist)"
+                    let fullURL = "\(ksoft)?q=\(safeSongName)%20\(safeMultSongArtist)"
                     url = URL(string: fullURL)!
                     request = URLRequest(url: url)
                     request.setValue("Bearer \(Constants.ksoftAPIKey)", forHTTPHeaderField: "Authorization")
                 }
                 else {
-                    url = URL(string: "\(lyricsOVH)\(safeSongArtist)/\(safeSongName)")!
+                    url = URL(string: "\(lyricsOVH)\(safeSingleArtist)/\(safeSongName)")!
                     request = URLRequest(url: url)
                 }
 
@@ -73,12 +79,14 @@ class LyricManager {
                 if let lyrics = self.parseJson(safeData, triedKSoft: triedKSoft) {
                     if lyrics == Constants.noLyrics && !LyricManager.triedMultipleArtists {
                         LyricManager.triedMultipleArtists = true
-                        self.previousSong = nil
+                        if self.defaults.spotifyInstalled {
+                            self.previousSong = nil
+                        }
                         self.fetchData(songAndArtist: songAndSingleArtist, songName: self.songName, singleSongArtist: self.singleSongArtist, multipleSongArtists: self.multipleSongArtists)
                     }
                     else {
                         self.delegate?.updateLyrics(lyrics)
-                        self.previousSong = nil
+//                        self.previousSong = nil
                         self.triedKSoft = false
                     }
                 }
@@ -104,21 +112,19 @@ class LyricManager {
                         let strippedSongName = self.songName.folding(options: .diacriticInsensitive, locale: nil).lowercased()
                         let strippedAPISongArtist = songs.artist.replacingOccurrences(of: "&", with: "and").folding(options: .diacriticInsensitive, locale: nil).lowercased()
                         let strippedSingleSongArtist = self.singleSongArtist.replacingOccurrences(of: "&", with: "and").folding(options: .diacriticInsensitive, locale: nil).lowercased()
-                        print("API song name: b\(strippedAPISongName)b")
-                        print("Spotify song name: b\(strippedSongName)b")
+                        print("API song name: \(strippedAPISongName)")
+                        print("Spotify song name: \(strippedSongName)")
                         print("API song artist: \(strippedAPISongArtist)")
-                        print("Spotify song artist: \(strippedSingleSongArtist)")
-                        if strippedSongName.contains(strippedAPISongName) && strippedAPISongArtist.contains(strippedSingleSongArtist) {
-                            print("Correct API song name: \(strippedAPISongName)")
-                            print("Correct Spotify song name: \(strippedSongName)")
+                        print("Spotify song name: \(strippedSingleSongArtist)")
+                        if strippedAPISongName.contains(strippedSongName) && strippedAPISongArtist.contains(strippedSingleSongArtist) {
                             return addKSoftCredit(lyrics: songs.lyrics)
                         }
+
                         self.triedKSoft = true
                     }
                 }
             }
             else {
-                print("Already tried KSoft")
                 let songInfo = try decoder.decode(LyricsOVHInfo.self, from: safeData)
                 if let lyrics = songInfo.lyrics {
                     let parsedLyrics = parseLyrics(lyrics)

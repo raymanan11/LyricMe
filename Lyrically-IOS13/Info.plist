@@ -30,13 +30,13 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-7019128000727670~7112377766</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>spotify</string>
 	</array>
-	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-7019128000727670~7112377766</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
@@ -67,7 +67,7 @@
 		<string>armv7</string>
 	</array>
 	<key>UIRequiresFullScreen</key>
-	<false/>
+	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
