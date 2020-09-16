@@ -8,14 +8,13 @@
 
 import Foundation
 import Alamofire
+import SwiftKeychainWrapper
 
 protocol LyricManagerDelegate : class {
     func updateLyrics(_ fullLyrics: String)
 }
 
 class LyricManager {
-    
-    let defaults = UserDefaults.standard
     
     var songName = ""
     var singleSongArtist = ""
@@ -33,6 +32,8 @@ class LyricManager {
     var dataTask: URLSessionDataTask?
 
     var previousSong: String?
+    
+    let spotifyInstalled: Bool? = KeychainWrapper.standard.bool(forKey: Constants.spotifyInstalled)
     
     func fetchData(songAndArtist: String, songName: String, singleSongArtist: String, multipleSongArtists: String) {
         self.songName = songName
@@ -79,7 +80,7 @@ class LyricManager {
                 if let lyrics = self.parseJson(safeData, triedKSoft: triedKSoft) {
                     if lyrics == Constants.noLyrics && !LyricManager.triedMultipleArtists {
                         LyricManager.triedMultipleArtists = true
-                        if self.defaults.spotifyInstalled {
+                        if let safeSpotifyInstalled = self.spotifyInstalled, safeSpotifyInstalled {
                             self.previousSong = nil
                         }
                         self.fetchData(songAndArtist: songAndSingleArtist, songName: self.songName, singleSongArtist: self.singleSongArtist, multipleSongArtists: self.multipleSongArtists)

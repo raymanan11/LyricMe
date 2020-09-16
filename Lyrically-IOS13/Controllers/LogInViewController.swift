@@ -2,10 +2,11 @@
 import UIKit
 import StoreKit
 import SafariServices
+import SwiftKeychainWrapper
 
 class LogInViewController: UIViewController, SKStoreProductViewControllerDelegate {
     
-    let defaults = UserDefaults.standard
+    let spotifyInstalled: Bool? = KeychainWrapper.standard.bool(forKey: Constants.spotifyInstalled)
     
     var sceneDelegate = SceneDelegate()
     var alertManager = AlertManager()
@@ -40,8 +41,7 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
         
         navigationController?.isNavigationBarHidden = true
         
-        let defaults = UserDefaults.standard
-        if defaults.initiatedSession {
+        if let safeSpotifyInstalled = spotifyInstalled, safeSpotifyInstalled {
             hideLogInButton()
             hideLogo()
         }
@@ -77,35 +77,14 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
 //    }
     
     @IBAction func logIn(_ sender: Any) {
-//        let appName = "spotify"
-//        let appScheme = "\(appName)://app"
-//        let appUrl = URL(string: appScheme)
-//
-//        if !UIApplication.shared.canOpenURL(appUrl! as URL) {
-//            defaults.spotifyInstalled = false
-//            print("defaults.spotifyInstalled = false")
-//            let scopes = "user-modify-playback-state%20user-read-currently-playing%20user-read-playback-state%20app-remote-control"
-//            let spotifyWebLogIn = "https://accounts.spotify.com/authorize?response_type=code&client_id=\(Constants.clientID)&redirect_uri=\(Constants.stringRedirectURI)&scope=\(scopes)"
-//            if let url = URL(string: spotifyWebLogIn) {
-//                spotifyAuthWebView = SFSafariViewController(url: url)
-//                present(spotifyAuthWebView!, animated: true, completion: nil)
-//            }
-//            else {
-//                print("Invalid spotify log in url")
-//            }
-//        }
-//        else {
-//            defaults.spotifyInstalled = true
-//            print("defaults.spotifyInstalled = true")
-//            sceneDelegate.login()
-//        }
         
-        if defaults.spotifyInstalled {
-            defaults.spotifyInstalled = true
+        if let safeSpotifyInstallled = spotifyInstalled, safeSpotifyInstallled {
+//            KeychainWrapper.standard.set(true, forKey: Constants.spotifyInstalled)
             print("defaults.spotifyInstalled = true")
             sceneDelegate.login()
         }
         else {
+//            KeychainWrapper.standard.set(false, forKey: Constants.spotifyInstalled)
             print("defaults.spotifyInstalled = false")
             let scopes = "user-modify-playback-state%20user-read-currently-playing%20user-read-playback-state%20app-remote-control"
             let spotifyWebLogIn = "https://accounts.spotify.com/authorize?response_type=code&client_id=\(Constants.clientID)&redirect_uri=\(Constants.stringRedirectURI)&scope=\(scopes)"

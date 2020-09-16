@@ -18,8 +18,6 @@ protocol UI {
 
 class CurrentlyPlayingManager {
     
-    let defaults = UserDefaults.standard
-    
     var previousSong: String?
     
     var tokenManager = TokenManager()
@@ -29,6 +27,8 @@ class CurrentlyPlayingManager {
     var lastSong: String?
     
     var triedOnce = false
+    
+    let spotifyInstalled: Bool? = KeychainWrapper.standard.bool(forKey: Constants.spotifyInstalled)
     
     @objc func fetchData() {
         print("getting data")
@@ -43,12 +43,12 @@ class CurrentlyPlayingManager {
                     }
                     else if let info = self.parseJSON(data: safeData) {
                         print("self.parseJSON")
-                        if !self.defaults.spotifyInstalled && !self.triedOnce {
+                        if let safeSpotifyInstalled = self.spotifyInstalled, !safeSpotifyInstalled, !self.triedOnce {
                             print("baby")
                             self.updateSongInfo(info: info)
                             self.triedOnce = true
                         }
-                        else if self.defaults.spotifyInstalled {
+                        else if let safeSpotifyInstalled = self.spotifyInstalled, safeSpotifyInstalled {
                             print("son")
                             self.updateSongInfo(info: info)
                         }

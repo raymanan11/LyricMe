@@ -8,6 +8,7 @@
 
 import UIKit
 import GoogleMobileAds
+import SwiftKeychainWrapper
 
 protocol ArtistData {
     func passData(artistData: ArtistInfo)
@@ -16,8 +17,6 @@ protocol ArtistData {
 class MainViewController: UIViewController, HasLyrics {
     
     var delegate: ArtistData?
-    
-    var defaults = UserDefaults.standard
 
     var currentlyPlaying = CurrentlyPlayingManager()
     var lyricManager = LyricManager()
@@ -33,6 +32,8 @@ class MainViewController: UIViewController, HasLyrics {
     var artistName: String?
     var currentSongURI: String?
     var currentSongAlbumURL: String?
+    
+    let onMainVC: Bool? = KeychainWrapper.standard.bool(forKey: Constants.onMainVC)
     
     var restrictions: SPTAppRemotePlaybackRestrictions?
     var firstSong: CurrentlyPlayingInfo?
@@ -65,8 +66,8 @@ class MainViewController: UIViewController, HasLyrics {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        defaults.onMainVC = true
-        print("defaults.onMainVC = true")
+        KeychainWrapper.standard.set(true, forKey: Constants.onMainVC)
+        print("onMainVC = true")
 
         currentlyPlaying.UIDelegate = self
         lyricManager.delegate = self
