@@ -6,6 +6,8 @@ import SwiftKeychainWrapper
 
 class LogInViewController: UIViewController, SKStoreProductViewControllerDelegate {
     
+    let initiatedSession: Bool? = KeychainWrapper.standard.bool(forKey: Constants.initiatedSession)
+    
     let spotifyInstalled: Bool? = KeychainWrapper.standard.bool(forKey: Constants.spotifyInstalled)
     
     var sceneDelegate = SceneDelegate()
@@ -41,7 +43,7 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
         
         navigationController?.isNavigationBarHidden = true
         
-        if let safeSpotifyInstalled = spotifyInstalled, safeSpotifyInstalled {
+        if let safeInitiatedSession = initiatedSession, safeInitiatedSession {
             hideLogInButton()
             hideLogo()
         }

@@ -14,7 +14,7 @@ protocol HasLyrics {
     func getInfo()
 }
 
-class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelegate {
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
     
@@ -51,6 +51,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         return manager
     }()
     
+    var mainVC: MainViewController {
+        get {
+            let mainVC = self.window?.rootViewController?.children[1] as! MainViewController
+            return mainVC
+        }
+    }
+    
     var accessToken = KeychainWrapper.standard.string(forKey: Constants.Tokens.accessToken) {
         didSet {
             let _: Bool = KeychainWrapper.standard.set(accessToken!, forKey: Constants.Tokens.accessToken)
@@ -70,45 +77,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         return appRemote
     }()
     
-    func login() {
-        // gets the requuested scopes of the user
-        let requestedScopes: SPTScope = [.appRemoteControl, .userReadCurrentlyPlaying, .userReadPlaybackState]
-        self.sessionManager.initiateSession(with: requestedScopes, options: .default)
-    }
+    // MARK: - SceneDelegate Methods
     
-    private func startCurrentSongTimer() {
-        print("Starting timer")
-        timer = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: true) { timer in
-            DispatchQueue.main.async {
-                print("calling get currently playing song")
-                self.getCurrentlyPlayingSong()
-            }
-        }
-    }
-    
-    private func stopCurrentSongTimer() {
-        if let safeTimer = self.timer {
-            safeTimer.invalidate()
-        }
-    }
-    
-    @objc func webLogInSetup() {
-        print("Authentication through web log in")
-        let accessToken: String? = KeychainWrapper.standard.string(forKey: Constants.Tokens.accessToken)
-        let refreshToken: String? = KeychainWrapper.standard.string(forKey: Constants.Tokens.refreshToken)
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.updateStatus), object: nil)
-        }
-//        defaults.initiatedSession = true
-        KeychainWrapper.standard.set(true, forKey: Constants.initiatedSession)
-        self.accessToken = accessToken
-        self.refreshToken = refreshToken
-        
-        print("bats")
-        startCurrentSongTimer()
-        
-    }
-
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.hideLogIn), object: nil)
         guard let url = URLContexts.first?.url else {
@@ -143,46 +113,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         NotificationCenter.default.post(name: NSNotification.Name(Constants.Segues.successfulLogIn), object: nil)
     }
     
-    func sessionManager(manager: SPTSessionManager, didInitiate session: SPTSession) {
-        print("inititated session")
-        // main VC default setup before updating main VC for lyrics and artist info
-//        DispatchQueue.main.async {
-//            NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.updateStatus), object: nil)
-//        }
-//        defaults.initiatedSession = true
-        KeychainWrapper.standard.set(true, forKey: Constants.initiatedSession)
-        appRemote.connectionParameters.accessToken = session.accessToken
-        self.accessToken = session.accessToken
-        self.refreshToken = session.refreshToken
-        // connect the app remote
-        appRemote.connect()
-    }
-    
-    func sessionManager(manager: SPTSessionManager, didFailWith error: Error) {
-        // if it fails, go back to log in VC where user can log in again
-        DispatchQueue.main.asyncAfter(deadline: 2.second.fromNow) {
-            self.updateLogInUI()
-            NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.returnToLogInVC), object: nil)
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        didEnterForeground = true
+        didEnterBackground = false
+        // first is false so that means app remotes won't conflict when connecting from both sceneWillEnterForeground and didInitiate session, only runs the appRemote.connect from the didInitiate instead of sceneWillEnterForeground
+        // only runs after user has authenticated and has spotify app open and exits app and comes back when music is playing
+        if let safeInitiatedSession = initiatedSession, safeInitiatedSession {
+            connected = true
+            if let safeSpotifyInstalled = spotifyInstalled, safeSpotifyInstalled {
+                appRemote.connect()
+            }
+            else {
+                // checks if user downloaded Spotify app, if they did, go back to main VC and have them auth through Spotify app
+                print("web login process")
+                webLogIn()
+            }
         }
-        print("fail", error)
-    }
-    
-    func sessionManager(manager: SPTSessionManager, didRenew session: SPTSession) {
-        print("renewed", session)
-    }
-    
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let _ = (scene as? UIWindowScene) else { return }
-    }
-
-    func sceneDidDisconnect(_ scene: UIScene) {
-        firstSignIn = true
-        print(#function)
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
         print(#function)
-//        defaults.spotifyInstalled = findApp(appName: "spotify")
         KeychainWrapper.standard.set(findApp(appName: "spotify"), forKey: Constants.spotifyInstalled)
         if let safeSpotifyInstalled = spotifyInstalled, !safeSpotifyInstalled && !firstAppEntry {
             startCurrentSongTimer()
@@ -207,7 +157,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
 
     func sceneWillResignActive(_ scene: UIScene) {
 //        defaults.onMainVC = false
-        KeychainWrapper.standard.set(false, forKey: Constants.onMainVC)
+//        KeychainWrapper.standard.set(false, forKey: Constants.onMainVC)
         didEnterBackground = true
         print(#function)
         if let safeSpotifyInstalled = spotifyInstalled, safeSpotifyInstalled {
@@ -219,53 +169,75 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
         
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "webLogInSetup"), object: nil)
     }
-    
-    func sceneWillEnterForeground(_ scene: UIScene) {
-        didEnterForeground = true
-        didEnterBackground = false
-        // first is false so that means app remotes won't conflict when connecting from both sceneWillEnterForeground and didInitiate session, only runs the appRemote.connect from the didInitiate instead of sceneDidBecomeActive
-        // only runs after user has authenticated and has spotify app open
-        if let safeInitiatedSession = initiatedSession, safeInitiatedSession {
-            connected = true
-            if let safeSpotifyInstalled = spotifyInstalled, safeSpotifyInstalled {
-                appRemote.connect()
-            }
-            else {
-                // checks if user downloaded Spotify app, if they did, go back to main VC and have them auth through Spotify app
-                print("web login process")
-                DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
-                    if self.findApp(appName: "spotify") {
-                        print("1")
-                        self.stopCurrentSongTimer()
-                        self.updateLogInUI()
-                        NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.returnToLogInVC), object: nil)
-                    }
-                        // else go straight to main VC and get lyrics
-                    else if self.firstAppEntry {
-                        print("2")
-                        print("going to main vc bc web log in and getting song info")
-                        self.firstAppEntry = false
-                        NotificationCenter.default.post(name: NSNotification.Name(Constants.Segues.successfulLogIn), object: nil)
-                        print("bats3")
-                        self.startCurrentSongTimer()
-                    }
-                }
-            }
-        }
-    }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
         print(#function)
         didEnterBackground = true
     }
     
-    var mainVC: MainViewController {
-        get {
-            let mainVC = self.window?.rootViewController?.children[1] as! MainViewController
-            return mainVC
+    func sceneDidDisconnect(_ scene: UIScene) {
+        firstSignIn = true
+        print(#function)
+    }
+    
+    fileprivate func webLogIn() {
+        DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
+            if self.findApp(appName: "spotify") {
+                print("1")
+                self.stopCurrentSongTimer()
+                self.updateLogInUI()
+                NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.returnToLogInVC), object: nil)
+            }
+            // else go straight to main VC and get lyrics
+            else if self.firstAppEntry {
+                print("2")
+                print("going to main vc bc web log in and getting song info")
+                self.firstAppEntry = false
+                NotificationCenter.default.post(name: NSNotification.Name(Constants.Segues.successfulLogIn), object: nil)
+                print("bats3")
+                self.startCurrentSongTimer()
+            }
         }
     }
-
+    
+    // MARK: - Methods used by SceneDelegate methods
+    func login() {
+        // gets the requuested scopes of the user
+        let requestedScopes: SPTScope = [.appRemoteControl, .userReadCurrentlyPlaying, .userReadPlaybackState]
+        self.sessionManager.initiateSession(with: requestedScopes, options: .default)
+    }
+    
+    private func startCurrentSongTimer() {
+        print("Starting timer")
+        timer = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: true) { timer in
+            DispatchQueue.main.async {
+                print("calling get currently playing song")
+                self.getCurrentlyPlayingSong()
+            }
+        }
+    }
+    
+    private func stopCurrentSongTimer() {
+        if let safeTimer = self.timer {
+            safeTimer.invalidate()
+        }
+    }
+    
+    @objc func webLogInSetup() {
+        print("Authentication through web log in")
+        let accessToken: String? = KeychainWrapper.standard.string(forKey: Constants.Tokens.accessToken)
+        let refreshToken: String? = KeychainWrapper.standard.string(forKey: Constants.Tokens.refreshToken)
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.updateStatus), object: nil)
+        }
+        KeychainWrapper.standard.set(true, forKey: Constants.initiatedSession)
+        self.accessToken = accessToken
+        self.refreshToken = refreshToken
+        
+        print("bats")
+        startCurrentSongTimer()
+        
+    }
     
     func findApp(appName:String) -> Bool {
 
@@ -281,50 +253,40 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, SPTSessionManagerDelega
 
 }
 
-extension UserDefaults {
-    var initiatedSession: Bool {
-        get {
-            if let initiateSession = UserDefaults.standard.object(forKey: "initiatedSession") as? Bool {
-                return initiateSession
-            }
-            else {
-                return false
-            }
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "initiatedSession")
-        }
+// MARK: - SPTSessionManagerDelegate
+
+extension SceneDelegate: SPTSessionManagerDelegate {
+    
+    func sessionManager(manager: SPTSessionManager, didInitiate session: SPTSession) {
+        print("inititated session")
+        // main VC default setup before updating main VC for lyrics and artist info
+//        DispatchQueue.main.async {
+//            NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.updateStatus), object: nil)
+//        }
+        KeychainWrapper.standard.set(true, forKey: Constants.initiatedSession)
+        appRemote.connectionParameters.accessToken = session.accessToken
+        self.accessToken = session.accessToken
+        self.refreshToken = session.refreshToken
+        // connect the app remote
+        appRemote.connect()
     }
     
-    var spotifyInstalled: Bool {
-        get {
-            if let initiateSession = UserDefaults.standard.object(forKey: "spotifyInstalled") as? Bool {
-                return initiateSession
-            }
-            else {
-                return false
-            }
+    func sessionManager(manager: SPTSessionManager, didFailWith error: Error) {
+        // if it fails, go back to log in VC where user can log in again
+        DispatchQueue.main.asyncAfter(deadline: 2.second.fromNow) {
+            self.updateLogInUI()
+            NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.returnToLogInVC), object: nil)
         }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "spotifyInstalled")
-        }
+        print("fail", error)
     }
     
-    var onMainVC: Bool {
-        get {
-            if let onMainVC = UserDefaults.standard.object(forKey: "onMainVC") as? Bool {
-                return onMainVC
-            }
-            else {
-                return false
-            }
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "onMainVC")
-        }
+    func sessionManager(manager: SPTSessionManager, didRenew session: SPTSession) {
+        print("renewed", session)
     }
     
 }
+
+// MARK: - SPTAppRemoteDelegate
 
 extension SceneDelegate: SPTAppRemoteDelegate {
     
@@ -339,18 +301,18 @@ extension SceneDelegate: SPTAppRemoteDelegate {
         })
         // only goes to mainVC if first entering app so that it won't keep showing transition screen every time user switches back and forth between spotify screen
         // somehow check if lyrics have not been received along with first app entry
-//        print("onMainVC: \(defaults.onMainVC)")
+        // goes to mainVC only if spotify music is playing because 
         if firstAppEntry, let safeOnMainVC = onMainVC, !safeOnMainVC {
             print("Going to mainVC bitch")
             NotificationCenter.default.post(name: NSNotification.Name(Constants.Segues.successfulLogIn), object: nil)
         }
         else {
+            print(firstAppEntry)
+            if let safeOnMainVC = onMainVC {
+                print(safeOnMainVC)
+            }
             print("unable to go into main VC bitch")
         }
-//        if firstAppEntry {
-//            print("Going to mainVC bitch")
-//            NotificationCenter.default.post(name: NSNotification.Name(Constants.Segues.successfulLogIn), object: nil)
-//        }
     }
     
     func appRemote(_ appRemote: SPTAppRemote, didDisconnectWithError error: Error?) {
@@ -361,7 +323,7 @@ extension SceneDelegate: SPTAppRemoteDelegate {
             lastSong = nil
 
             updateLogInUI()
-//             return to log in VC if it fails
+            // return to log in VC if it fails
             NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.returnToLogInVC), object: nil)
         }
         print("disconnected")
@@ -375,7 +337,7 @@ extension SceneDelegate: SPTAppRemoteDelegate {
         if !firstAppEntry {
             // reset the last song to nil so it won't remember the past song so it will update lyrics again
             lastSong = nil
-//             return to log in VC if it fauls
+            // return to log in VC if it fauls
             NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.returnToLogInVC), object: nil)
         }
     }
@@ -408,36 +370,22 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     
 }
 
+// MARK: - SPTAppRemotePlayerStateDelegate
+
 extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
     
     func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
         if let safeInitiatedSession = initiatedSession, safeInitiatedSession {
             fetchUserCapabilities()
+            print("In playerStateDidChange")
             if playerState.track.name != lastSong {
                 // increase number of songs passed to user defaults so ads will be able to show up
                 if lastSong != nil {
-//                    defaults.set(defaults.integer(forKey: Constants.MainVC.numSongsPassed) + 1, forKey: Constants.MainVC.numSongsPassed)
                     if let numSongsPassed = KeychainWrapper.standard.integer(forKey: Constants.MainVC.numSongsPassed) {
                         KeychainWrapper.standard.set(numSongsPassed + 1, forKey: Constants.MainVC.numSongsPassed)
                     }
                 }
-                // if first open URL and first sign in, update lyrics and artist info the alternate way because there is a bug that sometimes has incorrect information if using spotify api
-                if openURL && firstSignIn {
-                    print("alt")
-                    DispatchQueue.main.async {
-                        self.alternateGetCurrentlyPlayingSong(playerState)
-                    }
-                    openURL = false
-                    firstSignIn = false
-                }
-                // if not, use spotify api to request user's currently playing info to update lyrics and artist info
-                else {
-                    print("main")
-                    firstAppEntry = false
-                    DispatchQueue.main.async {
-                        self.getCurrentlyPlayingSong()
-                    }
-                }
+                updateLyrics(playerState)
                 // show ads every 7 songs
                 showAds()
             }
@@ -448,16 +396,30 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
     }
     
     private func showAds() {
-//        if defaults.integer(forKey: Constants.MainVC.numSongsPassed) == 7 {
-//            defaults.set(0, forKey: Constants.MainVC.numSongsPassed)
-//            DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
-//                NotificationCenter.default.post(name: NSNotification.Name("showAd"), object: nil)
-//            }
-//        }
         if let numSongsPasssed = KeychainWrapper.standard.integer(forKey: Constants.MainVC.numSongsPassed), numSongsPasssed == 7 {
             KeychainWrapper.standard.set(0, forKey: Constants.MainVC.numSongsPassed)
             DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
                 NotificationCenter.default.post(name: NSNotification.Name("showAd"), object: nil)
+            }
+        }
+    }
+    
+    private func updateLyrics(_ playerState: SPTAppRemotePlayerState) {
+        // if first open URL and first sign in, update lyrics and artist info the alternate way because there is a bug that sometimes has incorrect information if using spotify api
+        if openURL && firstSignIn {
+            print("alt")
+            DispatchQueue.main.async {
+                self.alternateGetCurrentlyPlayingSong(playerState)
+            }
+            openURL = false
+            firstSignIn = false
+        }
+        // if not, use spotify api to request user's currently playing info to update lyrics and artist info
+        else {
+            print("main")
+            firstAppEntry = false
+            DispatchQueue.main.async {
+                self.getCurrentlyPlayingSong()
             }
         }
     }
@@ -486,6 +448,8 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
         }
     }
 }
+
+// MARK: - SPTAppRemoteUserAPIDelegate
 
 extension SceneDelegate: SPTAppRemoteUserAPIDelegate {
     func userAPI(_ userAPI: SPTAppRemoteUserAPI, didReceive capabilities: SPTAppRemoteUserCapabilities) { }
