@@ -44,6 +44,7 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
         navigationController?.isNavigationBarHidden = true
         
         if let safeInitiatedSession = initiatedSession, safeInitiatedSession {
+            print("hiding buttons")
             hideLogInButton()
             hideLogo()
         }

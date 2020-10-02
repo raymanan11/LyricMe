@@ -189,6 +189,7 @@ extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
             ableToPlayArtistSong(cell, indexPath, safeSongURI)
             setArtistImage(artistImageURL: safeAlbumPhotosURL[indexPath.row], imageView: cell.albumImage)
             cell.songName.text = safePopularSongs[indexPath.row]
+
         }
         return cell
     }

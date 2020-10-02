@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import SwiftKeychainWrapper
+import AVFoundation
 
 protocol HasLyrics {
     func getInfo()
@@ -35,7 +36,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private var openURL: Bool = false
     private var didEnterForeground: Bool = false
     
-    let initiatedSession: Bool? = KeychainWrapper.standard.bool(forKey: Constants.initiatedSession)
+    var initiatedSession: Bool? = KeychainWrapper.standard.bool(forKey: Constants.initiatedSession)
     let spotifyInstalled: Bool? = KeychainWrapper.standard.bool(forKey: Constants.spotifyInstalled)
     let onMainVC: Bool? = KeychainWrapper.standard.bool(forKey: Constants.onMainVC)
     
@@ -84,7 +85,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let url = URLContexts.first?.url else {
             return
         }
-        DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
+        DispatchQueue.main.async {
             if let safeSpotifyInstalled = self.spotifyInstalled, safeSpotifyInstalled {
                 print("Spotify app authentication")
                 self.sessionManager.application(UIApplication.shared, open: url, options: [:])
@@ -114,13 +115,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func sceneWillEnterForeground(_ scene: UIScene) {
+        // sets initiateSession to either true of false depending on if Spotify app is active, if it is then it'll call appRemote.connect below and go straight to mainVC, if not then it'll show logInVC as well as not hide the buttons because logInVC viewDidLoad depends on initiateSession as well
         didEnterForeground = true
         didEnterBackground = false
+        KeychainWrapper.standard.set(findApp(appName: "spotify"), forKey: Constants.spotifyInstalled)
         // first is false so that means app remotes won't conflict when connecting from both sceneWillEnterForeground and didInitiate session, only runs the appRemote.connect from the didInitiate instead of sceneWillEnterForeground
         // only runs after user has authenticated and has spotify app open and exits app and comes back when music is playing
+        
         if let safeInitiatedSession = initiatedSession, safeInitiatedSession {
             connected = true
             if let safeSpotifyInstalled = spotifyInstalled, safeSpotifyInstalled {
+                print("Connected app remote 2")
                 appRemote.connect()
             }
             else {
@@ -129,17 +134,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 webLogIn()
             }
         }
+        else {
+            print("something wrong with initiatedSession")
+        }
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
         print(#function)
-        KeychainWrapper.standard.set(findApp(appName: "spotify"), forKey: Constants.spotifyInstalled)
+        print("Spotify Installed: \(findApp(appName: "spotify"))")
+        print("Initiated Session: \(initiatedSession)")
+        print("App Remote connected: \(appRemote.isConnected)")
         if let safeSpotifyInstalled = spotifyInstalled, !safeSpotifyInstalled && !firstAppEntry {
             startCurrentSongTimer()
         }
         NotificationCenter.default.addObserver(self, selector: #selector(self.webLogInSetup), name: NSNotification.Name(rawValue: "webLogInSetup"), object: nil)
-        // when first signing in, it will enter foreground (true) and appRemote.connect will connect which is why I did this so it won't call appRemote.connect() another time to stop any conflicts
-        // but then will set didEnterForeground to false in order to call appRemote.connect() whenever user dismisses the pull down menu so that the app can track if user changed the song there
+        // when first entering the app, appRemote.connect() runs from sceneWillEnterForeground() instead of from sceneDidBecomeActive
+        // only calls appRemote.connect() whenever user dismisses the pull down menu so that the app can track if user changed the song there or whenever something happens to call this method
         didEnterBackground = false
         if didEnterForeground {
             print("hi")
@@ -149,6 +159,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             print("bye")
             if let safeSpotifyInstalled = spotifyInstalled, safeSpotifyInstalled {
                 print("sceneDidbecomeActive spotifyInstalled = \(safeSpotifyInstalled)")
+                print("Connected app remote 3")
                 appRemote.connect()
             }
         }
@@ -230,7 +241,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.updateStatus), object: nil)
         }
-        KeychainWrapper.standard.set(true, forKey: Constants.initiatedSession)
+        initiatedSession = KeychainWrapper.standard.set(true, forKey: Constants.initiatedSession)
         self.accessToken = accessToken
         self.refreshToken = refreshToken
         
@@ -263,11 +274,12 @@ extension SceneDelegate: SPTSessionManagerDelegate {
 //        DispatchQueue.main.async {
 //            NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.updateStatus), object: nil)
 //        }
-        KeychainWrapper.standard.set(true, forKey: Constants.initiatedSession)
+        initiatedSession = KeychainWrapper.standard.set(true, forKey: Constants.initiatedSession)
         appRemote.connectionParameters.accessToken = session.accessToken
         self.accessToken = session.accessToken
         self.refreshToken = session.refreshToken
         // connect the app remote
+        print("Connected app remote 1")
         appRemote.connect()
     }
     
@@ -289,7 +301,7 @@ extension SceneDelegate: SPTSessionManagerDelegate {
 // MARK: - SPTAppRemoteDelegate
 
 extension SceneDelegate: SPTAppRemoteDelegate {
-    
+
     func appRemoteDidEstablishConnection(_ appRemote: SPTAppRemote) {
         self.appRemote = appRemote
         subscribeToCapabilityChanges()
@@ -301,7 +313,8 @@ extension SceneDelegate: SPTAppRemoteDelegate {
         })
         // only goes to mainVC if first entering app so that it won't keep showing transition screen every time user switches back and forth between spotify screen
         // somehow check if lyrics have not been received along with first app entry
-        // goes to mainVC only if spotify music is playing because 
+        // goes to mainVC only if spotify music is playing because
+        print(self.appRemote.isConnected)
         if firstAppEntry, let safeOnMainVC = onMainVC, !safeOnMainVC {
             print("Going to mainVC bitch")
             NotificationCenter.default.post(name: NSNotification.Name(Constants.Segues.successfulLogIn), object: nil)
@@ -311,15 +324,17 @@ extension SceneDelegate: SPTAppRemoteDelegate {
             if let safeOnMainVC = onMainVC {
                 print(safeOnMainVC)
             }
-            print("unable to go into main VC bitch")
+            print("already on main VC")
         }
     }
     
     func appRemote(_ appRemote: SPTAppRemote, didDisconnectWithError error: Error?) {
         connected = false
+        print("appRemote didDisconnectWithError")
+//        initiatedSession = KeychainWrapper.standard.set(false, forKey: Constants.initiatedSession)
         if !self.connected && !self.didEnterBackground {
-            KeychainWrapper.standard.set(false, forKey: Constants.initiatedSession)
-            
+            print("appRemote didDisconnect inside if statement")
+            initiatedSession = KeychainWrapper.standard.set(false, forKey: Constants.initiatedSession)
             lastSong = nil
 
             updateLogInUI()
@@ -328,10 +343,10 @@ extension SceneDelegate: SPTAppRemoteDelegate {
         }
         print("disconnected")
     }
+    
 
     func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
         updateLogInUI()
-        KeychainWrapper.standard.set(false, forKey: Constants.initiatedSession)
         firstSignIn = true
         print("failed", error)
         if !firstAppEntry {
@@ -375,9 +390,10 @@ extension SceneDelegate: SPTAppRemoteDelegate {
 extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
     
     func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
+        print("In playerStateDidChange")
+        print(initiatedSession)
         if let safeInitiatedSession = initiatedSession, safeInitiatedSession {
             fetchUserCapabilities()
-            print("In playerStateDidChange")
             if playerState.track.name != lastSong {
                 // increase number of songs passed to user defaults so ads will be able to show up
                 if lastSong != nil {
@@ -396,6 +412,7 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
     }
     
     private func showAds() {
+        print(KeychainWrapper.standard.integer(forKey: Constants.MainVC.numSongsPassed))
         if let numSongsPasssed = KeychainWrapper.standard.integer(forKey: Constants.MainVC.numSongsPassed), numSongsPasssed == 7 {
             KeychainWrapper.standard.set(0, forKey: Constants.MainVC.numSongsPassed)
             DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {

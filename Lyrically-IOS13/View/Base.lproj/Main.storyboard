@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="mtG-dd-mkS">
-    <device id="ipad11_0rounded" orientation="portrait" layout="fullscreen" appearance="dark"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="mtG-dd-mkS">
+    <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -13,11 +13,11 @@
             <objects>
                 <viewController storyboardIdentifier="logIn" id="BYZ-38-t0r" customClass="LogInViewController" customModule="LyricMe" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LyricallyLogo" translatesAutoresizingMaskIntoConstraints="NO" id="fF0-jE-DYg">
-                                <rect key="frame" x="271" y="401" width="292" height="292"/>
+                                <rect key="frame" x="122" y="290.33333333333331" width="131" height="131.33333333333331"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="fF0-jE-DYg" secondAttribute="height" multiplier="1:1" id="YWt-FS-1qR"/>
                                 </constraints>
@@ -27,8 +27,8 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JVw-FV-wHD">
-                                <rect key="frame" x="50" y="1034" width="734" height="90"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JVw-FV-wHD">
+                                <rect key="frame" x="50" y="638" width="275" height="90"/>
                                 <color key="backgroundColor" name="SpotifyGreen"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="90" id="8Kt-dz-lDI"/>
@@ -48,6 +48,7 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="AppBackground"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="JVw-FV-wHD" secondAttribute="bottom" constant="50" id="4ef-iA-adg"/>
@@ -57,7 +58,6 @@
                             <constraint firstItem="JVw-FV-wHD" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="50" id="aIR-Lo-6yK"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="JVw-FV-wHD" secondAttribute="trailing" constant="50" id="qHa-4Y-csa"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="eiB-Ho-Iik"/>
                     <connections>
@@ -75,20 +75,20 @@
             <objects>
                 <viewController storyboardIdentifier="main" id="0Dk-oK-vUy" customClass="MainViewController" customModule="LyricMe" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="x2j-6Z-U8d">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="IY9-FZ-8gU">
-                                <rect key="frame" x="0.0" y="50" width="834" height="1144"/>
+                                <rect key="frame" x="0.0" y="88" width="375" height="724"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="gdR-uB-rc5">
-                                        <rect key="frame" x="137.5" y="0.0" width="559" height="816.5"/>
+                                        <rect key="frame" x="47" y="0.0" width="281" height="400.66666666666669"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="60" translatesAutoresizingMaskIntoConstraints="NO" id="WZq-VM-Ejq">
-                                                <rect key="frame" x="0.0" y="0.0" width="559" height="802.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="281" height="390.66666666666669"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yuY-k7-3M3">
-                                                        <rect key="frame" x="0.0" y="374" width="58.5" height="54.5"/>
+                                                        <rect key="frame" x="0.0" y="184.66666666666666" width="26" height="21.333333333333343"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="yuY-k7-3M3" secondAttribute="height" multiplier="1:1" id="QLv-G5-769"/>
                                                         </constraints>
@@ -98,7 +98,7 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xal-pg-wWX">
-                                                        <rect key="frame" x="158.5" y="280.5" width="242" height="241.5"/>
+                                                        <rect key="frame" x="86" y="141" width="109" height="108.66666666666669"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="Xal-pg-wWX" secondAttribute="height" multiplier="1:1" id="9mS-86-LVP"/>
                                                         </constraints>
@@ -108,7 +108,7 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qPC-Sz-1p8">
-                                                        <rect key="frame" x="500.5" y="374" width="58.5" height="54.5"/>
+                                                        <rect key="frame" x="255" y="184.66666666666666" width="26" height="21.333333333333343"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="qPC-Sz-1p8" secondAttribute="height" multiplier="1:1" id="Kq0-4p-Urg"/>
                                                         </constraints>
@@ -121,10 +121,10 @@
                                                 <variation key="heightClass=regular-widthClass=regular" spacing="100"/>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="tPD-Iy-VGe">
-                                                <rect key="frame" x="10" y="816.5" width="539" height="0.0"/>
+                                                <rect key="frame" x="10" y="400.66666666666669" width="261" height="0.0"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7kU-sw-sLz">
-                                                        <rect key="frame" x="0.0" y="0.0" width="539" height="0.0"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="261" height="0.0"/>
                                                         <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="22"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -133,7 +133,7 @@
                                                         </variation>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uje-YQ-zzC">
-                                                        <rect key="frame" x="0.0" y="0.0" width="539" height="0.0"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="261" height="0.0"/>
                                                         <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="20"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -151,7 +151,7 @@
                                         <variation key="heightClass=regular-widthClass=regular" spacing="14"/>
                                     </stackView>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qYE-lw-Scg">
-                                        <rect key="frame" x="0.0" y="830.5" width="834" height="313.5"/>
+                                        <rect key="frame" x="0.0" y="410.66666666666674" width="375" height="313.33333333333326"/>
                                         <color key="backgroundColor" name="LyricBackground"/>
                                         <color key="textColor" name="Text"/>
                                         <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="18"/>
@@ -177,6 +177,7 @@
                                 <variation key="heightClass=regular-widthClass=regular" spacing="14"/>
                             </stackView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="qV0-cm-Gbz"/>
                         <color key="backgroundColor" name="AppBackground"/>
                         <constraints>
                             <constraint firstItem="IY9-FZ-8gU" firstAttribute="leading" secondItem="x2j-6Z-U8d" secondAttribute="leading" id="1zx-nK-Jb3"/>
@@ -184,7 +185,6 @@
                             <constraint firstItem="qV0-cm-Gbz" firstAttribute="trailing" secondItem="IY9-FZ-8gU" secondAttribute="trailing" id="ZWx-Sq-0S3"/>
                             <constraint firstAttribute="bottom" secondItem="IY9-FZ-8gU" secondAttribute="bottom" id="mp1-p8-54X"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="qV0-cm-Gbz"/>
                     </view>
                     <navigationItem key="navigationItem" id="ul3-jW-JW1"/>
                     <connections>
@@ -205,10 +205,10 @@
             <objects>
                 <viewController storyboardIdentifier="artistInfo" id="u79-L4-qTp" customClass="ArtistInfoViewController" customModule="LyricMe" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1NT-Ub-Y4C">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" name="AppBackground"/>
                         <viewLayoutGuide key="safeArea" id="zAP-LQ-ZmZ"/>
+                        <color key="backgroundColor" name="AppBackground"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="boolean" keyPath="labelize" value="YES"/>
                             <userDefinedRuntimeAttribute type="number" keyPath="scrollDuration">
@@ -231,7 +231,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="mtG-dd-mkS" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="xvI-Hs-tpa">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="50"/>
+                        <rect key="frame" x="0.0" y="44" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -245,7 +245,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="LyricallyLogo" width="341" height="341"/>
+        <image name="LyricallyLogo" width="341.33334350585938" height="341.33334350585938"/>
         <image name="backward.end.fill" catalog="system" width="128" height="102"/>
         <image name="forward.end.fill" catalog="system" width="128" height="102"/>
         <namedColor name="AppBackground">

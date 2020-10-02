@@ -32,7 +32,7 @@ class ArtistSongCell: UITableViewCell {
         myView.translatesAutoresizingMaskIntoConstraints = false
         myView.heightAnchor.constraint(equalToConstant: 70).isActive = true
         myView.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        
+
         return myView
     }()
 
@@ -40,7 +40,7 @@ class ArtistSongCell: UITableViewCell {
         let button = UIButton(type: .system)
         let image = UIImage(systemName: Constants.Assets.playButton)
         button.setBackgroundImage(image, for: .normal)
-        button.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handlePlay), for: UIControl.Event.touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
 
         return button
@@ -65,7 +65,8 @@ class ArtistSongCell: UITableViewCell {
         return imageView
     }()
     
-    @objc fileprivate func handlePlay() {
+    @objc private func handlePlay() {
+        print("Playin selected song!")
         if let safeSongURI = songURI {
             artistVC.updateSongURI(songURI: safeSongURI)
         }
@@ -76,9 +77,10 @@ class ArtistSongCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = UIColor(named: Constants.Assets.artistInfo)
         
+        contentView.addSubview(buttonPlay)
         containerView.addSubview(buttonPlay)
-        buttonPlay.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        buttonPlay.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        buttonPlay.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        buttonPlay.widthAnchor.constraint(equalToConstant: 60).isActive = true
         buttonPlay.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
         buttonPlay.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
 
@@ -98,6 +100,7 @@ class ArtistSongCell: UITableViewCell {
         stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
         stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20).isActive = true
         stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
+        
     }
 
     required init?(coder aDecoder: NSCoder) {
