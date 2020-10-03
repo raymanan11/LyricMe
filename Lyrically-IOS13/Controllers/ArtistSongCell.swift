@@ -59,8 +59,6 @@ class ArtistSongCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.backgroundColor = UIColor(named: Constants.Assets.artistInfo)
         imageView.translatesAutoresizingMaskIntoConstraints  = false
-//        imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
-//        imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
 
         return imageView
     }()
@@ -92,7 +90,7 @@ class ArtistSongCell: UITableViewCell {
             stackView = UIStackView(arrangedSubviews: [albumImage, songName])
         }
         stackView.distribution = .fillProportionally
-        stackView.spacing = 25
+        stackView.spacing = 20
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         let albumImageAspectRatio = NSLayoutConstraint(item: albumImage, attribute: .height, relatedBy: .equal, toItem: albumImage, attribute: .width, multiplier: (1.0 / 1.0), constant: 0)

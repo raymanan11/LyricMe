@@ -67,10 +67,10 @@ class ArtistInfoViewController: UIViewController {
         
         setArtistPicture()
         // affects artist image size
-        artistImage.widthAnchor.constraint(equalToConstant: 120).isActive = true
-        artistImage.heightAnchor.constraint(equalToConstant: 120).isActive = true
         artistImage.contentMode = .scaleAspectFill
         artistImage.translatesAutoresizingMaskIntoConstraints = false
+        let artistimageAspectRation = NSLayoutConstraint(item: artistImage, attribute: .height, relatedBy: .equal, toItem: artistImage, attribute: .width, multiplier: (1.0 / 1.0), constant: 0)
+        artistImage.addConstraint(artistimageAspectRation)
 
         containerView.backgroundColor = UIColor(named: Constants.Assets.appBackground)
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -218,3 +218,4 @@ extension ArtistInfoViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
 }
+

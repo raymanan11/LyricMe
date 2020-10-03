@@ -40,13 +40,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     let spotifyInstalled: Bool? = KeychainWrapper.standard.bool(forKey: Constants.spotifyInstalled)
     let onMainVC: Bool? = KeychainWrapper.standard.bool(forKey: Constants.onMainVC)
     
-    lazy var configuration = SPTConfiguration(clientID: Constants.clientID, redirectURL: Constants.redirectURI)
+//    lazy var configuration = SPTConfiguration(clientID: Constants.clientID, redirectURL: Constants.redirectURI)
+    
+    lazy var configuration: SPTConfiguration = {
+        let configuration = SPTConfiguration(clientID: Constants.clientID, redirectURL: Constants.redirectURI)
+        configuration.playURI = ""
+        return configuration
+    }()
     
     lazy var sessionManager: SPTSessionManager = {
         if let tokenSwapURL = URL(string: Constants.tokenSwapURL), let tokenRefreshURL = URL(string: Constants.refreshURL) {
             self.configuration.tokenSwapURL = tokenSwapURL
             self.configuration.tokenRefreshURL = tokenRefreshURL
-            self.configuration.playURI = ""
+//            self.configuration.playURI = ""
         }
         let manager = SPTSessionManager(configuration: self.configuration, delegate: self)
         return manager
@@ -85,6 +91,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let url = URLContexts.first?.url else {
             return
         }
+        let parameters = appRemote.authorizationParameters(from: url);
+
+        if let access_token = parameters?[SPTAppRemoteAccessTokenKey] {
+            appRemote.connectionParameters.accessToken = access_token
+            self.accessToken = access_token
+        }
+        else if let error_description = parameters?[SPTAppRemoteErrorDescriptionKey] {
+            print("accessToken error")
+        }
+        
         DispatchQueue.main.async {
             if let safeSpotifyInstalled = self.spotifyInstalled, safeSpotifyInstalled {
                 print("Spotify app authentication")
@@ -117,6 +133,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func sceneWillEnterForeground(_ scene: UIScene) {
         // sets initiateSession to either true of false depending on if Spotify app is active, if it is then it'll call appRemote.connect below and go straight to mainVC, if not then it'll show logInVC as well as not hide the buttons because logInVC viewDidLoad depends on initiateSession as well
+        print(#function)
         didEnterForeground = true
         didEnterBackground = false
         KeychainWrapper.standard.set(findApp(appName: "spotify"), forKey: Constants.spotifyInstalled)
@@ -126,12 +143,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let safeInitiatedSession = initiatedSession, safeInitiatedSession {
             connected = true
             if let safeSpotifyInstalled = spotifyInstalled, safeSpotifyInstalled {
+                print("appRemote.connect() 1")
                 appRemote.connect()
             }
             else {
                 // checks if user downloaded Spotify app, if they did, go back to main VC and have them auth through Spotify app
                 webLogIn()
             }
+        }
+        else {
+            print("initiatedSession not done yet")
         }
 
     }
@@ -150,6 +171,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         else {
             if let safeSpotifyInstalled = spotifyInstalled, safeSpotifyInstalled {
+                print("appRemote.connect() 2")
                 appRemote.connect()
             }
         }
@@ -262,6 +284,7 @@ extension SceneDelegate: SPTSessionManagerDelegate {
         self.accessToken = session.accessToken
         self.refreshToken = session.refreshToken
         // connect the app remote
+        print("appRemote.connect() 3")
         appRemote.connect()
     }
     

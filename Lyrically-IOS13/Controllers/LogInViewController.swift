@@ -1,6 +1,7 @@
 
 import UIKit
 import StoreKit
+import AVFoundation
 import SafariServices
 import SwiftKeychainWrapper
 
@@ -39,7 +40,7 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("In Log In VC")
+        print("In LogInVC")
         
         navigationController?.isNavigationBarHidden = true
         
@@ -57,9 +58,10 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.showLogInButton), name: NSNotification.Name(rawValue: Constants.LogInVC.showLogIn), object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.showLogo), name: NSNotification.Name(rawValue: "showLogo"), object: nil)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(self.hideLogo), name: NSNotification.Name(rawValue: "hideLogo"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.showLogo), name: NSNotification.Name(rawValue: "showLogo"), object: nil)
+    
 
     }
     
@@ -125,6 +127,32 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
             if appRemote?.authorizeAndPlayURI(playURI) == false {
                 alertManager.showAppStoreInstall(view: view, vc: self)
             }
+        }
+    }
+    
+    private func isSpotifyAppActive() {
+        if (AVAudioSession.sharedInstance().secondaryAudioShouldBeSilencedHint) {
+            SPTAppRemote.checkIfSpotifyAppIsActive { (isPlaying) in
+                if isPlaying {
+                    print("Spotify is playing")
+                    KeychainWrapper.standard.set(true, forKey: Constants.initiatedSession)
+                    print("hiding buttons")
+                    self.hideLogInButton()
+                    self.hideLogo()
+                }
+                else {
+                    print("audio is playing but not spotify audio")
+                    KeychainWrapper.standard.set(false, forKey: Constants.initiatedSession)
+                    self.showLogInButton()
+                    self.showLogo()
+                }
+            }
+        }
+        else {
+            print("spotify app is not active")
+            KeychainWrapper.standard.set(false, forKey: Constants.initiatedSession)
+            self.showLogo()
+            self.showLogInButton()
         }
     }
 
