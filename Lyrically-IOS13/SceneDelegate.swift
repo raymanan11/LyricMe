@@ -91,7 +91,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 self.sessionManager.application(UIApplication.shared, open: url, options: [:])
             }
             else {
-                print("Web bitch login")
+                print("Web authentication")
                 // dismiss the log in page
                 NotificationCenter.default.post(name: NSNotification.Name("dismissWebLogin"), object: nil)
                 // switch code for accessToken / refresh token into Keychain by using tokenManager
@@ -110,6 +110,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         openURL = true
         firstAppEntry = false
+        print("Going to mainVC as log in process initiated")
         // after pressing log in button, come back and go straight to main VC
         NotificationCenter.default.post(name: NSNotification.Name(Constants.Segues.successfulLogIn), object: nil)
     }
@@ -125,25 +126,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let safeInitiatedSession = initiatedSession, safeInitiatedSession {
             connected = true
             if let safeSpotifyInstalled = spotifyInstalled, safeSpotifyInstalled {
-                print("Connected app remote 2")
                 appRemote.connect()
             }
             else {
                 // checks if user downloaded Spotify app, if they did, go back to main VC and have them auth through Spotify app
-                print("web login process")
                 webLogIn()
             }
         }
-        else {
-            print("something wrong with initiatedSession")
-        }
+
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
         print(#function)
-        print("Spotify Installed: \(findApp(appName: "spotify"))")
-        print("Initiated Session: \(initiatedSession)")
-        print("App Remote connected: \(appRemote.isConnected)")
         if let safeSpotifyInstalled = spotifyInstalled, !safeSpotifyInstalled && !firstAppEntry {
             startCurrentSongTimer()
         }
@@ -152,14 +146,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // only calls appRemote.connect() whenever user dismisses the pull down menu so that the app can track if user changed the song there or whenever something happens to call this method
         didEnterBackground = false
         if didEnterForeground {
-            print("hi")
             didEnterForeground = false
         }
         else {
-            print("bye")
             if let safeSpotifyInstalled = spotifyInstalled, safeSpotifyInstalled {
-                print("sceneDidbecomeActive spotifyInstalled = \(safeSpotifyInstalled)")
-                print("Connected app remote 3")
                 appRemote.connect()
             }
         }
@@ -194,18 +184,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     fileprivate func webLogIn() {
         DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
             if self.findApp(appName: "spotify") {
-                print("1")
                 self.stopCurrentSongTimer()
                 self.updateLogInUI()
                 NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.returnToLogInVC), object: nil)
             }
             // else go straight to main VC and get lyrics
             else if self.firstAppEntry {
-                print("2")
-                print("going to main vc bc web log in and getting song info")
                 self.firstAppEntry = false
                 NotificationCenter.default.post(name: NSNotification.Name(Constants.Segues.successfulLogIn), object: nil)
-                print("bats3")
                 self.startCurrentSongTimer()
             }
         }
@@ -219,10 +205,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func startCurrentSongTimer() {
-        print("Starting timer")
         timer = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: true) { timer in
             DispatchQueue.main.async {
-                print("calling get currently playing song")
+                print("calling get currently playing song from timer")
                 self.getCurrentlyPlayingSong()
             }
         }
@@ -235,7 +220,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     @objc func webLogInSetup() {
-        print("Authentication through web log in")
         let accessToken: String? = KeychainWrapper.standard.string(forKey: Constants.Tokens.accessToken)
         let refreshToken: String? = KeychainWrapper.standard.string(forKey: Constants.Tokens.refreshToken)
         DispatchQueue.main.async {
@@ -245,7 +229,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.accessToken = accessToken
         self.refreshToken = refreshToken
         
-        print("bats")
         startCurrentSongTimer()
         
     }
@@ -279,7 +262,6 @@ extension SceneDelegate: SPTSessionManagerDelegate {
         self.accessToken = session.accessToken
         self.refreshToken = session.refreshToken
         // connect the app remote
-        print("Connected app remote 1")
         appRemote.connect()
     }
     
@@ -314,16 +296,11 @@ extension SceneDelegate: SPTAppRemoteDelegate {
         // only goes to mainVC if first entering app so that it won't keep showing transition screen every time user switches back and forth between spotify screen
         // somehow check if lyrics have not been received along with first app entry
         // goes to mainVC only if spotify music is playing because
-        print(self.appRemote.isConnected)
         if firstAppEntry, let safeOnMainVC = onMainVC, !safeOnMainVC {
-            print("Going to mainVC bitch")
+            print("Going to mainVC once music at start as app opens")
             NotificationCenter.default.post(name: NSNotification.Name(Constants.Segues.successfulLogIn), object: nil)
         }
         else {
-            print(firstAppEntry)
-            if let safeOnMainVC = onMainVC {
-                print(safeOnMainVC)
-            }
             print("already on main VC")
         }
     }

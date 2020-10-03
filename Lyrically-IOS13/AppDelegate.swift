@@ -16,6 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
+        initializeNumSongsPassed()
         isSpotifyAppActive()
         KeychainWrapper.standard.set(false, forKey: Constants.onMainVC)
         print("ads enabled")
@@ -32,6 +33,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         else {
             print("spotify app is not active")
             KeychainWrapper.standard.set(false, forKey: Constants.initiatedSession)
+        }
+    }
+    
+    private func initializeNumSongsPassed() {
+        let numSongsPassed = KeychainWrapper.standard.integer(forKey: Constants.MainVC.numSongsPassed)
+        if numSongsPassed == nil {
+            KeychainWrapper.standard.set(0, forKey: Constants.MainVC.numSongsPassed)
         }
     }
     

@@ -59,8 +59,8 @@ class ArtistSongCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.backgroundColor = UIColor(named: Constants.Assets.artistInfo)
         imageView.translatesAutoresizingMaskIntoConstraints  = false
-        imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
+//        imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+//        imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
 
         return imageView
     }()
@@ -94,6 +94,9 @@ class ArtistSongCell: UITableViewCell {
         stackView.distribution = .fillProportionally
         stackView.spacing = 25
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let albumImageAspectRatio = NSLayoutConstraint(item: albumImage, attribute: .height, relatedBy: .equal, toItem: albumImage, attribute: .width, multiplier: (1.0 / 1.0), constant: 0)
+        albumImage.addConstraint(albumImageAspectRatio)
 
         addSubview(stackView)
         stackView.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true

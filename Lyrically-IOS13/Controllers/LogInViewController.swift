@@ -82,21 +82,14 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
     @IBAction func logIn(_ sender: Any) {
         
         if let safeSpotifyInstallled = spotifyInstalled, safeSpotifyInstallled {
-//            KeychainWrapper.standard.set(true, forKey: Constants.spotifyInstalled)
-            print("defaults.spotifyInstalled = true")
             sceneDelegate.login()
         }
         else {
-//            KeychainWrapper.standard.set(false, forKey: Constants.spotifyInstalled)
-            print("defaults.spotifyInstalled = false")
             let scopes = "user-modify-playback-state%20user-read-currently-playing%20user-read-playback-state%20app-remote-control"
             let spotifyWebLogIn = "https://accounts.spotify.com/authorize?response_type=code&client_id=\(Constants.clientID)&redirect_uri=\(Constants.stringRedirectURI)&scope=\(scopes)"
             if let url = URL(string: spotifyWebLogIn) {
                 spotifyAuthWebView = SFSafariViewController(url: url)
                 present(spotifyAuthWebView!, animated: true, completion: nil)
-            }
-            else {
-                print("Invalid spotify log in url")
             }
         }
     }
@@ -122,9 +115,7 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
     }
     
     @objc func dismissWebLogIn() {
-        print("dismissWebLogIn")
         if let safeWebLogin = spotifyAuthWebView {
-            print("Dismissing log in page")
             safeWebLogin.dismiss(animated: true, completion: nil)
         }
     }
