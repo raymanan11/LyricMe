@@ -43,10 +43,7 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
         print("In LogInVC")
         
         navigationController?.isNavigationBarHidden = true
-        
-//        showLogo()
-//        showLogInButton()
-//        hideLogInButton()
+
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.moveToNextVC), name: NSNotification.Name(rawValue: Constants.Segues.successfulLogIn), object: nil)
         
@@ -62,22 +59,6 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
     
 
     }
-    
-//    override func viewWillDisappear(_ animated: Bool) {
-//
-//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.Segues.successfulLogIn), object: nil)
-//
-//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "dismissWebLogin"), object: nil)
-//
-//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.LogInVC.hideLogIn), object: nil)
-//
-//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: Constants.LogInVC.showLogIn), object: nil)
-//
-//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "showLogo"), object: nil)
-//
-//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideLogo"), object: nil)
-//
-//    }
     
     @IBAction func logIn(_ sender: Any) {
         

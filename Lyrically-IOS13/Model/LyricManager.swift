@@ -30,8 +30,6 @@ class LyricManager {
     let ksoft = "https://api.ksoft.si/lyrics/search"
     
     var dataTask: URLSessionDataTask?
-
-    var previousSong: String?
     
     let spotifyInstalled: Bool? = KeychainWrapper.standard.bool(forKey: Constants.spotifyInstalled)
     
@@ -43,33 +41,7 @@ class LyricManager {
         let spotifySongName = songName.replacingOccurrences(of: "’", with: "'").replacingOccurrences(of: "/", with: "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let singleSpotifySongArtist = singleSongArtist.replacingOccurrences(of: "’", with: "'").replacingOccurrences(of: "/", with: "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let multSongArtists = multipleSongArtists.replacingOccurrences(of: "’", with: "'").replacingOccurrences(of: "/", with: "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-        
-//        print("Song name: \(songName)")
-//        print("Previous Song name: \(previousSong)")
-//        if songName != previousSong {
-//            print("hello")
-//            previousSong = songName
-//            if let safeSongName = spotifySongName, let safeMultSongArtist = multSongArtists, let safeSingleArtist = singleSpotifySongArtist {
-//                var url: URL
-//                var request: URLRequest
-//
-//                if !triedKSoft {
-//                    let fullURL = "\(ksoft)?q=\(safeSongName)%20\(safeMultSongArtist)"
-//                    url = URL(string: fullURL)!
-//                    request = URLRequest(url: url)
-//                    request.setValue("Bearer \(Constants.ksoftAPIKey)", forHTTPHeaderField: "Authorization")
-//                }
-//                else {
-//                    url = URL(string: "\(lyricsOVH)\(safeSingleArtist)/\(safeSongName)")!
-//                    request = URLRequest(url: url)
-//                }
-//
-//                getLyrics(request, triedKSoft: triedKSoft)
-//            }
-//            else {
-//                delegate?.updateLyrics(Constants.noLyrics)
-//            }
-//        }
+
         print("LyricManager fetchData")
         if let safeSongName = spotifySongName, let safeMultSongArtist = multSongArtists, let safeSingleArtist = singleSpotifySongArtist {
             var url: URL
@@ -105,7 +77,6 @@ class LyricManager {
                     }
                     else {
                         self.delegate?.updateLyrics(lyrics)
-//                        self.previousSong = nil
                         self.triedKSoft = false
                     }
                 }
