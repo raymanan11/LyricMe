@@ -9,7 +9,7 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
     
     let initiatedSession: Bool? = KeychainWrapper.standard.bool(forKey: Constants.initiatedSession)
     
-    let spotifyInstalled: Bool? = KeychainWrapper.standard.bool(forKey: Constants.spotifyInstalled)
+    var spotifyInstalled: Bool?
     
     var sceneDelegate = SceneDelegate()
     var alertManager = AlertManager()
@@ -18,8 +18,6 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
     
     @IBOutlet weak var logInButton: UIButton!
     @IBOutlet weak var lyricMeLogo: UIImageView!
-    
-    private let playURI = "spotify:track:1mea3bSkSGXuIRvnydlB5b"
     
     var defaultCallback: SPTAppRemoteCallback {
         get {
@@ -53,14 +51,20 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.showLogInButton), name: NSNotification.Name(rawValue: Constants.LogInVC.showLogIn), object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.hideLogo), name: NSNotification.Name(rawValue: "hideLogo"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.disableLogInButton), name: NSNotification.Name(rawValue: Constants.LogInVC.disableLogIn), object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.showLogo), name: NSNotification.Name(rawValue: "showLogo"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.enableLogInButton), name: NSNotification.Name(rawValue: Constants.LogInVC.enableLogIn), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.hideLogo), name: NSNotification.Name(rawValue: Constants.LogInVC.hideLogo), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.showLogo), name: NSNotification.Name(rawValue: Constants.LogInVC.showLogo), object: nil)
     
 
     }
     
     @IBAction func logIn(_ sender: Any) {
+        
+        spotifyInstalled = KeychainWrapper.standard.bool(forKey: Constants.spotifyInstalled)
         
         if let safeSpotifyInstallled = spotifyInstalled, safeSpotifyInstallled {
             sceneDelegate.login()
@@ -89,6 +93,16 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
         logInButton.isHidden = false
     }
     
+    @objc func disableLogInButton() {
+        print("hiding login")
+        logInButton.isEnabled = false
+    }
+    
+    @objc func enableLogInButton() {
+        print("showing login")
+        logInButton.isEnabled = true
+    }
+    
     @objc func hideLogo() {
         print("hide logo")
         lyricMeLogo.isHidden = true
@@ -102,40 +116,6 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
     @objc func dismissWebLogIn() {
         if let safeWebLogin = spotifyAuthWebView {
             safeWebLogin.dismiss(animated: true, completion: nil)
-        }
-    }
-    
-    func checkIfSpotifyIsInstalled() {
-        if appRemote?.isConnected == false {
-            if appRemote?.authorizeAndPlayURI(playURI) == false {
-                alertManager.showAppStoreInstall(view: view, vc: self)
-            }
-        }
-    }
-    
-    private func isSpotifyAppActive() {
-        if (AVAudioSession.sharedInstance().secondaryAudioShouldBeSilencedHint) {
-            SPTAppRemote.checkIfSpotifyAppIsActive { (isPlaying) in
-                if isPlaying {
-                    print("Spotify is playing")
-                    KeychainWrapper.standard.set(true, forKey: Constants.initiatedSession)
-                    print("hiding buttons")
-                    self.hideLogInButton()
-                    self.hideLogo()
-                }
-                else {
-                    print("audio is playing but not spotify audio")
-                    KeychainWrapper.standard.set(false, forKey: Constants.initiatedSession)
-                    self.showLogInButton()
-                    self.showLogo()
-                }
-            }
-        }
-        else {
-            print("spotify app is not active")
-            KeychainWrapper.standard.set(false, forKey: Constants.initiatedSession)
-            self.showLogo()
-            self.showLogInButton()
         }
     }
 

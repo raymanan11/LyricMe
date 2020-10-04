@@ -27,6 +27,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var firstCurrentSong: CurrentlyPlayingInfo?
 
+    private let playURI = "spotify:track:1mea3bSkSGXuIRvnydlB5b"
     var numberOfSongsPassed = 1
     var lastSong: String?
     var onMainVCSong: String?
@@ -36,7 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     
     var initiatedSession: Bool? = KeychainWrapper.standard.bool(forKey: Constants.initiatedSession)
-    let spotifyInstalled: Bool? = KeychainWrapper.standard.bool(forKey: Constants.spotifyInstalled)
+    var spotifyInstalled: Bool? = KeychainWrapper.standard.bool(forKey: Constants.spotifyInstalled)
     let onMainVC: Bool? = KeychainWrapper.standard.bool(forKey: Constants.onMainVC)
     
     lazy var configuration: SPTConfiguration = {
@@ -94,10 +95,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             self.accessToken = access_token
         }
         else if let error_description = parameters?[SPTAppRemoteErrorDescriptionKey] {
-            print("accessToken error")
+            print(error_description)
         }
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
             if let safeSpotifyInstalled = self.spotifyInstalled, safeSpotifyInstalled {
                 print("Spotify app authentication")
                 self.sessionManager.application(UIApplication.shared, open: url, options: [:])
@@ -118,17 +119,32 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 Constants.code = dict["code"]
 
                 self.tokenManager.getAccessToken(spotifyCode: Constants.code!)
+                
+                NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
             }
         }
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
         
+        KeychainWrapper.standard.set(findApp(appName: "spotify"), forKey: Constants.spotifyInstalled)
+        
+        spotifyInstalled = KeychainWrapper.standard.bool(forKey: Constants.spotifyInstalled)
+        
+        if let safeSpotifyInstalled = spotifyInstalled, safeSpotifyInstalled {
+            print("spotify is installed!")
+        }
+        else {
+            print("spotify is not installed!")
+        }
+        
         print(#function)
         if let safeSpotifyInstalled = spotifyInstalled, safeSpotifyInstalled {
             appRemote.connect()
         }
         else {
+            // if spotifyInstalled is false and you try to connect it, it will go to didFailConnectionWithError meaning it will go back to login page but then everytime it will do this and everytime it will go to LogInVC which we don't want
+            appRemote.connect()
             self.startCurrentSongTimer()
         }
     }
@@ -136,12 +152,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillResignActive(_ scene: UIScene) {
         print(#function)
         if let safeSpotifyInstalled = spotifyInstalled, safeSpotifyInstalled {
+            onMainVCSong = lastSong
             appRemote.disconnect()
         }
         else {
             self.stopCurrentSongTimer()
         }
-        onMainVCSong = lastSong
         lastSong = nil
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "webLogInSetup"), object: nil)
     }
@@ -198,9 +214,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
     }
     
+    func checkIfSpotifyIsInstalled() {
+        if appRemote.isConnected == false {
+            if appRemote.authorizeAndPlayURI(playURI) == false {
+                spotifyInstalled = KeychainWrapper.standard.set(false, forKey: Constants.spotifyInstalled)
+                print("spotify is not installed!")
+            }
+        }
+        else {
+            spotifyInstalled = KeychainWrapper.standard.set(true, forKey: Constants.spotifyInstalled)
+            print("spotify is installed!")
+        }
+    }
+    
     func findApp(appName:String) -> Bool {
 
-        let appName = "spotify"
         let appScheme = "\(appName)://app"
         let appUrl = URL(string: appScheme)
 
@@ -246,7 +274,7 @@ extension SceneDelegate: SPTSessionManagerDelegate {
 
 extension SceneDelegate: SPTAppRemoteDelegate {
 
-    func moveToMainVC() {
+    private func moveToMainVC() {
         if let viewControllers = window?.rootViewController?.children {
             for viewController in viewControllers {
                 if viewController is MainViewController {
@@ -261,6 +289,8 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     
     func appRemoteDidEstablishConnection(_ appRemote: SPTAppRemote) {
         print("appRemoteDidEstablishConnection")
+        NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.disableLogIn), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.hideLogIn), object: nil)
         self.appRemote = appRemote
         subscribeToCapabilityChanges()
         self.appRemote.playerAPI?.delegate = self
@@ -274,26 +304,26 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     
     func appRemote(_ appRemote: SPTAppRemote, didDisconnectWithError error: Error?) {
         print("didDisconnectWithError")
+        if let safeError = error {
+            print(safeError)
+        }
         updateLogInUI()
     }
     
 
     func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
         print("didFailConnectionAttemptWithError")
-        updateLogInUIS()
+        if let safeError = error {
+            print(safeError)
+        }
+        NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.returnToLogInVC), object: nil)
+        updateLogInUI()
     }
     
     func updateLogInUI() {
-//        NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.returnToLogInVC), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name(Constants.ArtistVC.dismissArtistVC), object: nil)
-        NotificationCenter.default.post(name: NSNotification.Name("showLogo"), object: nil)
-        NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.showLogIn), object: nil)
-   }
-    
-    func updateLogInUIS() {
-        NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.returnToLogInVC), object: nil)
-        NotificationCenter.default.post(name: NSNotification.Name(Constants.ArtistVC.dismissArtistVC), object: nil)
-        NotificationCenter.default.post(name: NSNotification.Name("showLogo"), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.showLogo), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.enableLogIn), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.showLogIn), object: nil)
    }
     

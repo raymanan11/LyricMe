@@ -98,10 +98,10 @@ class LyricManager {
                 let songInfo = try decoder.decode(KSoftInfo.self, from: safeData)
                 if songInfo.data.count > 0 {
                     for songs in songInfo.data {
-                        let strippedAPISongName = songs.name.folding(options: .diacriticInsensitive, locale: nil).lowercased()
-                        let strippedSongName = self.songName.folding(options: .diacriticInsensitive, locale: nil).lowercased()
-                        let strippedAPISongArtist = songs.artist.replacingOccurrences(of: "&", with: "and").folding(options: .diacriticInsensitive, locale: nil).lowercased()
-                        let strippedSingleSongArtist = self.singleSongArtist.replacingOccurrences(of: "&", with: "and").folding(options: .diacriticInsensitive, locale: nil).lowercased()
+                        let strippedAPISongName = parseWord(songs.name.lowercased())
+                        let strippedSongName = parseWord(self.songName.lowercased())
+                        let strippedAPISongArtist = parseWord(songs.artist.lowercased())
+                        let strippedSingleSongArtist = parseWord(self.singleSongArtist.lowercased())
                         print("API song name: \(strippedAPISongName)")
                         print("Spotify song name: \(strippedSongName)")
                         print("API song artist: \(strippedAPISongArtist)")
