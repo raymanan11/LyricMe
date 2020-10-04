@@ -64,6 +64,7 @@ class CurrentlyPlayingManager {
                 else {
                     print("Not able to get data")
                     print(response.data)
+                    self.UIDelegate?.updateSpotifyStatus(isPlaying: false)
                 }
             }
         }

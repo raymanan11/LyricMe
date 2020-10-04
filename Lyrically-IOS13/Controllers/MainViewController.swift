@@ -259,12 +259,14 @@ extension MainViewController: GADInterstitialDelegate {
     }
     
     func interstitialWillPresentScreen(_ ad: GADInterstitial) {
+        disableMainVCButtons()
         appRemote?.playerAPI?.pause(defaultCallback)
         print("interstitialWillPresentScreen")
     }
     
     func interstitialWillDismissScreen(_ ad: GADInterstitial) {
         print("about to dismiss screen and reload ad")
+        enableMainVCButtons()
         fullScreenAd = createAndLoadInterstitial()
         addObservers()
         DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
@@ -277,6 +279,18 @@ extension MainViewController: GADInterstitialDelegate {
                 }
             }
         }
+    }
+    
+    private func enableMainVCButtons() {
+        skipForward.isEnabled = true
+        skipBackward.isEnabled = true
+        artistInfo.isEnabled = true
+    }
+    
+    private func disableMainVCButtons() {
+        skipForward.isEnabled = false
+        skipBackward.isEnabled = false
+        artistInfo.isEnabled = false
     }
     
 }

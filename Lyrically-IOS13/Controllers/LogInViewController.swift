@@ -44,11 +44,9 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
         
         navigationController?.isNavigationBarHidden = true
         
-        if let safeInitiatedSession = initiatedSession, safeInitiatedSession {
-            print("hiding buttons")
-            hideLogInButton()
-            hideLogo()
-        }
+//        showLogo()
+//        showLogInButton()
+//        hideLogInButton()
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.moveToNextVC), name: NSNotification.Name(rawValue: Constants.Segues.successfulLogIn), object: nil)
         
@@ -101,18 +99,22 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
     }
     
     @objc func hideLogInButton() {
+        print("hiding login")
         logInButton.isHidden = true
     }
     
     @objc func showLogInButton() {
+        print("showing login")
         logInButton.isHidden = false
     }
     
     @objc func hideLogo() {
+        print("hide logo")
         lyricMeLogo.isHidden = true
     }
     
     @objc func showLogo() {
+        print("show logo")
         lyricMeLogo.isHidden = false
     }
     

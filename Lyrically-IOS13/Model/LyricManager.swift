@@ -44,31 +44,52 @@ class LyricManager {
         let singleSpotifySongArtist = singleSongArtist.replacingOccurrences(of: "’", with: "'").replacingOccurrences(of: "/", with: "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let multSongArtists = multipleSongArtists.replacingOccurrences(of: "’", with: "'").replacingOccurrences(of: "/", with: "").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         
-        print("Song name: \(songName)")
-        print("Previous Song name: \(previousSong)")
-        if songName != previousSong {
-            print("hello")
-            previousSong = songName
-            if let safeSongName = spotifySongName, let safeMultSongArtist = multSongArtists, let safeSingleArtist = singleSpotifySongArtist {
-                var url: URL
-                var request: URLRequest
+//        print("Song name: \(songName)")
+//        print("Previous Song name: \(previousSong)")
+//        if songName != previousSong {
+//            print("hello")
+//            previousSong = songName
+//            if let safeSongName = spotifySongName, let safeMultSongArtist = multSongArtists, let safeSingleArtist = singleSpotifySongArtist {
+//                var url: URL
+//                var request: URLRequest
+//
+//                if !triedKSoft {
+//                    let fullURL = "\(ksoft)?q=\(safeSongName)%20\(safeMultSongArtist)"
+//                    url = URL(string: fullURL)!
+//                    request = URLRequest(url: url)
+//                    request.setValue("Bearer \(Constants.ksoftAPIKey)", forHTTPHeaderField: "Authorization")
+//                }
+//                else {
+//                    url = URL(string: "\(lyricsOVH)\(safeSingleArtist)/\(safeSongName)")!
+//                    request = URLRequest(url: url)
+//                }
+//
+//                getLyrics(request, triedKSoft: triedKSoft)
+//            }
+//            else {
+//                delegate?.updateLyrics(Constants.noLyrics)
+//            }
+//        }
+        print("LyricManager fetchData")
+        if let safeSongName = spotifySongName, let safeMultSongArtist = multSongArtists, let safeSingleArtist = singleSpotifySongArtist {
+            var url: URL
+            var request: URLRequest
 
-                if !triedKSoft {
-                    let fullURL = "\(ksoft)?q=\(safeSongName)%20\(safeMultSongArtist)"
-                    url = URL(string: fullURL)!
-                    request = URLRequest(url: url)
-                    request.setValue("Bearer \(Constants.ksoftAPIKey)", forHTTPHeaderField: "Authorization")
-                }
-                else {
-                    url = URL(string: "\(lyricsOVH)\(safeSingleArtist)/\(safeSongName)")!
-                    request = URLRequest(url: url)
-                }
-
-                getLyrics(request, triedKSoft: triedKSoft)
+            if !triedKSoft {
+                let fullURL = "\(ksoft)?q=\(safeSongName)%20\(safeMultSongArtist)"
+                url = URL(string: fullURL)!
+                request = URLRequest(url: url)
+                request.setValue("Bearer \(Constants.ksoftAPIKey)", forHTTPHeaderField: "Authorization")
             }
             else {
-                delegate?.updateLyrics(Constants.noLyrics)
+                url = URL(string: "\(lyricsOVH)\(safeSingleArtist)/\(safeSongName)")!
+                request = URLRequest(url: url)
             }
+
+            getLyrics(request, triedKSoft: triedKSoft)
+        }
+        else {
+            delegate?.updateLyrics(Constants.noLyrics)
         }
         
     }
@@ -80,9 +101,6 @@ class LyricManager {
                 if let lyrics = self.parseJson(safeData, triedKSoft: triedKSoft) {
                     if lyrics == Constants.noLyrics && !LyricManager.triedMultipleArtists {
                         LyricManager.triedMultipleArtists = true
-                        if let safeSpotifyInstalled = self.spotifyInstalled, safeSpotifyInstalled {
-                            self.previousSong = nil
-                        }
                         self.fetchData(songAndArtist: songAndSingleArtist, songName: self.songName, singleSongArtist: self.singleSongArtist, multipleSongArtists: self.multipleSongArtists)
                     }
                     else {
@@ -103,7 +121,7 @@ class LyricManager {
     func parseJson(_ safeData: Data, triedKSoft: Bool) -> String? {
         let decoder = JSONDecoder()
         do {
-            let str = String(decoding: safeData, as: UTF8.self)
+//            let str = String(decoding: safeData, as: UTF8.self)
             // depending on boolean on which API to choose, decode from the respective class
             if !triedKSoft {
                 let songInfo = try decoder.decode(KSoftInfo.self, from: safeData)
