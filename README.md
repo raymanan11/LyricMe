@@ -1,4 +1,4 @@
 # LyricMe
 iOS App that instantly gets lyrics your currently playing song! It's easy! Just sign in with yourt Spotify account and sing along to your favorite songs as well as your currently playing artist's most popular songs!
 
-![Alt Text](https://media.giphy.com/media/vtccPYdp0xShkGcHWy/giphy.gif)
+![Alt Text](https://media.giphy.com/media/Q33XUijkTCqZKza8J7/giphy.gif)
