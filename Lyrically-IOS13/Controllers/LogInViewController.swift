@@ -34,6 +34,11 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
             return (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.appRemote
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        print(#function)
+//        logInButton.isHidden = true
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,12 +99,12 @@ class LogInViewController: UIViewController, SKStoreProductViewControllerDelegat
     }
     
     @objc func disableLogInButton() {
-        print("hiding login")
+        print("disabling login")
         logInButton.isEnabled = false
     }
     
     @objc func enableLogInButton() {
-        print("showing login")
+        print("enabling login")
         logInButton.isEnabled = true
     }
     

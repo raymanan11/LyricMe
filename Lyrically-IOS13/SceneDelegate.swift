@@ -50,6 +50,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let tokenSwapURL = URL(string: Constants.tokenSwapURL), let tokenRefreshURL = URL(string: Constants.refreshURL) {
             self.configuration.tokenSwapURL = tokenSwapURL
             self.configuration.tokenRefreshURL = tokenRefreshURL
+            self.configuration.playURI = ""
         }
         let manager = SPTSessionManager(configuration: self.configuration, delegate: self)
         return manager
@@ -98,31 +99,55 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             print(error_description)
         }
         
-        DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
-            if let safeSpotifyInstalled = self.spotifyInstalled, safeSpotifyInstalled {
-                print("Spotify app authentication")
-                self.sessionManager.application(UIApplication.shared, open: url, options: [:])
-            }
-            else {
-                print("Web authentication")
-                // dismiss the log in page
-                NotificationCenter.default.post(name: NSNotification.Name("dismissWebLogin"), object: nil)
-                // switch code for accessToken / refresh token into Keychain by using tokenManager
-                var dict = [String:String]()
-                let components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
-                if let queryItems = components.queryItems {
-                    for item in queryItems {
-                        dict[item.name] = item.value!
-                    }
-                }
-
-                Constants.code = dict["code"]
-
-                self.tokenManager.getAccessToken(spotifyCode: Constants.code!)
-                
-                NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
-            }
+        if let safeSpotifyInstalled = self.spotifyInstalled, safeSpotifyInstalled {
+            print("Spotify app authentication")
+            self.sessionManager.application(UIApplication.shared, open: url, options: [:])
         }
+        else {
+            print("Web authentication")
+            // dismiss the log in page
+            NotificationCenter.default.post(name: NSNotification.Name("dismissWebLogin"), object: nil)
+            // switch code for accessToken / refresh token into Keychain by using tokenManager
+            var dict = [String:String]()
+            let components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+            if let queryItems = components.queryItems {
+                for item in queryItems {
+                    dict[item.name] = item.value!
+                }
+            }
+
+            Constants.code = dict["code"]
+
+            self.tokenManager.getAccessToken(spotifyCode: Constants.code!)
+            
+            NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
+        }
+        
+//        DispatchQueue.main.asyncAfter(deadline: 0.second.fromNow) {
+//            if let safeSpotifyInstalled = self.spotifyInstalled, safeSpotifyInstalled {
+//                print("Spotify app authentication")
+//                self.sessionManager.application(UIApplication.shared, open: url, options: [:])
+//            }
+//            else {
+//                print("Web authentication")
+//                // dismiss the log in page
+//                NotificationCenter.default.post(name: NSNotification.Name("dismissWebLogin"), object: nil)
+//                // switch code for accessToken / refresh token into Keychain by using tokenManager
+//                var dict = [String:String]()
+//                let components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+//                if let queryItems = components.queryItems {
+//                    for item in queryItems {
+//                        dict[item.name] = item.value!
+//                    }
+//                }
+//
+//                Constants.code = dict["code"]
+//
+//                self.tokenManager.getAccessToken(spotifyCode: Constants.code!)
+//
+//                NotificationCenter.default.post(name: NSNotification.Name(Constants.returnToApp), object: nil)
+//            }
+//        }
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
@@ -276,7 +301,7 @@ extension SceneDelegate: SPTAppRemoteDelegate {
 
     private func moveToMainVC() {
         if let viewControllers = window?.rootViewController?.children {
-            for viewController in viewControllers {
+            for viewController in viewControllers {  
                 if viewController is MainViewController {
                     lastSong = onMainVCSong
                     return
@@ -289,8 +314,6 @@ extension SceneDelegate: SPTAppRemoteDelegate {
     
     func appRemoteDidEstablishConnection(_ appRemote: SPTAppRemote) {
         print("appRemoteDidEstablishConnection")
-        NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.disableLogIn), object: nil)
-        NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.hideLogIn), object: nil)
         self.appRemote = appRemote
         subscribeToCapabilityChanges()
         self.appRemote.playerAPI?.delegate = self
@@ -316,14 +339,14 @@ extension SceneDelegate: SPTAppRemoteDelegate {
         if let safeError = error {
             print(safeError)
         }
+        // the logInButton is showing but because I hid the button in viewWillAppear, the logInButton is hidden
+        
         NotificationCenter.default.post(name: NSNotification.Name(Constants.MainVC.returnToLogInVC), object: nil)
         updateLogInUI()
     }
     
     func updateLogInUI() {
         NotificationCenter.default.post(name: NSNotification.Name(Constants.ArtistVC.dismissArtistVC), object: nil)
-        NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.showLogo), object: nil)
-        NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.enableLogIn), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name(Constants.LogInVC.showLogIn), object: nil)
    }
     
@@ -376,7 +399,7 @@ extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
     }
     
     private func showAds() {
-        if let numSongsPassed = KeychainWrapper.standard.integer(forKey: Constants.MainVC.numSongsPassed), numSongsPassed == 7 {
+        if let numSongsPassed = KeychainWrapper.standard.integer(forKey: Constants.MainVC.numSongsPassed), numSongsPassed == 6 {
             print("numSongsPassed: \(numSongsPassed)")
             KeychainWrapper.standard.set(0, forKey: Constants.MainVC.numSongsPassed)
             DispatchQueue.main.asyncAfter(deadline: 1.second.fromNow) {
